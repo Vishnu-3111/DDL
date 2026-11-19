@@ -1,0 +1,285 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="4AEB3AAFEB" name="PostgreSQL" version="1.0" notes="PostgreSQL"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="varchar">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Array Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Configuration Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Generation Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity Generation" type="" description="" unit="" values="" default=""/>
+					<Tag name="ListValues" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sequence Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storage Mode" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Option" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="PostgreSQL"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Return Tables=Common Properties;Null Processing=Common Properties;Database and Schema=Common Properties;Arguments=Function Definition;Language=Function Definition;Configuration Parameters=Function Definition;Return Type=Function Definition;funcdef=Function Definition;Transform=PostgreSQL Functional Properties;Window Function=PostgreSQL Functional Properties;Volatility Category=PostgreSQL Functional Properties;Leakproof=PostgreSQL Functional Properties;Security=PostgreSQL Functional Properties;Parallel=PostgreSQL Functional Properties;Execution Cost=PostgreSQL Functional Properties;Support Function=PostgreSQL Functional Properties;External Linkage=PostgreSQL Functional Properties;Function Implementation=PostgreSQL Functional Properties;Result Row=PostgreSQL Functional Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Function Definition,PostgreSQL Functional Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Function Definition=closed;PostgreSQL Functional Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="Configuration Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Execution Cost" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Linkage" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Implementation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Leakproof" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Processing" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parallel" type="" description="" unit="" values="" default=""/>
+					<Tag name="Result Row" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return Tables" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Security" type="" description="" unit="" values="" default=""/>
+					<Tag name="Support Function" type="" description="" unit="" values="" default=""/>
+					<Tag name="Transform" type="" description="" unit="" values="" default=""/>
+					<Tag name="Volatility Category" type="" description="" unit="" values="" default=""/>
+					<Tag name="Window Function" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Concurrently" type="" description="" unit="" values="" default=""/>
+					<Tag name="Include Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Method" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Distinct" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storage Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="TableSpace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="Where Condition" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Inclusion Property" type="" description="" unit="" values="" default=""/>
+					<Tag name="Property Specification" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="PostgreSQL"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Transform=Common Properties;Security=Common Properties;External Linkage=Common Properties;Database and Schema=Common Properties;Arguments=Procedure Definition;Language=Procedure Definition;Configuration Parameters=Procedure Definition;Procedure Implementation=Procedure Definition;procdef=Procedure Definition;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="Configuration Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Linkage" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Implementation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Security" type="" description="" unit="" values="" default=""/>
+					<Tag name="Transform" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="sequence" metatype="sequence" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::dbsequence" baseStereotypes="EAUML::dbsequence">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="PostgreSQL"/>
+						<Property name="_tagGroupings" value="Sequence Type=Common Properties;Not Exists=Common Properties;Increment By=Common Properties;Start With=Common Properties;Database and Schema=Common Properties;MinValue Specification=Range Specification;MinValue=Range Specification;MaxValue Specification=Range Specification;MaxValue=Range Specification;Data Type Specification=PostgreSQL Sequence Properties;Cache=PostgreSQL Sequence Properties;Circular Sequence=PostgreSQL Sequence Properties;Owned By=PostgreSQL Sequence Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Range Specification,PostgreSQL Sequence Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Range Specification=closed;PostgreSQL Sequence Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cache" type="" description="" unit="" values="" default=""/>
+					<Tag name="Circular Sequence" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Type Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Increment By" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Owned By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sequence Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Start With" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="PostgreSQL::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="PostgreSQL::FK" constraint="PostgreSQL::table"/>
+					<stereotypedrelationship stereotype="PostgreSQL::like" constraint="PostgreSQL::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="PostgreSQL"/>
+						<Property name="_tagGroupings" value="Not Exists=Common Properties;Scope Specification=Common Properties;Table Type=Common Properties;Database and Schema=Common Properties;Select Query=Table As;Data Load=Table As;Subpartition=Table Partition Properties;Partition Method=Table Partition Properties;Partition By=Table Partition Properties;OID Configuration=OID Configuration;Storage Parameters=OID Configuration;Partition Specification=Foreign Table Properties;Boundary Specification=Foreign Table Properties;Server Name=Foreign Table Properties;Configuration Parameters=Foreign Table Properties;Composite Type=PostgreSQ Table Properties;Table Inheritance=PostgreSQ Table Properties;Table Method=PostgreSQ Table Properties;On Commit=PostgreSQ Table Properties;TableSpace=PostgreSQ Table Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Table As,Table Partition Properties,OID Configuration,Foreign Table Properties,PostgreSQ Table Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Table Partition Properties=closed;OID Configuration=closed;Foreign Table Properties=closed;PostgreSQ Table Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Boundary Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Composite Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Configuration Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Load" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="OID Configuration" type="" description="" unit="" values="" default=""/>
+					<Tag name="On Commit" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="Partition By" description="" unit="" values="" default=""/>
+					<Tag name="Partition Method" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Scope Specification" type="Scope Specification" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Server Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storage Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Subpartition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Inheritance" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Method" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+					<Tag name="TableSpace" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Constraint Deferral" type="" description="" unit="" values="" default=""/>
+					<Tag name="Execute" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Each" type="For Each" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Reference Table" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Transition Relation" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+					<Tag name="Trigger type" type="Trigger type" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="PostgreSQL"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Temporary View=Common Properties;Recursive=Common Properties;Not Exists=Common Properties;Database and Schema=Common Properties;Recursive With=Common Properties;viewdef=View definition;View Columns=PostgreSQL View Properties;View Method=PostgreSQL View Properties;View Options=PostgreSQL View Properties;Check Option=PostgreSQL View Properties;Materialized View=Materialized View Properties;TableSpace=Materialized View Properties;Data Load=Materialized View Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,View definition,PostgreSQL View Properties,Materialized View Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View definition=closed;PostgreSQL View Properties=closed;Materialized View Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Check Option" type="Check Option" description="" unit="" values="" default=""/>
+					<Tag name="Data Load" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Materialized View" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Recursive" type="" description="" unit="" values="" default=""/>
+					<Tag name="Recursive With" type="" description="" unit="" values="" default=""/>
+					<Tag name="TableSpace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporary View" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Method" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Check Option" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Cascaded,Local;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="For Each" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Row,Statement;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Partition By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Scope Specification" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Global,Local;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Temporary,Unlogged,Foreign;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Trigger type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Event,Constraint;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

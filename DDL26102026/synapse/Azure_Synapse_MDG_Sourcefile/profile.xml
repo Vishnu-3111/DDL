@@ -1,0 +1,203 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="175D752247" name="AzureSynapse" version="1.0" notes="AzureSynapse"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="varchar">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Azure Synapse"/>
+						<Property name="_tagGroupings" value="Returns=Function Definition;Schema and Database=Function Definition;funcdef=Function Definition;Parameter=Function Option;Called Null=Function Option;Returns Null=Function Option;SchemaBinding=Function Option;"/>
+						<Property name="_tagGroups" value="Function Definition,Function Option"/>
+						<Property name="_tagGroupStates" value="Function Definition=open;Function Option=closed"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Called Null" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns Null" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="SchemaBinding" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Clustered" type="" description="" unit="" values="" default=""/>
+					<Tag name="Filestream On" type="Filestream On" description="" unit="" values="" default=""/>
+					<Tag name="Include" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Columnstore" type="" description="" unit="" values="" default=""/>
+					<Tag name="On Value" type="On Value" description="" unit="" values="" default=""/>
+					<Tag name="Order By" type="" description="" unit="" values="" default=""/>
+					<Tag name="property" type="" description="" unit="" values="" default=""/>
+					<Tag name="Relational Index Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="Where Condition" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Inline Constraint" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Azure Synapse"/>
+						<Property name="_tagGroupings" value="Alter=Common Properties;For Replication=Common Properties;Schema and Database=Common Properties;Varying=Common Properties;IsNull=Common Properties;Native Compilation=Common Properties;Encryption=Procedure Option;Recompile=Procedure Option;Execute As=Procedure Option;SchemaBinding=Procedure Option;Parameter=Procedure Definition;Default Parameter=Procedure Definition;Parameter Option=Procedure Definition;procdef=Procedure Definition;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Option,Procedure Definition"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Option=closed;Procedure Definition=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Default Parameter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encryption" type="" description="" unit="" values="" default=""/>
+					<Tag name="Execute As" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Replication" type="" description="" unit="" values="" default=""/>
+					<Tag name="IsNull" type="" description="" unit="" values="" default=""/>
+					<Tag name="Native Compilation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Recompile" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="SchemaBinding" type="" description="" unit="" values="" default=""/>
+					<Tag name="Varying" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="AzureSynapse::FK" constraint="AzureSynapse::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Azure Synapse"/>
+						<Property name="_tagGroupings" value="Schema and Database=Common Properties;Partition=Common Properties;Table Type=Common Properties;Select Query=Table As;Location=External Table Properties;Data Source=External Table Properties;File Format=External Table Properties;Reject Type=External Table Properties;Reject Value=External Table Properties;Rejected Row Location=External Table Properties;Table Option=External Table Properties;Columnstore Index=Table Option;Heap=Table Option;Clustered Index=Table Option;Distribution=Table Option;For Append=Table Option;Index Order=Table Option;"/>
+						<Property name="_tagGroups" value="Common Properties,Table As,External Table Properties,Table Option"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;External Table Properties=closed;Table Option=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Clustered Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Columnstore Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Source" type="" description="" unit="" values="" default=""/>
+					<Tag name="Distribution" type="" description="" unit="" values="" default=""/>
+					<Tag name="File Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Append" type="" description="" unit="" values="" default=""/>
+					<Tag name="Heap" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Order" type="" description="" unit="" values="" default=""/>
+					<Tag name="Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Reject Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Reject Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Rejected Row Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Inline Constraint" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Azure Synapse"/>
+						<Property name="_tagGroupings" value="Columns=Common Properties;Schema and Database=Common Properties;Alter=Common Properties;Materialized=Common Properties;For Append=View Properties;Encryption=View Properties;SchemaBinding=View Properties;View Metadata=View Properties;Check Option=View Properties;viewdef=View Definition;Columnstore Index=Materialized View;Heap=Materialized View;Clustered Index=Materialized View;Distribution=Materialized View;Partition=Materialized View;"/>
+						<Property name="_tagGroups" value="Common Properties,View Properties,View Definition,Materialized View"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View Properties=closed;View Definition=closed;Materialized View=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Check Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Clustered Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Columnstore Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Distribution" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encryption" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Append" type="" description="" unit="" values="" default=""/>
+					<Tag name="Heap" type="" description="" unit="" values="" default=""/>
+					<Tag name="Materialized" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="SchemaBinding" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Metadata" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Filestream On" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="On Value" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,External;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

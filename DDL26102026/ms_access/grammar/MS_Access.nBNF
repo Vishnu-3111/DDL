@@ -1,0 +1,473 @@
+//
+// This file is conversion of the syntax form following web site:
+// https://learn.microsoft.com/en-us/office/client-developer/access/desktop-database-reference/data-definition-language
+//
+
+CaseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>							::= <WHITESPACE> |
+										<COMMENT> |
+										token(<NUMBER>) |
+										token(<STRING>) |
+										token(<IDENTIFIER>) |
+										token(keywords());
+
+<DELIMITER>							::= "\n" | "\r" | "\t" | " "  | "~"  |
+										"`"  | "!"  | "@"  | "#"  | "$"  |
+										"%"  | "^"  | "&"  | "*"  | "("  |
+										")"  | "-"  | "+"  | "="  | "("  | 
+										"["  | ")"  | "]"  | ";"  | ":"  | 
+										"\\" | "\'" | "\"" | ","  | "<"  | 
+										">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>						::= " "  | "\r" | "\n" | "\t";
+
+// Not sure about comment like /*...*/?
+<COMMENT>							::= ("--"  skip(<eol>) <eol> )| 	
+										("//" skip(<eol>) <eol> )|
+										("/*" skip("*/") "*/") ;
+
+<EOL>								::= "\r" "\n" |
+										"\n";
+
+<NUMBER>							::= ["-"]"0".."9"+;
+
+<DECIMAL>							::= <NUMBER> ("." <NUMBER>)* ;
+
+
+// Not sure about string wrapped by double quota (i.e. ")
+<STRING>					::=   "\"\"\"" skip("\"\"\"") "\"\"\"" |	
+										"\'\'\'" skip("\'\'\'") "\'\'\'"|
+										"$$" skip("$$") "$$" | 									 
+										 "\"" skip("\"", "\\\"") "\"" | 										
+									    "\'" skip("\'", "\\\'") "\'";
+
+<IDENTIFIER>				::= ("a".."z" | "_"|"-") ("a".."z" | "0".."9" | "_"|"-")*;
+
+// Parser rules
+<language>					::= attributeEx("EAGENTYPE", "MSAccess 2007") attributeEx("EAMAPPING", "DDL") <statement>*;
+
+<statement>					::= <create_commands> 
+								|<alter_commands>
+								|<othercommands>
+								|<drop_command>
+								|<SelectQuery>;
+
+<create_commands> 			::= <create_table>
+								| <create_view> 
+								| <create_procedure>
+								| <create_index>
+								| <create_user>
+								| <create_group>
+								;	
+								
+<alter_commands>			::=<alter_table>
+								|<alter_database>
+								|<alter_user>
+								;
+								
+<othercommands>				::= <add_users> 
+								|<grant_command>
+								|<revoke_command>
+								|<delete_command>
+								|<execute_command>
+								|<procedural_clause>
+								|<tansaction_command>
+								|<transform_statement>
+								|<update_command>
+								|<union_command>
+								|<insert_command>
+								;
+
+<drop_command>				::= <drop_common>|<drop_user>|<drop_group> ;
+
+<drop_common>				::= ("DROP" ((("TABLE"| "PROCEDURE"  | "VIEW")<name> )| ("INDEX" <name> "ON" <tbl_name>)) [";"]) ;
+
+<name>						::= <IDENTIFIER>|("[" skipBalanced("[","]") "]");
+
+<multiIdentifier>			::="[" attribute("NAME" , skipBalanced("[","]"))"]" ;
+
+<create_table>				::= node("ELEMENT" ,
+									attributeEx("EATYPE", "Class")
+									attributeEx("EASTEREOTYPE", "MsAccess::table")
+									"CREATE" ["TEMPORARY" node("Temporary Table" , attributeEx("VALUE" , "True"))]
+									"TABLE" 
+									((attribute("NAME" , <table_name>)) |<multiIdentifier>)
+									"(" <table_fields> ("," <table_fields>)* ")"
+								)[";"] ;
+								
+<table_name>				::=   <IDENTIFIER> ;
+								
+<table_fields>				::=  <foreign_key> |(node("OPERATION" , <table_constraint>)) | <column_defintion>  ;
+
+<foreign_key>				::= node("FOREIGNKEY", 
+									 ["CONSTRAINT" ((attribute("NAME", <constraint_name>))|<multiIdentifier>  )]
+									"FOREIGN" "KEY" ["NO" "INDEX"] attributeEx("EASTEREOTYPE", "MsAccess::FK")
+									[<constraint_columns>]
+									<references>
+									[<fk_options>*]
+								);
+								
+<fk_options>				::= ("ON" "UPDATE" 
+									( 
+										("CASCADE" 
+											node("Update" , attributeEx("VALUE" , "Cascade"))
+										)
+										|("SET" "NULL" 
+											node("Update" , attributeEx("VALUE" , "Set Null"))
+										)
+									)
+								) 
+							    | ("ON" "DELETE" 
+									( 
+										("CASCADE" 
+											node("Delete" , attributeEx("VALUE" , "Cascade"))
+										)
+										|("SET" "NULL" 
+											node("Delete" , attributeEx("VALUE" , "Set Null"))
+										)
+									)
+								)								
+								;
+								
+				
+							
+							
+<references>				::=   "REFERENCES" 
+								node("TARGET" ,((attribute("NAME", <foreigntable>))|<multiIdentifier>)
+								[<constraint_columns>]
+								);
+
+<column_defintion>			::= node("ATTRIBUTE" , attributeEx("EASTEREOTYPE" , "MsAccess::column")
+								(( attribute("NAME" ,<column_name> ) )|<multiIdentifier>)
+								 <column_type> ["NOT" "NULL" attributeEx("NOTNULL" , "true")] 
+								 ["WITH" ("COMPRESSION" | "COMP") node("Compression" , attributeEx("VALUE" , "True"))] 
+									[node("CONSTRAINT" , <single_field_constraint>)]
+								);
+								
+<column_name>				::=  <IDENTIFIER>  ;	
+
+<table_constraint>			::= ["CONSTRAINT" ((attribute("NAME" , <constraint_name>))|<multiIdentifier>)]
+									<multifieldindex>
+									;
+									
+<multifieldindex>			::= (
+									("PRIMARY" "KEY"  attributeEx("EASTEREOTYPE" , "MsAccess::PK") <constraint_columns> )
+									| ("UNIQUE" attributeEx("EASTEREOTYPE" , "MsAccess::unique") <constraint_columns>)
+									|( "NOT" "NULL" "(" <notnull> ("," <notnull>)* ")" )									
+								);
+								
+<notnull>					::= <IDENTIFIER> ;
+								
+								
+<constraint_columns>		::= "(" <constraint_column> ("," <constraint_column>)* ")";
+<constraint_column>			::= node("PARAMETER", ((attribute("NAME", <column_name>))|<multiIdentifier>) ["ASC"|"DESC"]) ;
+
+<column_type>				::=  node("TYPE", attribute("NAME", <data_type>)
+										["(" ((attribute("PRECISION", <size>)"," attribute("SCALE", <size>))|
+												(attribute("LENGTH", <size>)))")"]
+									) ;
+
+<data_type>					::= ["NCHAR"] <type>  ;
+
+<type>						::= <IDENTIFIER>;
+
+<size>						::= <NUMBER> ;
+
+<single_field_constraint>	::= ["CONSTRAINT"  (( attribute("NAME" ,<constraint_name>))|<multiIdentifier>) ]
+								(("PRIMARY" "KEY" attributeEx("EASTEREOTYPE" , "MsAccess::PK"))
+									| ("UNIQUE" attributeEx("EASTEREOTYPE" , "MsAccess::unique"))									
+									| (attributeEx("EASTEREOTYPE" , "MsAccess::FK") <references> [<fk_options>*])
+								)
+								;
+								
+<constraint_name>		::=   <IDENTIFIER> ;
+<foreigntable>			::=   <IDENTIFIER> ;
+
+
+<create_view>			::=  node("ELEMENT" , 
+								attributeEx("EATYPE" , "Class")
+								attributeEx("EASTEREOTYPE" , "MsAccess::view")	
+								"CREATE" "VIEW" 
+								(( attribute("NAME" , <view_name>))|<multiIdentifier>)
+								[ "(" node("View Columns" , attribute("VALUE" , (<field> ("," <field>)*)))  ")"] 
+								"AS"  node("viewdef" , attribute("VALUE" , <SelectQuery>)) 								
+							)[";"];
+							
+<view_name>				::= <IDENTIFIER> ;
+
+<field>					::= ["["] <IDENTIFIER> ["]"];
+
+<SelectQuery> 						::= ["("]  [<with_table_expression>	 ("," <with_table_expression>)*]
+										"SELECT"  
+										skip("FROM")										
+										[<from>] 
+										[<Join_value>*] 
+										[<groupBy>]
+										[<where_condition>] 
+										[<having>]
+										[<union_condition>] 
+										["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
+										[ "NULLS" "FIRST" | "NULLS" "LAST" ]
+										[ "OFFSET" <start> ]
+										["START" "WITH" <condition>]										
+										["CONNECT" "BY" <condition>]
+										["START" "WITH" <condition>]
+										[ "LIMIT" ( <NUMBER> | "ALL" ) ]  
+										[<groupBy>] [")"]
+										[ "OPTION" "(" <option_clause> ")" ] 
+										["WITH" "OWNERACCESS" "OPTION"]
+										  ;	
+										  
+<with_table_expression>			::=  "WITH" ["RECURSIVE"] <col_names> "AS"  <SelectQuery> ;
+
+<col_name>						::= <IDENTIFIER>| ("[" skipBalanced("(",")")  "]") ;
+
+<col_names>						::= <col_name> ("," <col_name>)* ;
+
+<from>								::= "FROM" (<rowset_function_limited>|<fromClause> | <from_sub>);		
+
+<rowset_function_limited>	::=  <open_value> [("AS" |".")<IDENTIFIER>]*;
+
+<open_value>			::= <IDENTIFIER> "(" skipBalanced("(" , ")")")";
+
+<from_sub>							::= <from_tables> [ "NATURAL" ] ;
+
+<fromClause>                        ::=  <from_tables>;	
+
+<from_tables>						::= <from_table> ("," <from_table>)*;
+
+<tbl_name>							::=  <IDENTIFIER> |("[" skipBalanced("[","]")"]") ;
+
+<from_table> 						::= [ [ "[" | "(" ] <IDENTIFIER> [ "]" | ")" ] "."]*  ["[" | "("] <tbl_name> ["]" | ")"] [ (<Join_value>[<Join_value>*])|<groupBy>| <where_condition> | <union_condition> | ( "ORDER" "BY" (<order_expr> ("," <order_expr>)*))| ("LIMIT" ( <NUMBER> | "ALL" )) | <having>| ("OPTION" "(" <option_clause>  ")") |( ["AS"] [ "[" | "(" ] <IDENTIFIER> [ "]" | ")" ]) ]  ;
+
+<Join_value> 						::= <join_type> <tbl_name>[("." <IDENTIFIER>) | ("AS"  <IDENTIFIER>)| ("(" <IDENTIFIER> [("." <IDENTIFIER>)*]")" <IDENTIFIER>)]
+											[<join_on_value>] ;
+										
+<join_on_value>						::= ("ON" <join_con> ) | ("USING" "(" <col_name>  ("," <col_name>)* ")");
+										
+<join_type>							::= ("JOIN") |("INNER" "JOIN") | ("LEFT" "JOIN") | ("LEFT" "OUTER" "JOIN")	
+										| ("RIGHT" "JOIN") | ("RIGHT" "OUTER" "JOIN") | ("FULL" "JOIN") |
+										("FULL" "OUTER" "JOIN") | ("CROSS" "JOIN") ;
+										
+<join_con>							::= <logical_Expression> ;	
+
+<logical_Expression>				::= <join_condition> (("AND"|"OR") (<join_condition>) )* ;
+
+<join_condition>					::= (<tbl_name> | <NUMBER>)[(("*" | "+"|".")<col_name> )*] ["(" <col_name> ")"] [<comparison_Operator> ] [ ("(" skipBalanced("(" , ")" ) ")") |("CONVERT" "("skipBalanced("(" , ")" )")" )  | ( [<tbl_name>  | <STRING> | (<DECIMAL>)|(<NUMBER>) ] [("." ["("] <col_name>| <NUMBER> [")"] )] ["AND" (<DECIMAL> | <NUMBER>)] )| (<default_expr> )  ];	
+
+<comparison_Operator> 				::= "=" | 
+										"+" |
+										"/" |
+										("<" [">"]["="]) | 										
+										("OF") | 										
+										(">" ["="])|										
+										 ("BETWEEN") | 
+										 ("IN") | 
+										 ("NOT" "IN") |
+										("IS" "NULL") | 
+										("IS" "NOT" "NULL") |
+										"LIKE";
+										
+<default_expr> 						::=  (<NUMBER> ["." <NUMBER>] )| [<STRING>]  	;
+
+<groupBy>							::= "GROUP" "BY" <group_condition>;
+
+<group_condition>					::= ( ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_name> ["]"] | <NUMBER>)  ( "," ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_name> ["]"] | <NUMBER>))*) ;
+
+<where_condition>					::= "WHERE" ["NOT" "EXISTS"] ["("] <condition> [")"]  ; 							
+<condition>							::= <join_con> ;
+
+
+<union_condition>					::= ( "UNION" [ "ALL" ] | "INTERSECT" | "EXCEPT" | "MINUS" )
+										<SelectQuery>* ;	
+										
+<order_expr> 						::= <column_with_expression> [ "ASC" | "DESC" ];
+
+<column_with_expression>			::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<tbl_name> "." | <SelectQuery>] ["("] (<col_name> ["/" <col_name>] | <NUMBER> | <STRING> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
+
+<having>							::= "HAVING" <condition> ;
+
+<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+
+<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+
+<option_clause>					::=  (<query_hint> |<boundary_value>) ([","] (<query_hint> |<boundary_value>) )* ;		
+
+<query_hint> 					::=   "HASH" "JOIN"   
+										| "LOOP" "JOIN"   
+										| "MERGE" "JOIN"   
+										| "FORCE" "ORDER"   
+										| (( "FORCE" | "DISABLE" ) "EXTERNALPUSHDOWN" )
+										| ( "LABEL" "=" <IDENTIFIER> <STRING> )
+										;
+										
+<boundary_value>				::= <NUMBER> [<string>] | <IDENTIFIER> [<string>] | <string> | "="  ;	
+
+
+<convert_expression> 				::= <convert_value> ("," <convert_value> )* ;		
+
+<convert_value>				::= (("CONVERT"| (<IDENTIFIER> ["." <IDENTIFIER>])) "(" [<convert_expression>] ")");
+
+
+<create_procedure>			::= node("ELEMENT" ,
+								attributeEx("EATYPE" , "Class")
+								attributeEx("EASTEREOTYPE" , "MsAccess::procedure")
+								"CREATE" "PROCEDURE" 
+								((attribute("NAME" ,<procedure_name> ))|<multiIdentifier>)
+								[<procedure_properties>*] 								
+								) [";"];
+								
+<procedure_properties>	::= ("AS" node("procdef" , attribute("VALUE" , <procedure_definition>))) 
+							| ( ["("] node("Parameters" , attribute("VALUE" , (<parameters> ("," <parameters>)*)))  [")"])
+							;	
+								
+<procedure_name>		::= <IDENTIFIER> ;
+
+<parameters>			::= (<param>|("[" skipBalanced("(",")") "]")) <data_type>[<size>["," <size>]] ;
+
+<param>					::= <IDENTIFIER>;
+
+<procedure_definition> 	::= skipBalanced( "As" , ";")	;
+
+<create_index>			::= node("OPERATION",
+							attributeEx("EASTEREOTYPE" , "MsAccess::index")
+							"CREATE" [ <unique_property> ] "INDEX" 
+							(( attribute("NAME" ,<index_name>))|<multiIdentifier>)  "ON"
+                            node("OWNER" , ((attribute("NAME" , <table_name>))|<multiIdentifier>))	
+							<constraint_columns>
+							["WITH" 
+								( ("PRIMARY" node("Index Option" , attributeEx("VALUE" , "Primary")) ) 
+								| ("DISALLOW" "NULL" node("Index Option" , attributeEx("VALUE" , "Disallow Null"))) 
+								| ("IGNORE" "NULL" node("Index Option" , attributeEx("VALUE" , "Ignore Null"))) 
+								)]
+							)[";"];
+							
+<index_name>			::= <IDENTIFIER>;
+
+<unique_property>	::= ("UNIQUE"
+								  node("Unique",  attributeEx("VALUE", "1"))
+								  node("property", attributeEx("VALUE", "Unique=1;Clustered=0;")));
+
+
+<add_users>			::= "ADD" "USER" <user>("," <user>)* "TO" <group> [";"] ;
+
+
+<user>				::= <tbl_name>;
+
+<group>				::= <user>;
+
+
+<alter_table>			::= mapRight("ALTER" "TABLE" node("OWNER",(( attribute("NAME",<table_name>))|<multiIdentifier>)), 
+								("ADD" (("COLUMN" <col_name> <column_type>["("<NUMBER> ")"] ["NOT" "NULL"] ["CONSTRAINT" <constraint_index>] )
+								| ( <add_constarint_value> ))
+								|("ALTER" "COLUMN" <col_name> <column_type>["("<NUMBER> ")"] )
+								| (DROP (("COLUMN" <col_name>) | ("CONSTRAINT" ["["] <constraint_name> ["]"])) ))) [";"] ;
+
+
+<constraint_index>		::=(<foreign_key> |(<table_constraint>));
+
+<add_constarint_value>	::= (<foreign_key> |(node("OPERATION" , <table_constraint>))) ;
+
+
+<alter_database>		::= "ALTER" "DATABASE" "PASSWORD" <password> <password> [";"] ;
+
+<password>				::=<IDENTIFIER> ;
+
+<alter_user>			::= "ALTER" "USER" <user> "PASSWORD" <password> <password>[";"] ;
+
+
+<create_user>			::=	 "CREATE" "USER" (<user> <password> <pid> ("," <user> <password> <pid>)*) [";"] ;
+
+
+<pid>					::=(<IDENTIFIER>|<NUMBER>) ;
+
+<create_group>			::= "CREATE" "GROUP" (<group> <pid>("," <group> <pid>)*) [";"] ;
+
+<drop_user>				::= "DROP" "USER" <user>("," <user>)* ["FROM" <group>] [";"] ;
+
+
+<drop_group>			::= "DROP" "GROUP" <group>("," <group>)* [";"] ;
+
+
+<grant_command>			::= "GRANT" (<privilege>("," <privilege>)*) "ON"(("TABLE" <tbl_name>) | ("OBJECT" <object>)
+								|("CONTAINER" <container> )) "TO" (<authorizationname>("," <authorizationname>)*) [";"] ;
+
+
+<privilege>				::=("SELECT"| "DELETE"| "INSERT"| "UPDATE"| "DROP"| "SELECTSECURITY" 
+							|"UPDATESECURITY"| "DBPASSWORD"| "UPDATEIDENTITY"| "CREATE"
+							|"SELECTSCHEMA"| "SCHEMA"|  "UPDATEOWNER"|"READ"|"WRITE"|("FULL""CONTROL")) ;
+							
+<object>				::= ("VIEW"|"DATABASE"|"PROCEDURE"|"INDEX")|<IDENTIFIER> ;
+
+<container>				::=<tbl_name> ;
+
+<authorizationname>		::=<tbl_name> ;
+
+
+<revoke_command>		::= "REVOKE" (<privilege>("," <privilege>)*) "ON"(("TABLE" <tbl_name>) | ("OBJECT" <object>)
+								|("CONTAINER" <container> )) "FROM" (<authorizationname>("," <authorizationname>)*) [";"] ;
+
+<delete_command>		::= "DELETE" [[<tbl_name>"."]"*"] "FROM" <tbl_name> "WHERE" <condition> [";"] ;
+
+<execute_command>		::= "EXECUTE" (<procedure_name>|("[" skipBalanced("[","]") "]")) [(<param_value>("," <param_value>)*)] [";"] ;
+
+<param_value>			::=(<STRING>|<NUMBER>|<IDENTIFIER>|("[" skipBalanced("[","]") "]")) ;
+
+
+<procedural_clause>		::= "PROCEDURE" <name> [(<param_with_space> <data_type>("," <param_with_space> <data_type>)*)] [";"] ;
+
+<param_with_space>		::=(("[" skipBalanced("[","]")"]")|<IDENTIFIER>) ;
+
+
+<tansaction_command>	::= ("BEGIN"|"COMMIT"|"ROLLBACK") ("TRANSACTION"|"WORK") [";"] ;
+
+
+<transform_statement>	::= "TRANSFORM" <aggfunction>["AS" <IDENTIFIER>] <SelectQuery> "PIVOT" <pivotfield>
+								["IN" "(" skipBalanced("(",")")")"] [";"] ;
+
+
+<aggfunction>			::= ("AVG"|"COUNT"|"FIRST"|"LAST"|"MIN"|"MAX"|"STDEV"|"STDEVP"|"SUM"|"VARP"|"VAR" ) ("(" skipBalanced("(",")") ")")  ;
+
+<pivotfield>			::=<name>("(" skipBalanced("(",")") ")") ;
+
+
+<union_command>			::=( ("TABLE"(<param_with_space>)( "UNION" ["ALL"] (<SelectQuery>|<param_with_space>))*)|<SelectQuery>) [";"] ;
+
+
+<update_command>		::= "UPDATE" <tbl_name> "SET" (<newvalue>(","<newvalue>)*) "WHERE" <condition> [";"] ;
+
+
+<newvalue>				::=<column_name> "=" (<STRING>|<DECIMAL>|<NUMBER>|<IDENTIFIER>)[("+"|"-"|"*"|"%"|"/") (<STRING>|<DECIMAL>|<IDENTIFIER>)] ;
+
+<insert_command>		::= "INSERT" "INTO" <tbl_name> ["("<col_name>("," <col_name>)*")"]  (("VALUES" "(" <values> ")")|
+							(["IN" <externaldatabase>] "SELECT" [<source>"."][((<col_name>("," <col_name>)*)|"*")]
+							"FROM" <tbl_name>)) [";"];
+
+<value>					::=<param_value> ;
+
+<values>				::= <value>("," <value>)* ;
+
+<externaldatabase>		::= <IDENTIFIER>|("[" skipBalanced("[","]")"]")| "*";
+
+<source>				::=<externaldatabase> ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

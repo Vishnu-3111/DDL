@@ -1,0 +1,345 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<MDG.Technology version="1.0"><Documentation id="DW_SF" name="Snowflake" version="1.0" notes="Aritifacts for Snowflake DB"/><UMLProfiles><UMLProfile profiletype="uml2">
+	<Documentation id="28E6119BF3" name="Snowflake" version="1.0" notes="Snowflake"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="clone" metatype="clone" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Clone Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Clone Timing" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute">
+						<Property name="_tagGroupings" value="Array Field List=Datatype field;Map Field List=Datatype field;Object Field List=Datatype field;"/>
+						<Property name="_tagGroups" value="Datatype field"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Array Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Modifier" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Map Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Masking Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Object Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Tag" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Snowflake"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroupStates" value="Common Properties=open;External Function=closed;Function Definition=closed;Snowflake Function Properties=closed;"/>
+						<Property name="_tagGroups" value="Common Properties,External Function,Function Definition,Snowflake Function Properties"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Temporary Function=Common Properties;Secure=Common Properties;External Function=Common Properties;Not Exists=Common Properties;Schema and Database=Common Properties;Api Integration=External Function;Headers=External Function;Context Headers=External Function;Max Batch Rows=External Function;Compression=External Function;Request Translator=External Function;Response Translator=External Function;Returns=Function Definition;Language=Function Definition;Arguments=Function Definition;funcdef=Function Definition;Returns State=Function Definition;Copy Grants=Snowflake Function Properties;Null Behaviour=Snowflake Function Properties;Mutability Classification=Snowflake Function Properties;Memoizable=Snowflake Function Properties;Runtime Version=Snowflake Function Properties;Comment=Snowflake Function Properties;Packages=Snowflake Function Properties;Imports=Snowflake Function Properties;Handler=Snowflake Function Properties;Target Path=Snowflake Function Properties;Data Metric=Snowflake Function Properties;Is Aggregate=Snowflake Function Properties;External Access Integration=Snowflake Function Properties;Secrets=Snowflake Function Properties;Nullable or Not=Snowflake Function Properties;End Point=Snowflake Function Properties;Service Name=Snowflake Function Properties;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Api Integration" type="" description="" unit="" values="" default=""/>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compression" type="Compression" description="" unit="" values="" default=""/>
+					<Tag name="Context Headers" type="" description="" unit="" values="" default=""/>
+					<Tag name="Copy Grants" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Metric" type="" description="" unit="" values="" default=""/>
+					<Tag name="End Point" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Access Integration" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Function" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Handler" type="" description="" unit="" values="" default=""/>
+					<Tag name="Headers" type="" description="" unit="" values="" default=""/>
+					<Tag name="Imports" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Aggregate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="Language" description="" unit="" values="" default=""/>
+					<Tag name="Max Batch Rows" type="" description="" unit="" values="" default=""/>
+					<Tag name="Memoizable" type="" description="" unit="" values="" default=""/>
+					<Tag name="Mutability Classification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Behaviour" type="" description="" unit="" values="" default=""/>
+					<Tag name="Nullable or Not" type="" description="" unit="" values="" default=""/>
+					<Tag name="Packages" type="" description="" unit="" values="" default=""/>
+					<Tag name="Request Translator" type="" description="" unit="" values="" default=""/>
+					<Tag name="Response Translator" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns" type="Returns" description="" unit="" values="" default=""/>
+					<Tag name="Returns State" type="" description="" unit="" values="" default=""/>
+					<Tag name="Runtime Version" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secrets" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secure" type="" description="" unit="" values="" default=""/>
+					<Tag name="Service Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Path" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporary Function" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" instanceType="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Snowflake"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroupStates" value="Procedure Definition=closed;Common Properties=open;Snowflake Procedure Properties=closed;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition,Snowflake Procedure Properties"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Secure=Common Properties;Schema and Database=Common Properties;Returns=Procedure Definition;Language=Procedure Definition;procdef=Procedure Definition;Arguments=Snowflake Procedure Properties;Runtime Version=Snowflake Procedure Properties;Packages=Snowflake Procedure Properties;Imports=Snowflake Procedure Properties;Handler=Snowflake Procedure Properties;Target Path=Snowflake Procedure Properties;Null Behaviour=Snowflake Procedure Properties;Mutability Classification=Snowflake Procedure Properties;Comment=Snowflake Procedure Properties;External Access Integration=Snowflake Procedure Properties;Secrets=Snowflake Procedure Properties;Execute As=Snowflake Procedure Properties;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Execute As" type="Execute As" description="" unit="" values="" default=""/>
+					<Tag name="External Access Integration" type="" description="" unit="" values="" default=""/>
+					<Tag name="Handler" type="" description="" unit="" values="" default=""/>
+					<Tag name="Imports" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="Language" description="" unit="" values="" default=""/>
+					<Tag name="Mutability Classification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Behaviour" type="" description="" unit="" values="" default=""/>
+					<Tag name="Packages" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns" type="Returns" description="" unit="" values="" default=""/>
+					<Tag name="Runtime Version" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secrets" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secure" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Path" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="sequence" metatype="sequence" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::dbsequence" baseStereotypes="EAUML::dbsequence">
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="Snowflake::clone" constraint="Snowflake::sequence"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Snowflake"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cache Size" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Initial Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="No Cycle" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sequence Interval" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sequencing Mode" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="Snowflake::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="Snowflake::clone" constraint="Snowflake::table"/>
+					<stereotypedrelationship stereotype="Snowflake::FK" constraint="Snowflake::table"/>
+					<stereotypedrelationship stereotype="Snowflake::like" constraint="Snowflake::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Snowflake"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroupStates" value="Using Table=closed;Dynamic Table=closed;External Table Properties=closed;Iceberg Table=closed;Table As=closed;Table structure Specification=closed;Snowflake Table Properties=closed;Common Properties=open;"/>
+						<Property name="_tagGroups" value="Common Properties,Using Table,Dynamic Table,External Table Properties,Iceberg Table,Table As,Snowflake Table Properties,Table structure Specification"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Not Exists=Common Properties;Table Type=Common Properties;Temporary Option=Common Properties;Schema and Database=Common Properties;Is Alter=Common Properties;Using Template=Using Table;Target Lag=Dynamic Table;Warehouse=Dynamic Table;Initialize=Dynamic Table;Refresh Mode=Dynamic Table;File Format=External Table Properties;Tag=External Table Properties;Refresh On Create=External Table Properties;Pattern=External Table Properties;AWS SNS=External Table Properties;User Specified=External Table Properties;Delta=External Table Properties;Cloud Parameter=External Table Properties;Location=External Table Properties;Auto Refresh=External Table Properties;File Format Name=External Table Properties;FormatReference=External Table Properties;FileFormatTypeOption=External Table Properties;Schema Evolution=External Table Properties;Change Tracking=Iceberg Table;External Volume=Iceberg Table;Catalog=Iceberg Table;External Catalog=Iceberg Table;Select Query=Table As;Row Access Policy=Snowflake Table Properties;Comment=Snowflake Table Properties;Data Retention=Snowflake Table Properties;Aggregation Policy=Snowflake Table Properties;Clustering=Table structure Specification;Copy Options=Table structure Specification;Default Collation=Table structure Specification;Copy Grants=Table structure Specification;Partition By=Table structure Specification;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Aggregation Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Auto Refresh" type="Auto Refresh" description="" unit="" values="" default=""/>
+					<Tag name="AWS SNS" type="" description="" unit="" values="" default=""/>
+					<Tag name="Catalog" type="" description="" unit="" values="" default=""/>
+					<Tag name="Change Tracking" type="" description="" unit="" values="" default=""/>
+					<Tag name="Cloud Parameter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Clustering" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Copy Grants" type="" description="" unit="" values="" default=""/>
+					<Tag name="Copy Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Retention" type="" description="" unit="" values="" default=""/>
+					<Tag name="Default Collation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Delta" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Catalog" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Volume" type="" description="" unit="" values="" default=""/>
+					<Tag name="File Format" type="File Format" description="" unit="" values="" default=""/>
+					<Tag name="File Format Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="FileFormatTypeOption" type="" description="" unit="" values="" default=""/>
+					<Tag name="FormatReference" type="" description="" unit="" values="" default=""/>
+					<Tag name="Initialize" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="Partition By" description="" unit="" values="" default=""/>
+					<Tag name="Pattern" type="" description="" unit="" values="" default=""/>
+					<Tag name="Refresh Mode" type="" description="" unit="" values="" default=""/>
+					<Tag name="Refresh On Create" type="" description="" unit="" values="" default=""/>
+					<Tag name="Row Access Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema Evolution" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+					<Tag name="Tag" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Lag" type="" description="" unit="" values="" default=""/>
+					<Tag name="User Specified" type="" description="" unit="" values="" default=""/>
+					<Tag name="Using Template" type="" description="" unit="" values="" default=""/>
+					<Tag name="Warehouse" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporary Option" type="Table Temporary Option" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Snowflake"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View Definition=closed;Snowflake View properties=closed;View Type=closed;"/>
+						<Property name="_tagGroups" value="Common Properties,View Definition,Snowflake View properties,View Type"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Secure=Common Properties;Not Exists=Common Properties;View Columns=Common Properties;View Constraints=Common Properties;Temporary Option=Common Properties;Schema and Database=Common Properties;viewdef=View Definition;Row Access Policy=Snowflake View properties;Tag=Snowflake View properties;Copy Grants=Snowflake View properties;Comment=Snowflake View properties;Clustering=Snowflake View properties;Aggregation Policy=Snowflake View properties;Recursive=View Type;Materialized=View Type;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Aggregation Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Clustering" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Copy Grants" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Materialized" type="Materialized" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Recursive" type="" description="" unit="" values="" default=""/>
+					<Tag name="Row Access Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secure" type="" description="" unit="" values="" default=""/>
+					<Tag name="Tag" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Constraints" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporary Option" type="View Temporary Option" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Auto Refresh" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,True,False;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Compression" description="" notes="Type=Enum;&#xA;Values=Auto,GZIP,BZ2,BROTLI,ZSTD,DEFLATE,RAW_DEFLATE,None;"/>
+			<TaggedValueType property="Execute As" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Caller,Owner;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="File Format" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,CSV,ORC,JSON,AVRO,PARQUET;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Language" description="" notes="Type=Enum;&#xA;Values=Scala,Java,Javascript,Python,Sql;"/>
+			<TaggedValueType property="Materialized" description="" notes="Type=Boolean;&#xA;Default=False;"/>
+			<TaggedValueType property="Partition By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Returns" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Temporary Option" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Local Temporary,Global Temporary,Temporary,Volatile,Transient;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Dynamic,External,Event,Iceberg,Hybrid,Dynamic Iceberg;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="View Temporary Option" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Local Temporary,Global Temporary,Temporary,Volatile;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UMLProfiles><TaggedValueTypes><RefData version="1.0" exporter="EA.25"><DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'"><DataRow><Column name="Property" value="Is Replace"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Scope Specification"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Local,Global;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Temporary Table Options"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Temporary,Volatile,Transient;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Not Exists"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Clustering"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Copy Options"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Data Retention"/></DataRow><DataRow><Column name="Property" value="Change Tracking"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,True,False;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Default Collation"/></DataRow><DataRow><Column name="Property" value="Copy Grants"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Row Access Policy"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Tag"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Select Query"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Clone Timing"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,At,Before;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Clone Options"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Using Template"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Table Type"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Dynamic,External,Event,Iceberg;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Target Lag"/></DataRow><DataRow><Column name="Property" value="Warehouse"/></DataRow><DataRow><Column name="Property" value="Cloud Parameter"/></DataRow><DataRow><Column name="Property" value="Partition By"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Refresh On Create"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,True,Flase;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Pattern"/></DataRow><DataRow><Column name="Property" value="AWS SNS"/></DataRow><DataRow><Column name="Property" value="User Specified"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Delta"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="External Volume"/></DataRow><DataRow><Column name="Property" value="Catalog"/></DataRow><DataRow><Column name="Property" value="External Catalog"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Secure"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Recursive"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Materialized"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="View Columns"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="View Constraints"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="viewdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Comment"/></DataRow><DataRow><Column name="Property" value="Initial Value"/></DataRow><DataRow><Column name="Property" value="Sequence Interval"/></DataRow><DataRow><Column name="Property" value="Cache Size"/></DataRow><DataRow><Column name="Property" value="No Cycle"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Arguments"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Returns"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Language"/><Column name="Notes" value="Type=Enum;&#xA;Values=Scala,Java,Javascript,Python,Sql;"/></DataRow><DataRow><Column name="Property" value="Runtime Version"/></DataRow><DataRow><Column name="Property" value="Packages"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Imports"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Handler"/></DataRow><DataRow><Column name="Property" value="Target Path"/></DataRow><DataRow><Column name="Property" value="Null Behaviour"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Permissive,Nullable,Strict;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Mutability Classification"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Volatile,Immutable;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="procdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Temporary Function"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="External Function"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Memoizable"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Api Integration"/></DataRow><DataRow><Column name="Property" value="Headers"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Context Headers"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Max Batch Rows"/></DataRow><DataRow><Column name="Property" value="Compression"/><Column name="Notes" value="Type=Enum;&#xA;Values=Auto,GZIP,BZ2,BROTLI,ZSTD,DEFLATE,RAW_DEFLATE,None;"/></DataRow><DataRow><Column name="Property" value="Request Translator"/></DataRow><DataRow><Column name="Property" value="Response Translator"/></DataRow><DataRow><Column name="Property" value="funcdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Column Expression"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Collate"/></DataRow><DataRow><Column name="Property" value="Column Modifier"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Masking Policy"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Inline Constraint"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Location"/></DataRow><DataRow><Column name="Property" value="Auto Refresh"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,True,Flase;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Update"/></DataRow><DataRow><Column name="Property" value="Delete"/></DataRow><DataRow><Column name="Property" value="Aggregation Policy"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Returns State"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Null,Not Null;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Secrets"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="External Access Integration"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Data Metric"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="Is Aggregate"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="FormatReference"/></DataRow><DataRow><Column name="Property" value="File Format Name"/></DataRow><DataRow><Column name="Property" value="FileFormatTypeOption"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Array Field List"/></DataRow><DataRow><Column name="Property" value="Map Field List"/></DataRow><DataRow><Column name="Property" value="Object Field List"/></DataRow><DataRow><Column name="Property" value="End Point"/></DataRow><DataRow><Column name="Property" value="Schema and Database"/></DataRow><DataRow><Column name="Property" value="Service Name"/></DataRow><DataRow><Column name="Property" value="Is Alter"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Schema Evolution"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Refresh Mode"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Auto,Full,Incremental;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Initialize"/><Column name="Notes" value="Type=Enum;&#xA;Values= &lt;none&gt;,ON_CREATE,ON_SCHEDULE;&#xA;Default=&lt;none&gt;;"/></DataRow><DataRow><Column name="Property" value="Sequencing Mode"/><Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Noorder,Order;&#xA;Default=&lt;none&gt;;"/></DataRow></DataSet></RefData></TaggedValueTypes><DiagramProfile><UMLProfile profiletype="uml2">
+	<Documentation id="E923F168A1" name="Snowflake" version="1.0" notes="Snowflake"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Snowflake" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Diagram_Logical">
+						<Property name="alias" value="Snowflake"/>
+						<Property name="toolbox" value="Snowflake"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></DiagramProfile><UIToolboxes><UMLProfile profiletype="uml2">
+	<Documentation id="F86D1526DE" name="Snowflake" version="1.0" notes="Snowflake"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Snowflake" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Snowflake::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Snowflake::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+					<Tag name="Snowflake::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Snowflake::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
+					<Tag name="Snowflake::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Snowflake::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Snowflake::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Snowflake::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Snowflake::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>					
+					<Tag name="Snowflake::FK(UML::Operation)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Snowflake::clone(UML::Generalization)" type="" description="" unit="" values="" default="Clone"/>
+					<Tag name="Snowflake::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Snowflake::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UIToolboxes></MDG.Technology>

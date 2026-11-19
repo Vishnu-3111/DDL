@@ -1,0 +1,2046 @@
+// 
+// This file is conversion of the syntax from following web site:
+// https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Definition-Language-Syntax-and-Examples/Introduction-to-SQL-Data-Definition-Language-Syntax-and-Examples
+//
+
+CaseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>							::= <WHITESPACE> |
+										<COMMENT> |
+										token(<NUMBER>) |
+										(<STRING>) |
+										token(<IDENTIFIER>) |
+										token(keywords());
+
+<DELIMITER>							::= "\n" | "\r" | "\t" | " "  | "~"  |
+										"`"  | "!"  | "@"  | "#"  | "$"  |
+										"%"  | "^"  | "&"  | "*"  | "("  |
+										")"  | "-"  | "+"  | "="  | "("  | 
+										"["  | ")"  | "]"  | ";"  | ":"  | 
+										"\\" | "\'" | "\"" | ","  | "<"  | 
+										">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>						::= " "  | "\r" | "\n" | "\t";
+
+// Not sure about comment like /*...*/?
+<COMMENT>							::= "--"  skip(<eol>) <eol> | 	
+										"//" skip(<eol>) <eol> |
+										"/*" skip("*/") "*/";
+
+<EOL>								::= "\r" "\n" |
+										"\n";
+
+<NUMBER>							::= ["-"]"0".."9"+;
+
+<DECIMAL>							::= <NUMBER> ("." <NUMBER>)* ;
+
+
+// Not sure about string wrapped by double quota (i.e. ")
+<STRING>			::= token("\"") token(<STRINGDBODY>) token("\"") | 
+						token("\'") token(<STRINGSBODY>) token("\'");
+<STRINGSBODY>		::= skip("\'", "\\\'");
+<STRINGDBODY>		::= skip("\"", "\\\"");
+
+<StringValue>		::=( "\""  <STRINGDBODY> "\"" )| 
+						("\'"  <STRINGSBODY> "\'");	
+
+<StringAsName>		::= ( "\"" attribute("NAME", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("NAME", <STRINGSBODY>) "\'");
+						
+<StringAsValue>		::= ( "\"" attribute("VALUE", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("VALUE", <STRINGSBODY>) "\'");
+						
+<tbl_as_string>		::=<IDENTIFIER>|<StringValue>;						
+
+<IDENTIFIER>				::= ("a".."z" | "_"|"-") ("a".."z" | "0".."9" | "_"|"-")*;
+
+// Parser rules
+<language>					::= attributeEx("EAGENTYPE", "Teradata") attributeEx("EAMAPPING", "DDL") <statement>*;
+
+<t_data_type>					::= ( ("INTEGER" ) | ("SMALLINT") | ("BIGINT" ) | ("BYTEINT" ) | ("DATE" ) 
+									| (( "TIME" | "TIMESTAMP" )  ["WITH" "TIME" "ZONE"])
+									|("REAL" )
+									|("DOUBLE" "PRECISION")
+									|( "FLOAT" ) 
+									|( "NUMBER" ) 
+									|(( "DECIMAL" | "NUMERIC" ) )
+									|(( "CHARACTER" | "CHAR" |  "BYTE" | "GRAPHIC" ) )
+									|( "LONG" "VARCHAR" )
+									|("CHARARACTER" )
+									|("LONG" "VARGRAPHIC") 
+									|(( ("BINARY" "LARGE" "OBJECT") | ("BLOB") | ("CHARACTER" "LARGE" "OBJECT" )| ("CLOB") ) ["(" <NUMBER> ("G" | "K" | "M" )")"] )						
+									|(["SYSUDTLIB" "."] ( <UDT_name> | "MBR" | <ARRAY_name> | <VARRAY_name> ))
+									| ([<NUMBER>]<IDENTIFIER>)
+									
+								);
+
+<data_type>					::= ( ("INTEGER"  ["DEFAULT" <NUMBER>]) | ("SMALLINT" ["DEFAULT" <NUMBER>] ["FORMAT" <StringValue>]) | ("BIGINT" ["DEFAULT" <NUMBER>]) | ("BYTEINT" ["DEFAULT" <NUMBER>]) | ("DATE" ["FORMAT" <StringValue>]) 
+									| (( "TIME" | "TIMESTAMP" )  ) 
+									|("INTERVAL" "YEAR" ["(" <precision> ")"] ["TO" "MONTH"]) 
+									|("INTERVAL" "MONTH" ["(" <precision> ")"]) 
+									|("INTERVAL" "DAY" ["(" <precision>")"] ["TO" ( "HOUR" | "MINUTE" | ("SECOND" ["("<fractional_seconds_precision>")"]) )])
+									|("INTERVAL" "HOUR" ["(" <precision> ")"] ["TO" ( "MINUTE" |  ("SECOND" ["("<fractional_seconds_precision>")"]) )] )
+									|("INTERVAL" "MINUTE" ["(" <precision> ")"] ["TO" "SECOND" ["(" <fractional_seconds_precision> ")"]] )
+									|("INTERVAL" "SECOND" ["(" <precision> ["," <fractional_seconds_precision>]")"])
+									|("PERIOD" "(" "DATE" ")") 
+									|("PERIOD" "(" ( "TIME" | "TIMESTAMP" ) ["("<precision>")"] ["WITH" "TIME" "ZONE"] ")" )
+									|("REAL" )
+									|("DOUBLE" "PRECISION")
+									|( "FLOAT" [ "(" <NUMBER> ")" ]) 
+									|( "NUMBER" [ "(" (<NUMBER>|"*") ("," (<NUMBER>|"*"))* ")" ]) 
+									|(( "DECIMAL" | "NUMERIC" ) [ "(" <NUMBER> ("," <NUMBER>)* ")" ])
+									|(( "CHARACTER" | "CHAR" |  "BYTE" | "GRAPHIC" ) [ "(" <NUMBER> ")" ]) 
+									|( ( "VARCHAR" | ("CHAR" "VARYING") | "VARBYTE" | "VARGRAPHIC" ) [ "(" <NUMBER> ")" ] [ ("CHARACTER" "SET" ( "UNICODE" | "LATIN" )) | ("STORAGE" "FORMAT" ( "BSON" | "UBJSON" ) ) ])
+									|( "LONG" "VARCHAR" )
+									|("CHARARACTER" "(" <NUMBER> ")")
+									|("LONG" "VARGRAPHIC") 
+									|(( ("BINARY" "LARGE" "OBJECT") | ("BLOB") | ("CHARACTER" "LARGE" "OBJECT" )| ("CLOB") ) ["(" <NUMBER> [ "G" | "K" | "M" ] ")"] )
+									|(["SYSUDTLIB" "."] ( "XML" | "XMLTYPE" ) [ "(" <NUMBER> [ "G" | "K" | "M" ] ")" ] [ "INLINE" "LENGTH" <NUMBER> ] )
+									|( ["SYSUDTLIB" "."] "JSON" [ "(" <NUMBER> [ "K" | "M" ] ")" ] [ "INLINE" "LENGTH" <NUMBER> ]
+										[ ("CHARACTER" "SET" ( "UNICODE" | "LATIN" )) | ("STORAGE" "FORMAT" ( "BSON" | "UBJSON" ) ) ])
+									|(["SYSUDTLIB" "."] "ST_GEOMETRY" [ "(" <NUMBER> [ "K" | "M" ]")" ] [ "INLINE" "LENGTH" <NUMBER> ]) 
+									|( ["SYSUDTLIB" "."] "DATASET" [ "(" <NUMBER> [ "K" | "M" ] ")" ] [ "INLINE" "LENGTH" <NUMBER> ] 
+										"STORAGE" "FORMAT" ( "Avro" | ("CSV" [ "CHARACTER" "SET" ( "UNICODE" | "LATIN" ) ]) )
+										[ "WITH" "SCHEMA" [<database_user_name> "."] <schema_name> ]) 
+									
+									|(["SYSUDTLIB" "."] ( <UDT_name> | "MBR" | <ARRAY_name> | <VARRAY_name> ))
+									| ([<NUMBER>]<IDENTIFIER>)
+									
+								);
+
+ <schema_name> 					::= <IDENTIFIER> ;
+<fractional_seconds_precision>	::= <NUMBER> ;
+<precision>						::= <NUMBER> ;
+<UDT_name>						::= <IDENTIFIER> ;
+<ARRAY_name>						::= <IDENTIFIER> ;
+<VARRAY_name>						::= <IDENTIFIER> ;
+
+<statement>					::= <create_commands> 
+								| <alter_commands>
+								| <drop_commands>
+								| <help_commands>
+								| <other_commands>
+								|<Rename_commands>
+								|<Show_commands>
+								|<Set_commands>
+								|<Replace_method>
+								|<Replace_query_logging>
+								;
+									
+<create_commands>			::= <create_table>
+								| <create_error_table>
+								| <create_procedure>
+								| <create_function>
+								| <create_index_commands>	
+								| <create_trigger>
+								|<createConstraint>
+								|<create_authorization>								
+								| <create_macro>								
+								| <create_type>									
+								| <create_database>
+								| <create_role>
+								| <create_user>
+								| <create_glop>
+								| <Create_method>
+								|<Create_cast>
+								| <create_view>
+								|<create_storage_format_schema>
+								|<Create_Ordering>
+								|<Create_transform>
+								|<create_profile>
+								|<Create_map>
+								|<create_zone>
+								;
+							
+
+<alter_commands>			::= <alter_table>
+								|<alter_Foreign_table>
+								|<alterTableToCurrent>
+								|<alterIndex>
+								|<alter_procedure>
+								|<alter_function>
+								|<alter_type>
+								|<alter_trigger>
+								|<AlterConstraint>
+								|<Alter_method>
+								|<Alter_zone>
+							;
+
+<drop_commands>				::= <drop_table>
+								| <drop_error_table>
+								| <drop_view>
+								| <drop_join_index>
+								| <drop_hash_index>
+								| <drop_authorization>
+								| <drop_procedure>
+								| <drop_macro>
+								| <drop_function_mapping>
+								| <drop_type>
+								| <drop_database>
+								| <drop_user>
+								| <drop_constraint>
+								| <drop_trigger>
+								| <drop_index>
+								| <drop_function>
+								|<drop_role>
+								| <drop_golp_set>
+								|<drop_cast>
+								|<drop_ordering>
+								|<drop_transform>
+								|<drop_profile>
+								|<drop_map>
+								|<drop_statistic>
+								|<drop_storage_format_schema> 
+								;
+								
+<Show_commands>				::= <Show_Common_commands>
+								|<Show_query_logging>
+								|<Show_statistics>
+								|<Show_request>
+								|<Show_object>
+								;
+								
+<Rename_commands>			::=	"RENAME" ("TABLE"|"VIEW"|"PROCEDURE"|"MACRO"|["SPECIFIC"] "FUNCTION"|"TRIGGER") [ <database_name> "." ]  <tbl_as_string>
+									[ "(" 	<data_type> (","<data_type>) ")" ]
+								( "TO" | "AS" ) [ <database_name> "." ] <tbl_as_string> [";"] 
+								;
+
+								
+<help_commands>				::= <help_column>
+								|<help_constraint>
+								|<help_error_table>
+								|<help_index>
+								|<help_procedure>
+								|<help_function>
+								|<help_type>
+								|<help_user>
+								|<help_trigger>
+								|<help_method>
+								|<help_cast>
+								|<help_transform>
+								|<help_database>
+								|<help_session>
+								|<help_statistics>
+								|<help_storage_format>
+								;
+
+
+<other_commands>			::= <insert>
+								| <update>
+								|<modify_user>
+								|<modify_profile>
+								|<delete_databases>
+								|<database_command>
+								|<Schema_comment>
+								|<logging_incremental_objectlist>
+								|<incremental_restore>
+								|<begin_isolated_load>
+								|<checkpoint_isolated_load>
+								|<end_isolated_laoding>
+								|<Being_logging>
+								|<begin_query_capure>
+								|<begin_query_logging>
+								|<flush_query_logging>
+								|<end_logging>
+								|<end_query_capture>
+								|<end_query_logging>
+								|<delete_user>
+								|<delete_table> 
+									;
+<Set_commands>				::= <set_role>
+								|<set_session_constraint>
+								|<set_session_database>
+								|<set_session_func_trace>
+								|<set_transform_group>
+								|<set_session>
+								|<set_time_zone>
+								|<set_session_query_barnd>
+								;
+									
+
+										
+<create_table>				::= node("ELEMENT",
+								attributeEx("EATYPE", "Class")
+								attributeEx("EASTEREOTYPE", "Teradata::table")
+								(("CREATE" <table_kind> "TABLE") | "CT") <table_specification> 
+									[[","]"QUEUE" node("Is Queue" , attributeEx("VALUE" , "True"))]
+									  [ ([","] node("Table Option" , attribute("VALUE", ([","]<table_option>)*)))  ] 
+									 [ ("(" <column_partition_definition> ("," <column_partition_definition>)* [")"]) ]
+									 ["USING" "(" node("Foreign Table Expression" , attribute("VALUE" , <foreign_table_expression>*)) ")"]
+									 [ node("Table Index" , attribute("VALUE" , (<index> ([","] <index>)*))) ]
+									  [(node("As Clause" , attribute("VALUE" , <AS_clause>)) )|("AS" "(" (<column_partition_definition> ("," <column_partition_definition>)*) ")")]
+									  [ node("Table Index" , attribute("VALUE" , (<index> ([","] <index>)*))) ]
+									  [ <table_preservation> ]	
+								  )[";"];
+								  
+<foreign_table_expression>	::= ("LOCATION" "(" <external_file_path> ")")
+								|("SCANPCT" "=" <scan_pct>)
+								|( "PATHPATTERN" "(" <value> ")")
+								|("MANIFEST" "(" <StringValue> ")")
+								|( "TABLE_FORMAT" "(" <StringValue>  ")")
+								|( "ROWFORMAT" "(" <StringValue> ")" )
+								|("STOREDAS" "(" <StringValue>   ")")
+								|( "HEADER" "(" <StringValue>  ")")
+								|("STRIP_EXTERIOR_SPACES" "(" <StringValue> ")")
+								|("STRIP_ENCLOSING_CHAR" "(" <StringValue>  ")" )
+								;
+
+<external_file_path>		::= <StringValue>;
+<scan_pct>		::= <StringValue>;
+								  
+
+<authorization_name>		::= <IDENTIFIER> ;									
+								  
+<table_kind>				::= [ ("SET" node("Duplication Mode" , attributeEx("VALUE" , "Set")))| 
+									("MULTISET" node("Duplication Mode" , attributeEx("VALUE" , "Multiset"))) ] 
+								[ 
+									("GLOBAL" "TEMPORARY" "TRACE" node("Table Type" , attributeEx("VALUE" ,"Global Temporary Trace")))
+									|("GLOBAL" "TEMPORARY"  node("Table Type" , attributeEx("VALUE" ,"Global Temporary" ))) 
+									| ("VOLATILE" node("Table Type" , attributeEx("VALUE" ,"Volatile" ))) 
+									| ("FOREIGN"  node("Table Type" , attributeEx("VALUE" ,"Foreign" )) ) 
+								];
+
+<table_specification> 		::=  [node("Schema and Database" ,((attribute("VALUE", <database_user_name>))|<StringAsValue>)".")*] 
+								((attribute("NAME", <table_name>))|<StringAsName>);
+
+<database_user_name>		::= <IDENTIFIER> ;
+<table_name>		::= <IDENTIFIER> ;
+
+<table_option>		::=( 
+						 ( "MAP" "=" <map_name> ["COLOCATE" "USING" <colocation_name>] )
+						  |(["NO"] "FALLBACK" ["PROTECTION"] )
+						  |("WITH" "JOURNAL" "TABLE" "=" <table_specification>) 
+						  |(["NO"] "LOG" )
+						  | (["NO" | "DUAL"] ["BEFORE"] "JOURNAL") 
+						  | (["NO" | "DUAL" | "LOCAL" | "NOT" "LOCAL"] "AFTER" "JOURNAL" )
+						  |("CHECKSUM" "=" ( "DEFAULT" |"ON" | "OFF" ) )
+						  | ("FREESPACE" "=" <NUMBER> ["PERCENT"] )
+						  | <mergeblockratio> |  <datablocksize>  | <blockcompression>  | <isolated_loading>
+						  |("EXTERNAL" "SECURITY" [ ( "INVOKER" | "DEFINER" ) "TRUSTED" ]
+									[(([","] <table_option>))|([(<database_user_name> ".")* ] <authorization_name>)])
+						);
+						
+<map_name>			::= <IDENTIFIER> ;
+<colocation_name>			::= <IDENTIFIER> ;
+
+<mergeblockratio>	::= ( ("DEFAULT" "MERGEBLOCKRATIO")
+							|( "MERGEBLOCKRATIO" "=" <NUMBER> ["PERCENT"])
+							| ("NO" "MERGEBLOCKRATIO")
+						);
+						
+						
+<datablocksize> 	::= "DATABLOCKSIZE" "="  (
+						  (<NUMBER> [ "BYTES" | "KBYTES" | "KILOBYTES" ] )|
+						  (( "MINIMUM" | "MAXIMUM" | "DEFAULT" ) "DATABLOCKSIZE")
+						);
+						
+<blockcompression>  ::= "BLOCKCOMPRESSION" "=" ( "AUTOTEMP" | "MANUAL" | "ALWAYS" | "NEVER" | "DEFAULT" )
+					   ["," "BLOCKCOMPRESSIONALGORITHM" "=" ( "ZLIB" | "ELZS_H" | "DEFAULT" ) ]
+					   ["," "BLOCKCOMPRESSIONLEVEL" "=" ( <value> | "DEFAULT" ) ];
+					   
+<value>				::= <NUMBER>|<StringValue>|<IDENTIFIER>;
+
+<isolated_loading>	::= "WITH" ["NO"] ["CONCURRENT"] "ISOLATED" "LOADING" [ "FOR" ( "ALL" | "INSERT" | "NONE" ) ];
+
+<column_partition_definition>	::=  <foreign_key>  | (node("OPERATION" , <table_constraint>))  | <column_definition>;
+									 
+<column_definition>				::= node( "ATTRIBUTE", attributeEx("EASTEREOTYPE", "Teradata::column")
+										( [ "COLUMN" | "ROW" ]  ((attribute("NAME", <col_name>))|<StringAsName>) [<column_type>] 
+											[(<column_data_type_attribute>)*]																					
+											[ (["NO"] "AUTO" "COMPRESS") ]
+											["CURRENT_TIMESTAMP""(" "6" ")"]
+											
+										)
+										| ("PERIOD" "FOR" <period_name> "(" <period_begin_column> "," <period_end_column> ")" )
+										| <normalize_option>
+									)  ;
+
+<column_name>			::= [(<IDENTIFIER>|<StringValue>)  "."](<IDENTIFIER>|<StringValue>) ;	
+<col_name>			::= <IDENTIFIER> ;
+<period_name>			::= <IDENTIFIER> ;	
+<period_begin_column>	::= <NUMBER> ;	
+<period_end_column>		::= <NUMBER> ;	
+
+<column_type>						::= (											
+											(node("TYPE", attribute("NAME", <interval_types>))
+													[node ("interval Field list",attribute("VALUE",<interval_field_value>))]
+												)
+											|(node ("Type",attribute ("NAME","PERIOD"))
+													["("node ("Period Field list",attribute("VALUE",<period_field>)) ")"]
+												)
+											|(node ("Type",attribute ("NAME",<string_type>) [ "(" attribute("LENGTH",<NUMBER> )")" ])
+													[(("CHARACTER" "SET" node ("CharacterSet",attribute("VALUE",<charater_set>)))
+														|(node ("Storage Format",attribute("VALUE",<storage_formats>)))
+													 )])
+											|( node ("Type",attribute ("NAME",(["SYSUDTLIB" "."]("XML"|"XMLTYPE")))
+														["(" attribute("LENGTH",<NUMBER>) ")"])	
+													[( "INLINE" "LENGTH" node("inline length",attribute("VALUE", <NUMBER>)))]
+												)
+											|( node ("Type",attribute ("NAME",(["SYSUDTLIB" "."]"JSON"))
+													["(" attribute("LENGTH",<NUMBER>) ")"])
+													[( "INLINE" "LENGTH" node("inline length",attribute("VALUE", <NUMBER>)))]
+													[("CHARACTER" "SET" node("CharacterSet",attribute("VALUE",<charater_set>)))
+														|(node ("Storage Format",attribute("VALUE",<storage_formats>)))
+														]									
+												)
+											|( node ("Type",attribute ("NAME",(["SYSUDTLIB" "."]"ST_GEOMETRY"))
+														["(" attribute("LENGTH",<NUMBER>) ")"]	)
+													[( "INLINE" "LENGTH" node("inline length",attribute("VALUE", <NUMBER>)))]
+												)
+											|( node ("Type",attribute ("NAME",(["SYSUDTLIB" "."]"DATASET")))
+													[( "INLINE" "LENGTH" node("inline length",attribute("VALUE", <NUMBER>)))]
+													[("STORAGE" "FORMAT" (("AVRO" node ("Storage Format",attributeEX("VALUE","AVRO")))
+																|("CSV" node("Storage Format",attributeEX("VALUE","CSV"))
+																	["CHARACTER" "SET" node("CharacterSet",attribute("VALUE",<charater_set>))]
+																	)))]
+														["WITH" "SCHEMA" [<database_name>"."] <schema_name>]
+														[node("snappy compress" ,attribute("VALUE",<snappy_compress>))]
+												)
+											|(node("TYPE", attribute("NAME", <t_data_type>)
+												["("((attribute("PRECISION",<NUMBER>)","attribute("SCALE",<NUMBER>))|(attribute("LENGTH",<NUMBER>)))")"]["WITH" "TIME" "ZONE"]))
+										);
+										
+<snappy_compress>					::= ["COMPRESS" "USING" "SNAPPY_COMPRESS"]["DECOMPRESS" "USING" "SNAPPY_DECOMPRESS"];								
+										
+<period_field>						::=	 ( "DATE" |(  ( "TIME" | "TIMESTAMP" ) ["("<precision>")"] ["WITH" "TIME" "ZONE"]) )	;							
+												
+<interval_field_value>				::= 	["(" <precision>["," <fractional_seconds_precision>] ")"] 
+											([("TO" "MONTH")
+											|("TO" ( "HOUR" | "MINUTE" | ("SECOND" ["("<fractional_seconds_precision>")"]) ))]							
+											) ;
+											
+ 
+<string_type>						::=( ( "VARCHAR" | ("CHAR" "VARYING") | "VARBYTE" | "VARGRAPHIC" )  ) ;
+
+
+<charater_set>						::=	 ( "UNICODE" | "LATIN" ) ;
+
+<storage_formats>					::= ( "BSON" | "UBJSON") ;
+											
+											
+<interval_types>			::= (("INTERVAL" "YEAR"  ) 
+									|("INTERVAL" "MONTH") 
+									|("INTERVAL" "DAY" )
+									|("INTERVAL" "HOUR" )
+									|("INTERVAL" "MINUTE" )
+									|("INTERVAL" "SECOND")
+									) ;
+
+
+<column_data_type_attribute> 	::= ( ( ("UPPERCASE" | "UC") node("Uppercase", attributeEx("True")) ) 
+										| ("NOT" ( "CASESPECIFIC" | "CS" ) node("Case Sensitivity" , attributeEx("VALUE" , "Not Casespecific")))
+										| (( "CASESPECIFIC" | "CS" )node("Case Sensitivity" , attributeEx("VALUE" , "Casespecific")))
+										| ("FORMAT"  node("Format" , attribute("VALUE" , <StringValue>)))
+										| ("TITLE" node("Title" , attribute("VALUE" , <StringValue>)))
+										| ("NAMED" node("Named" , attribute("VALUE" , <name>)) )
+										| ("DEFAULT" [ attribute("DEFAULT" , ( <NUMBER> | "USER" | "DATE" | "TIME" | "NULL" ))])
+										| ("WITH" "DEFAULT" node("With Default" , attributeEx("VALUE" , "True"))) 
+										| ("CHARACTER" "SET" node("CharacterSet" , attribute("VALUE" , <server_character_set>))) 
+										| (["NOT" attributeEx("NOTNULL", "true")] "NULL")
+										| ("NOT" "AUTO" "COLUMN" node("Auto Increment" , attributeEx("VALUE" , "Not Auto Column")))
+										| ("AUTO" "COLUMN" node("Auto Increment" , attributeEx("VALUE" , "Auto Column")))
+										| (node("Compression Attricbute" , attribute("VALUE" , <compression_attribute>))) 
+										| (node("CONSTRAINT" , <column_constraint_attribute>)) 	
+										| ( node("OPERATION",[ "CONSTRAINT"	((attribute("NAME" ,<constraint_name> ))|<StringAsName>) ]  attributeEx("EASTEREOTYPE","Teradata::check")   "CHECK" "(" attribute("CODE" , <boolean_condition>) ")" ))
+										| (node("Identity Column" , attribute("VALUE" , <identity_column>))) 										
+										
+									);
+
+<name>							::= <StringValue> | <IDENTIFIER> ;
+<server_character_set>			::= <IDENTIFIER> ;
+
+
+<compression_attribute>		::= ( ("NO" "COMPRESS") |
+								  ("COMPRESS" [ <compress_values> ("," <compress_values>)*] )|
+								  ("COMPRESS" "USING" <compress_UDF_name> "DECOMPRESS"
+									"USING" <decompress_UDF_name>)
+								);
+
+
+<compress_values>			::= <NUMBER> | <IDENTIFIER> ;
+<compress_UDF_name>			::= <IDENTIFIER> ;
+<decompress_UDF_name>			::= <IDENTIFIER> ;
+
+<column_constraint_attribute>	::= [ "CONSTRAINT"	((attribute("NAME" ,<constraint_name> ))|<StringAsName>) ] 
+								 (<column_constraint_values>)
+								  ;
+								  
+<column_constraint_values>		::= (("UNIQUE" attributeEx("EASTEREOTYPE" , "Teradata::unique") ) | ("PRIMARY" "KEY" attributeEx("EASTEREOTYPE" , "Teradata::PK"))  )
+									| <references> 
+									//| <row_level_security_constraint_column_name>
+									;
+								  
+<constraint_name>			::= <IDENTIFIER> ;
+
+<boolean_condition>					::= <logical_Expression>;
+
+
+<references>				::=  attributeEx("EASTEREOTYPE" , "Teradata::FK")
+								"REFERENCES" 
+								node("TARGET" , [ "WITH" ["NO"] "CHECK" "OPTION" ]
+								((attribute("NAME", <table_name>) )|<StringAsName>)
+								[<constraint_columns>]
+								);
+
+<identity_column> 			::=  "GENERATE" ("ALWAYS" | ("BY" "DEFAULT")) "AS" "IDENTITY"
+							   [ ( ("START" "WITH" <NUMBER> | <IDENTIFIER>) |
+								   ("INCREMENT" "BY" <constant>) |
+								   ("MINVALUE" <constant>) |
+								   ("NO" "MINVALUE") |	
+								  ( "MAXVALUE" <constant>) |
+								   ("NO" "MAXVALUE") |
+								   ([ "NO" ] "CYCLE") ) ];
+
+<constant>				::= <NUMBER> | <IDENTIFIER>;
+
+<normalize_option>		::=    "NORMALIZE" [ "ALL" "BUT" "(" <column_name> ("," <column_name>)* ")" ] 
+							   "ON" <normalize_column>
+							   [ "ON" ( ("MEETS" "OR" "OVERLAPS") | ("OVERLAPS" ["OR" "MEETS"])) ];
+
+
+
+<normalize_column>		::= <IDENTIFIER>;
+
+<table_constraint>		::= ( ("CONSTRAINT" [<table_constraint_values>] [((attribute("NAME", <constraint_name>))|<StringAsName>)]) )
+							  [(<table_constraint_values>) ]
+							  ;
+							  
+							  
+
+
+<table_constraint_values>	::= (( ( attributeEx("EASTEREOTYPE", "Teradata::unique") "UNIQUE")
+									| (attributeEx("EASTEREOTYPE", "Teradata::PK") "PRIMARY" "KEY" ) 
+								  )[<constraint_columns>]
+								)
+								| ("CHECK" attributeEx("EASTEREOTYPE", "Teradata::check" )["(" attribute("CODE" , <boolean_condition>) ")"]);
+
+<constraint_columns>				::= ["("] <constraint_column> ("," <constraint_column>)* [")"];
+<constraint_column>					::= node("PARAMETER",((attribute("NAME", <col_name>))|<StringAsName>) ) ;
+								   
+<foreign_key>			::= node("FOREIGNKEY", 
+								[ "CONSTRAINT" ((attribute("NAME", <constraint_name>))|<StringAsName>)  ]
+								"FOREIGN" "KEY" attributeEx("EASTEREOTYPE", "Teradata::FK")
+								[<constraint_columns>]
+								<references>
+							);
+								  
+								  
+<index>					::= (["UNIQUE"] "PRIMARY" "INDEX" [<index_name>] <constraint_columns> )| 
+								("NO" "PRIMARY" "INDEX") |
+								("PRIMARY" "AMP" ["INDEX"] [<index_name>] <constraint_columns>)|
+								("PARTITION" "BY" ["("]( <partitioning_level> ("," <partitioning_level>)* ) [")"]) |
+								("UNIQUE" "INDEX" [ <index_name> ] [ <constraint_columns> ] [<loading>]) |
+								("INDEX" [<index_name>] ["ALL"] <constraint_columns> [<ordering>] [<loading>])|
+								(<blockcompression>)|
+								("CHECKSUM" "=" ( "ON" | "DEFAULT" | "OFF" ));
+								
+<index_name>			::= <IDENTIFIER>;
+
+
+<partitioning_level>			::=  (("COLUMN" [ ["NO"] "AUTO" "COMPRESS" ] [ "ALL" "BUT" ] [ "ADD" <constant> ] [<column_partition> ("," <column_partition>)*])
+										|  <partitioning_expression> 
+									  ) [ "ADD" <constant> ];
+									  
+<partitioning_expression>		::= <logical_Expression>;	
+
+<column_partition>				::= ( [ "COLUMN" | "ROW" ] [( (<column_name> <data_type>) ("," (<column_name> <data_type>))*  )]
+										[["NO"] "AUTO" "COMPRESS"]
+									 ) ;							  
+									 
+<loading>			::= "WITH" ["NO"] "LOAD" "IDENTITY" ;
+<ordering>			::= "ORDER" "BY" [ "VALUES" | "HASH" ] [ "(" <order_column_name> ")" ];
+
+<order_column_name>	::= <IDENTIFIER> ;
+
+<table_preservation>	::= "ON" "COMMIT" 
+								( 
+								("DELETE" node("Table Preservation" , attributeEx("VALUE" , "Delete"))) 
+								| ("PRESERVE" node("Table Preservation" , attributeEx("VALUE" , "Preserve")))
+								)
+								"ROWS";
+
+<AS_clause>				::= "AS" (("("<SelectQuery> ")") 
+								|<IDENTIFIER>) 
+								[<subquery_clause>] 
+								["WITH" ["NO"] "DATA" [ "AND" ["NO"] "STATISTICS" ]] ;
+
+<subquery_clause>			::= <AS_clause> ;
+
+<SelectQuery> 						::=  [<with_table_expression>	 ("," <with_table_expression>)*]
+										("SELECT" | "SEL") 
+										skip("FROM")										
+										[<from>] 
+										[<Join_value>*] 
+										[<groupBy>]
+										[<where_condition>] 
+										[<having>]
+										[<union_condition>] 
+										["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
+										[ "NULLS" "FIRST" | "NULLS" "LAST" ]
+										[ "OFFSET" <start> ]
+										["START" "WITH" <condition>]										
+										["CONNECT" "BY" <condition>]
+										["START" "WITH" <condition>]
+										[ "LIMIT" ( <NUMBER> | "ALL" ) ]  
+										[<groupBy>] 
+										[ "OPTION" "(" <option_clause> ")" ]   		
+										["QUALIFY" <condition>]
+										[ "WITH" "CHECK" "OPTION" ]
+										[<sample_clause>]
+										  ;	
+
+<sample_clause>			::= "SAMPLE"
+							  [ "WITH" "REPLACEMENT" ]
+							  [ "RANDOMIZED" "LOCALIZATION" ]
+							  [( ( <sample_descriptions> ("," <sample_descriptions>)* ) |
+								<when_clause> 
+							  )];
+							  
+<when_clause>			::= "WHEN" <condition> "THEN" ( <sample_descriptions> ("," <sample_descriptions>)* )  "END";
+							  
+<sample_descriptions>		::= <fraction_description> | <count_description> ;
+
+<fraction_description>		::= (<NUMBER>("." <NUMBER>)* ) | (<NUMBER> "%");
+<count_description>		::= <NUMBER>;
+										  
+<with_table_expression>			::=  "WITH" ["RECURSIVE"] <col_names> "AS"  <SelectQuery> ;
+
+<col_names>						::= <column_name> ("," <column_name>)* ;
+
+<from>								::= "FROM" (<rowset_function_limited>|<fromClause> | <from_sub>);		
+
+<rowset_function_limited>	::=  <open_value> [("AS" |".") <IDENTIFIER>] ["(" skipBalanced("(" , ")")")"];
+
+<open_value>			::= [<IDENTIFIER>] "(" skipBalanced("(" , ")")")";
+
+<from_sub>							::= <from_tables> [ "NATURAL" ] ;
+
+<fromClause>                        ::=  <from_tables>;	
+
+<from_tables>						::= <from_table> ("," <from_table>)*;
+
+<from_table> 						::=  <tbl_as_string>  [ (<Join_value>[<Join_value>*])|<groupBy>| <where_condition> | <union_condition> | ("ORDER" "BY" (<order_expr> ("," <order_expr>)*))|( "LIMIT" ( <NUMBER> | "ALL" ) )| <having>| ("WITH" "CHECK" "OPTION")|("OPTION" "(" <option_clause>  ")")|("QUALIFY" <condition>)| <sample_clause> |(<logging_errors>)|(<hash_by>)|( ["AS"] <IDENTIFIER> ) ]  ;
+
+
+
+
+<Join_value> 						::= <join_type> <tbl_as_string> ["." <IDENTIFIER>] 
+										[ <join_on_value>|<groupBy>| <where_condition> | <union_condition> | "ORDER" "BY" (<order_expr> ("," <order_expr>)*)| "LIMIT" ( <NUMBER> | "ALL" ) | <having>| "OPTION" "(" <option_clause>  ")" |( ["AS"] [ "[" | "(" ] <IDENTIFIER> [ "]" | ")" ]) ]
+										[<join_on_value>] ;
+										
+<join_on_value>						::= ("ON" <join_con> ) |( "USING" "(" <column_name>  ("," <column_name>)* ")");
+										
+<join_type>							::= ("JOIN") |("INNER" "JOIN") | ("LEFT" "JOIN") | ("LEFT" "OUTER" "JOIN")	| ("RIGHT" "JOIN") | ("RIGHT" "OUTER" "JOIN") | ("FULL" "JOIN") |
+										("FULL" "OUTER" "JOIN") | ("CROSS" "JOIN") ;
+										
+<join_con>							::= <logical_Expression> ;	
+
+<logical_Expression>				::= <join_condition> (("AND"|"OR") (<join_condition>) )* ;
+
+<join_condition>					::= [<tbl_as_string>][( ("." | "/"|"+")<column_name>) | ("(" <col_names> ")")] [ ("(" skipBalanced("(" , ")" ) ")") ] ["/" [<IDENTIFIER> "."] <IDENTIFIER>] [<NUMBER>] [<comparison_Operator> ] [("AND"|"OR")]
+["NEW" <IDENTIFIER>"("  <StringValue> ")"] ["ELSE" <insert_for_update>] ["(" "SUBSTRING" "(" skipBalanced("(" , ")" ) ")" ")"] [ ("(" skipBalanced("(" , ")" ) ")") |("CONVERT" "("skipBalanced("(" , ")" )")" )  | ( [<tbl_as_string>  | <StringValue> | (<DECIMAL>)|(<NUMBER>) ] [<comparison_Operator>] [("."  <column_name>| <NUMBER>  )] ["AND" (<DECIMAL> | <NUMBER>)] [("(" skipBalanced("(" , ")" ) ")")] )| (<default_expr> )  ];	
+
+<comparison_Operator> 				::= "=" | 
+										"+" |
+										("<" [">"]["="]) | 										
+										("OF") | 										
+										(">" ["="])|										
+										 ("BETWEEN") | 
+										 ("IN") | 
+										 ("NOT" "IN") |
+										("IS" "NULL") | 
+										("IS" "NOT" "NULL") |
+										"LIKE"|
+										("|" "|");
+										
+<default_expr> 						::=  (<NUMBER> ["." <NUMBER>] )| [<StringValue>]  	;
+
+<groupBy>							::= "GROUP" "BY" <group_condition>;
+
+<group_condition>					::= ( ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_as_string> ["]"] | <NUMBER>)  ( "," ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_as_string> ["]"] | <NUMBER>))*) ;
+
+<where_condition>					::= "WHERE" ["NOT" "EXISTS"] <condition>   ; 							
+<condition>							::= <join_con> ;
+
+
+<union_condition>					::= ( "UNION" [ "ALL" ] | "INTERSECT" | "EXCEPT" | "MINUS" )
+										<SelectQuery>* ;	
+										
+<order_expr> 						::= <column_with_expression> [ "ASC" | "DESC" ];
+
+<column_with_expression>			::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<tbl_as_string> "." | <SelectQuery>] ["("] (<column_name> ["/" <column_name>] | <NUMBER> | <StringValue> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
+
+<having>							::= "HAVING" <having_condition> ;
+
+<having_condition>					::= <aggregate_function> "(" ("*"|<column_name>) ")" <comparison_Operator>  <value> ;
+
+<aggregate_function>				::= "SUM" | "AVG" | "COUNT" | "MAX" | "MIN" ;
+
+<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+
+<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+
+<option_clause>					::=  (<query_hint> |<boundary_value>) ([","] (<query_hint> |<boundary_value>) )* ;		
+
+<query_hint> 					::=   "HASH" "JOIN"   
+										| "LOOP" "JOIN"   
+										| "MERGE" "JOIN"   
+										| "FORCE" "ORDER"   
+										| (( "FORCE" | "DISABLE" ) "EXTERNALPUSHDOWN" )
+										| ( "LABEL" "=" <IDENTIFIER> <StringValue> )
+										;
+										
+<boundary_value>				::= <NUMBER> [<StringValue>] | <IDENTIFIER> [<StringValue>] | <StringValue> | "="  ;	
+
+
+<convert_expression> 			::= <convert_value> ("," <convert_value> )* ;		
+
+<convert_value>					::= (("CONVERT"| (<IDENTIFIER> ["." <IDENTIFIER>])) "(" [<convert_expression>] ")");
+		
+
+<create_error_table>			::= node("ELEMENT", 
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "Teradata::table")
+											 "CREATE" "ERROR" "TABLE" 		
+											[ "FOR" <table_for>  ["NO" "RLS" node("No RLS", attributeEx("VALUE" , "True"))] 
+											attributeEx("NAME", "Error_table")]											 
+											[ <error_table_name_specification> ]
+											[ "FOR" <table_for> ["NO" "RLS" node("No RLS", attributeEx("VALUE" , "True"))] ]
+										)[";"];
+
+
+<error_table_name_specification>		::= [node("Schema and Database",((attribute("VALUE" , <database_user_name>))|<StringAsName>)".")]
+										((attribute("NAME", <table_name>))|<StringAsName>);
+
+<data_table_name_specification>			::= [ (<database_user_name> ".")*  ] ((attribute("NAME", <table_name>))|<StringAsName>);
+
+
+<table_for>						::= node("CONNECTOR",
+									attributeEx("EATYPE", "Generalization")
+									attributeEx("EASTEREOTYPE", "Teradata::error")
+									 node("TARGET", <data_table_name_specification>)
+								);
+
+
+<create_view>					::= node("ELEMENT",
+										attributeEx("EATYPE", "Class")
+										attributeEx("EASTEREOTYPE", "Teradata::view")
+										(("CREATE" ["RECURSIVE" node("Is Recursive" , attributeEx("VALUE" , "True"))] "VIEW" node("View Type" , attributeEx("VALUE" , "Create")))
+										| ("CV") 
+										| ("REPLACE" ["RECURSIVE" node("Is Recursive" , attributeEx("VALUE" , "True"))] "VIEW" node("View Type" , attributeEx("VALUE" , "Replace"))) ) 
+										  <view_name_specification>
+										[ "(" node("View Columns" , attribute("VALUE", (<column_name> ("," <column_name>)*))) ")" ] 
+										["AS" ["("] node("viewdef" , attribute("VALUE" , <view_specification>*))  [")"] ]										
+									) [";"];
+
+<view_name_specification>		::= [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")] 
+((attribute("NAME", <view_name>))|<StringAsName>);
+
+
+<view_name>						::= <IDENTIFIER>;
+
+<view_specification>			::=
+									(<locking_clause>)
+									| (<as_of_clause>)		
+									| ( "WITH" <with_recursive_expression> ("," <with_recursive_expression>)* ) 
+									| (<SelectQuery>)
+										;
+
+
+<locking_clause>				::= "LOCKING" <item_to_lock> [ "FOR" | "IN" ] <lock_type> [ "MODE" ] [ "NOWAIT" ];
+
+
+<item_to_lock>					::=  ([ "DATABASE" | "TABLE" | "VIEW" ] <database_user_name>) |  ("ROW") ;	
+
+
+<lock_type>						::= ( "ACCESS" |
+									 ( "EXCLUSIVE" | "EXCL" ) |
+									 "SHARE" |
+									 ("READ" [ "OVERRIDE" ]) |
+									 "WRITE" |
+									 ("LOAD" "COMMITTED")
+									);
+									
+<as_of_clause>					::= "AS" "OF" "calendar_function" "("
+									 ( "DATE" |( "TIMESTAMP" [ "WITH" "TIME" "ZONE" ]) ) <expression> ["," <system_calendar_name> ] ")";
+									 
+									 
+<system_calendar_name> 			::= <StringValue>;
+<expression> 					::= <StringValue>;
+
+<with_recursive_expression> ::=  (  <recursive_with_modifier> | <nonrecursive_with_modifier> );
+
+<nonrecursive_with_modifier> ::= <query_name> [ "(" <column_name> ("," <column_name>)* ")" ] ["AS" "(" <SelectQuery> ")"];
+
+<query_name>			::= <IDENTIFIER>;
+
+<recursive_with_modifier>	::= "RECURSIVE" <query_name> [ "(" <column_name> ("," <column_name>)* ")" ] "AS" "("
+								 <seed> [<union_specification>]
+								")";
+
+<seed>						::= <SelectQuery>;
+
+<union_specification>		::= "UNION" "ALL" (<SelectQuery>);
+
+
+<create_procedure>			::= node("ELEMENT",
+										attributeEx("EATYPE", "Class")
+										attributeEx("EASTEREOTYPE", "Teradata::procedure")
+										( 	("CREATE" node("Procedure Type" , attributeEx("VALUE" , "Create" ))) 
+											| ("REPLACE" node("Procedure Type" , attributeEx("VALUE" , "Replace"))) 
+										) 
+										"PROCEDURE"  <procedure_name_specification>
+										<procedure_values>*
+									) [";"];
+									
+<procedure_values>          ::= ("(" [node("Parameter Specification" , attribute("VALUE" , (<parameter_specification> ("," <parameter_specification>)*)))] ")")
+								| ( "SQL" "SECURITY" node("Sql Security" , attribute("VALUE" , <privilege_option> )))
+								| ("DYNAMIC" "RESULT" "SETS" node("Dynamic Result Sets" ,attribute("VALUE" , <number_of_sets>)))
+								| (<language_and_access_specification>)
+								| (<parameter_style_specification>)
+								| ("USING" [ "GLOP" "SET" ] node("Glop Set", attribute("VALUE" , <GLOP_set_name>)))
+								| ("EXTERNAL" (node("Is External" , attributeEx("VALUE" , "True")))
+											[ "NAME" node("External Name" , attribute("VALUE" , (( <external_procedure_name> | <code_specification> | (<JAR_ID_specification>) ))) ) ] 
+									)
+								|("EXTERNAL" "SECURITY" node("External Security" , attribute("VALUE" ,( ("DEFINER" [ <authorization_name> ]) | "INVOKER" ) )) )
+								| (node("procdef" , attribute("VALUE" , <procedure_statement>)))
+								;
+							 
+<procedure_name_specification>	::= [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")] ((attribute("NAME", <procedure_name>))|<StringAsName>);
+
+<procedure_name>		::= <IDENTIFIER> ;
+<parameter_name>		::= <IDENTIFIER> ;
+<number_of_sets>		::= <NUMBER> ;
+
+<parameter_specification>	::= [ "IN" | "OUT" | "INOUT" ] <parameter_name> ["LOCATOR"] <data_type> ["AS" "LOCATOR"];
+
+
+<language_and_access_specification>	::= ( (<language_clause> [ <SQL_data_access> ] )|
+											 (<SQL_data_access> [ <language_clause> ]) 
+											 
+										);
+
+<language_clause>			::="LANGUAGE"  node("Language Clause" , attribute("VALUE" , <IDENTIFIER> )) ;
+<SQL_data_access>			::= node("SQL Data Access" , attribute("VALUE" , (["NO" | "MODIFIES" | "CONTAINS"|"READ"] "SQL" ["DATA"]))) ;
+
+<GLOP_set_name>			::= <IDENTIFIER> ;
+<privilege_option>		::= "CREATOR" | "DEFINER" | "INVOKER" | "OWNER" ;
+<external_procedure_name>		::= <IDENTIFIER> ;
+//<code_specification>		::= <StringValue> ;
+<JAR_ID_specification>		::= <StringValue> ;
+
+
+<parameter_style_specification>	::= "PARAMETER" "STYLE" ( 
+									("SQL" node("Parameter Style" , attributeEx("VALUE" , "SQL"))) 
+									| ("TD_GENERAL" node("Parameter Style" , attributeEx("VALUE" , "Td_General"))) 
+									| ("JAVA" node("Parameter Style" , attributeEx("VALUE" , "Java"))) 
+									) ;
+
+<procedure_statement>		::= (  ("BEGIN" skipBalanced("BEGIN" , "END")  "END" "REQUEST") 
+									| ( <compound_statement> )
+									| (<open_statement>) 
+									| (<fetch_statement>) 
+									| (<assignment_statement>) 
+									| (<condition_statement>)
+									| ([ <label_name> ":" ] <iteration_statement> [ <label_name> ]) 
+									| ( <diagnostic_statement> ) 
+									 | ("ITERATE" <label_name>) 
+									 | ("LEAVE" <label_name>)
+								);
+
+<compound_statement>		::= [ <label_name> ":" ] "BEGIN" skipBalanced("BEGIN" , "END")  [skip("END")] "END" [ <label_name> ];
+
+<label_name>				::= <IDENTIFIER> ;
+
+<open_statement>			::= "OPEN" <cursor_name> [ "USING" ( <SQL_identifier> ("," <SQL_identifier>)*) ] ;
+
+<cursor_name> 				::= <IDENTIFIER>;
+<SQL_identifier>		::= <IDENTIFIER>;
+
+<fetch_statement>		::= "FETCH" [ [ "NEXT" | "FIRST" ] "FROM" ] <cursor_name>
+							"INTO" ( <local_variable_name> ("," <local_variable_name>)* ) ;
+							
+<local_variable_name>	::= <IDENTIFIER> ;
+
+<assignment_statement>	::= "SET" <assignment_target> "=" <assignment_source>;
+
+<assignment_target>		::= <IDENTIFIER> ;
+<assignment_source>		::= <IDENTIFIER> [(<DELIMITER>) [<NUMBER> | <IDENTIFIER>]];
+
+<condition_statement>	::= <case_statement> | <if_statement>;
+
+<case_statement>		::= "CASE" skipBalanced("CASE",("END" "CASE")) "END" "CASE";
+
+<if_statement>			::= "IF" skipBalanced("IF" , ("END" "IF")) "END" "IF";
+
+<iteration_statement>	::= <while_statement> | <loop_statement> | <for_statement> | <repeat_statement>;
+
+<while_statement>		::= "WHILE" skipBalanced("WHILE" , ("END" "WHILE")) "END" "WHILE";
+
+<loop_statement>		::= "LOOP" skipBalanced("LOOP" , ("END" "LOOP")) "END" "LOOP";
+
+<for_statement>			::= "FOR" skipBalanced("FOR" , ("END" "FOR")) "END" "FOR";
+
+<repeat_statement>		::= "REPEAT" skipBalanced("REPEAT" , ("END" "REPEAT")) "END" "REPEAT" ;
+
+<diagnostic_statement>	::= ( (( ("SIGNAL" <signal_specification> )| ("RESIGNAL" [ <signal_specification> ]) )
+								 [ "SET" <condition_information_item> "=" <value> ] )|								 
+								( "GET" "DIAGNOSTICS" [ "EXCEPTION" <condition_number> ] 
+								<diagnostic_assignment> ("," <diagnostic_assignment>)*)
+							) ;
+							
+<signal_specification>	::= <condition_name> | ("SQLSTATE" [ "VALUE" ] <SQLSTATE_code>);							
+							
+<diagnostic_assignment>	::= <parameter_name> "=" <statement_information_item>;
+
+<condition_name>		::= <IDENTIFIER> ;
+<SQLSTATE_code>		::= <IDENTIFIER> ;
+<condition_information_item>		::= <IDENTIFIER> ;
+<statement_information_item>		::= <IDENTIFIER> ;
+<condition_number>		::= <NUMBER> ;
+
+<create_function>		::= node("ELEMENT",
+								attributeEx("EATYPE", "Class")
+								attributeEx("EASTEREOTYPE", "Teradata::function")
+								( ("CREATE" node("Function Type" , attributeEx("VALUE" , "Create") )) 
+								| ("REPLACE"  node("Function Type" , attributeEx("VALUE" , "Replace") )) ) "FUNCTION" 
+								["MAPPING" node("Is Mapping" , attributeEx("VALUE" , "True"))]
+								<function_name_specification>
+								<function_values>*
+								
+							)[";"];
+
+
+<function_values>		::= ("FOR" node("For Table" , attribute("VALUE" , ((<database_user_name> ".")* <function_name>))))
+							|("SERVER" node("Server Name" , attribute("VALUE" , ((<database_user_name> ".")* <server_name>))))
+							|("EXTERNAL" "SECURITY" node("External Security" , attribute("VALUE" , (([ "DEFINER" | "INVOKER" ] ["TRUSTED"] <authorization_name>)))) )
+							|( "MAP" "JSON" "(" node("Map Json" , attribute("VALUE" , (<json_document>))) ")" )
+							|("STOREDAS" 
+							"(" (  (("'" "TEXTFILE" "'" node("Stored As", attributeEX("VALUE" , "TextFile"))) | ("'" "PARQUET" "'" node("Stored As", attributeEX("VALUE" , "Parquet"))))  ) ")")
+							|("(" [node("Parameter Specification" , attribute("VALUE" , (<parameter_specification> ("," <parameter_specification>)*)))] ")")
+							|(<function_attribute>)
+							|(
+								("RETURNS" "TABLE" node("Return Table Statement" , attribute("VALUE", <function_table_specification>)))
+								|("RETURNS" node("Return datatype" , attribute("VALUE" , (<return_data_type> ["AS" "LOCATOR"] ["CAST" "FROM" <data_type>]))))
+							)							
+							|(<parameter_style_specification>)
+							|([ "SQL" "SECURITY" "DEFINER" node("Is Definer" , attributeEx("VALUE","True")) ] ("COLLATION" "INVOKER" "INLINE" "TYPE" "1" 
+								node("Collation Invoker" ,attributeEx("VALUE","True") )))
+							|("RETURN" node("Return Expression" , attribute("VALUE" , <return_expression>)) )
+							
+							|("USING" node("Table List" , attribute("VALUE" , ((<table_list> ("," <table_list>)*)))))
+							|("USING" [ "GLOP" "SET" ] node("Glop Set", attribute("VALUE" , <GLOP_set_name>)) )
+							|(("EXTERNAL" (node("Is External" , attributeEx("VALUE" , "True")))
+											[ "NAME" node("External Name" , attribute("VALUE" , (( <external_procedure_name> | <code_specification> | (<JAR_ID_specification>) ))) ) ] )
+							  )
+							|("FOR"  
+								( ("COMPRESS" node("Type Specifier" , attributeEx("VALUE", "Compress"))) 
+								| ("DECOMPRESS" node("Type Specifier" , attributeEx("VALUE", "Decompress")) ) )
+								)
+							| (node("Function Option" , attribute("VALUE" , ("EXECUTE" "MAP" "=" <map_name> [ "COLOCATE" "USING" <colocation_name> ]))) )
+							|(<language_and_access_specification>)
+						
+							;							
+							
+<table_list>			::= ( ("ANY" "IN" "TABLE") | (<name> ["(" skipBalanced("(" , ")") ")"] [ ("IN" "TABLE") | ("OUT" "TABLE") ]) );
+							
+<json_document>				::= <StringValue> ;
+
+<server_name>				::= <IDENTIFIER> ;
+							
+<function_name_specification>	::=[node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")]  ((attribute("NAME", <function_name>))|<StringAsName>);
+
+<function_name>		::= <IDENTIFIER>;
+<return_data_type>		::= <data_type>;
+
+<function_attribute>	::= ("SPECIFIC" node("Specific Table" , attribute("VALUE" , ([ (<database_user_name> ".")* ] <specific_function_name>)))  )|
+							 ( "CLASS" node("Function Class" ,attribute("VALUE" , (( "AGGREGATE" | "AG" ) [ "(" <interim_size> ")" ]))))|
+							 ("NOT" "DETERMINISTIC" node("Deterministic" , attributeEx("VALUE" , "No"))) |
+							 ("DETERMINISTIC" node("Deterministic" , attributeEx("VALUE" , "Yes")))|
+							 ("CALLED" "ON" "NULL" "INPUT" node("Null Handling" , attributeEx("VALUE" , "True"))) |
+							 ("RETURNS" "NULL" "ON" "NULL" "INPUT" node("Null Semantics" , attributeEx("VALUE" , "True")));
+
+<specific_function_name>	::= <IDENTIFIER>;	
+<interim_size>	::= <NUMBER>;	
+
+<return_expression>			::=(("CASE" skip("END") "END")|<logical_Expression>);	
+
+<function_table_specification>		::= ( "(" <column_specification> ("," <column_specification>)* ")" )
+										|(
+											 "VARYING" ( ("COLUMNS" "(" <maximum_output_columns> ")") |
+											( "USING" "FUNCTION" [ (<database_user_name> ".")*  ]
+											 [ <function_name> ])
+											)
+										 );	
+
+<column_specification>				::= <column_name> <data_type>;									 
+										 
+<code_specification>				::= ("F" <DELIMITER> <function_entry_name> )|(( "S" | "C" ) <path_specification>);
+
+<function_entry_name>			::= <IDENTIFIER> ;
+
+<path_specification>			::=  ("I" <DELIMITER> <name_on_server> <DELIMITER> <include_name> )|
+									 ("L" <DELIMITER> <library_name>) |
+									( "O" <DELIMITER> <name_on_server> <DELIMITER> <object_name>) |
+									 ("P" <DELIMITER> <package_name> )|
+									( "S" <DELIMITER> <name_on_server> <DELIMITER> <source_name>) |
+									 ("NS" <DELIMITER> <source_file> <DELIMITER> <include_file>);
+									 
+<name_on_server>				::= <IDENTIFIER>;		
+<include_name>				::= <IDENTIFIER>;		
+<library_name>				::= <IDENTIFIER>;		
+<object_name>				::= <IDENTIFIER>;		
+<package_name>				::= <IDENTIFIER>;		
+<source_name>				::= <IDENTIFIER>;		
+<source_file>				::= <IDENTIFIER>;		
+<include_file>				::= <IDENTIFIER>;		
+<maximum_output_columns>				::= <NUMBER>;		
+
+<create_index_commands>		::= <create_index>
+								| <create_join_index>
+								| <create_hash_index>
+								;
+
+<create_index>				::= node("OPERATION",
+								attributeEx("EASTEREOTYPE", "Teradata::index")
+								"CREATE" <index_specification> ("," <index_specification>)* "ON" ( <index_table_specification>  )
+								)[";"];
+								
+<index_specification>		::= [<unique_property>] "INDEX" [((attribute("NAME" ,<index_name>))|<StringAsName>)] ["ALL" node("All Columns" , attributeEx("VALUE" , "True") )] <constraint_columns>
+								 [<ordering_clause>]
+								 [<loading_clause>];
+								 
+<unique_property>			::= ("UNIQUE"
+								  node("Unique",  attributeEx("VALUE", "1"))
+								  node("property", attributeEx("VALUE", "Unique=1;Clustered=0;")));
+								
+<index_table_specification>	::= ["TEMPORARY" node("Is Temporary", attributeEx("VALUE" , "True"))] [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")]   node("OWNER", ((attribute("NAME",  <table_name> ))|<StringAsName>)) ;
+								
+<join_index_name>			::= <IDENTIFIER> ;
+
+<ordering_clause>		::= "ORDER" "BY" node("Order By" , attribute("VALUE" , ([ "VALUES" | "HASH" ] [ "(" <order_column_name> ")" ])));
+
+<loading_clause>		::= ("WITH" "LOAD" "IDENTITY" node("With Load" , attributeEx("VALUE" , "True")))
+							|  ("WITH" "NO" "LOAD" "IDENTITY" node("With Load" , attributeEx("VALUE" , "False")));
+
+<create_join_index>		::= node("OPERATION",
+							attributeEx("EASTEREOTYPE", "Teradata::index")
+							"CREATE" ("JOIN" node("Index Type" , attributeEx("VALUE" , "Join"))) "INDEX" <join_index_name_specification> 
+							[ ( node("Table Option" , attribute("VALUE", (<table_option> ("," <table_option>)*))))  ] 
+							[("AS"  attribute("CODE" , <SelectQuery>))]
+							[node("Table Index" , attribute("VALUE" , (<index> ([","] <index>)*)))]
+							)[";"];
+							
+<join_index_name_specification>	::= [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")] ((attribute("NAME" ,<join_index_name>))|<StringAsName>);
+
+<create_hash_index>		::= node("OPERATION",
+									attributeEx("EASTEREOTYPE", "Teradata::index")
+									"CREATE" 
+									("HASH" node("Index Type" , attributeEx("VALUE" , "Hash")))
+									"INDEX" <hash_index_name_specification> [[","] (<table_option>(","<table_option>)*)]
+									[node("Table Index" , attribute("VALUE" , (([","] <index>)*))) ]
+									<constraint_columns> "ON" [<IDENTIFIER>"."] node("OWNER", ((attribute("NAME",  <table_name> ))|<StringAsName>))
+									[ "BY" "(" node("Column By" , attribute("VALUE" , (<column_name> ("," <column_name>)*))) ")" ]
+									[ "ORDER" "BY" node("Order By" , attribute("VALUE" , <order_by_clause>))] 
+								
+							)[";"];
+							
+<order_by_clause>		::= ("VALUES" [ "(" <column_name> ("," <column_name>)* ")" ] )|
+									("HASH" "(" <column_name> ("," <column_name>)* ")") |
+									("(" <column_name> ("," <column_name>)* ")");
+							
+<hash_index_name_specification>	::= [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")] ((attribute("NAME" ,<hash_index_name>))|<StringAsName>);
+
+<hash_index_name>		::= <IDENTIFIER> ;
+
+<create_trigger>		::= node("OPERATION",
+									attributeEx("EASTEREOTYPE", "Teradata::trigger")
+									( ("CREATE" node("Trigger Type" , attributeEx("Create")))
+									| ("REPLACE")  node("Trigger Type" , attributeEx("Replace"))) "TRIGGER" 
+									<trigger_name_specification>									
+									 [ ("ENABLED" node("Trigger Status" , attributeEx("VALUE" , "Enabled")))
+									 | ("DISABLED" node("Trigger Status" , attributeEx("VALUE" , "Disabled"))) ]
+									 ( ("BEFORE" node("TRG_TIME" , attributeEx("VALUE" , "Before"))) 
+									 | ("AFTER" node("TRG_TIME" , attributeEx("VALUE" , "After"))) ) 
+									 [ node("Temporal Option" , attribute("VALUE" , <temporal_option> ))] 
+									 <triggering_event>
+									 "ON" [ (<database_user_name>".")* ]  node("OWNER", ((attribute("NAME",  <table_name> ))|<StringAsName>))
+									 [ "ORDER" node("Trigger Order" ,attribute("VALUE" , <NUMBER>)) ]
+									[( "REFERENCING"  node("Reference" , attribute("VALUE" , <reference>*)))]
+									 [ "FOR" "EACH" node("For Each" , attribute("VALUE" , ( "ROW" | "STATEMENT" )))]
+									 [ "WHEN" "(" node("Search Condition" , attribute("VALUE" , <search_condition>))  ")" ]
+									 ( ("(" attribute("CODE" , <trigger_action>) ")" ) |( attribute("CODE" , <trigger_action>)) |("BEGIN" "ATOMIC" attribute("CODE" , (skipBalanced("ATOMIC", "END"))) "END") ) 
+								) [";"];
+								
+<trigger_name_specification>	::= [node("Schema and Database" , ((attribute("VALUE" , <database_user_name>))|<StringAsValue>)".")] ((attribute("NAME", <trigger_name>))|<StringAsName>);
+
+<trigger_name>			::= <IDENTIFIER> ;
+
+<temporal_option>		::= ("CURRENT_TIMESTAMP") | ("PERIOD" <period_column> );
+
+<triggering_event>		::= ( ("INSERT"  node("TRG_EVENT" , attributeEx("VALUE" , "Insert")))| 
+							 ("DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Delete"))) |
+							 ("UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Update")) [ "OF" ( <constraint_columns> ) ])
+							);
+
+
+
+<period_column>			::= <IDENTIFIER>;
+
+<reference>				::= ( ((("OLD_TABLE") | ("OLD" "TABLE") | ("NEW_TABLE")|("NEW" "TABLE") | ("OLD_NEW_TABLE")| ("OLD") | ("NEW") ) [ "ROW" ] ["AS"] <old_new_table_name> ["(" <old_value> "," <new_value> ")"]))	;
+							
+							
+							
+<old_value>	::= <IDENTIFIER> ;
+<new_value>	::= <IDENTIFIER> ;
+<old_new_table_name> 	::= <IDENTIFIER> ;
+
+<search_condition>  ::= <logical_Expression> ;
+
+<trigger_action>	::=  ("INSERT" | "DELETE" | "UPDATE"|"SET" |"ABORT" | "CALL") skip(";") ";"  ;
+
+<create_authorization> ::= ( "CREATE" | "REPLACE" ) "AUTHORIZATION" [ (<database_user_name> ".")* ] <authorization_name>
+							 [ "AS" [ "DEFINER" | "INVOKER" ] "TRUSTED" ]
+							 "USER" <user_name>
+							 "PASSWORD" <password>
+							 [";"]
+							;
+							
+<user_name>			::= <StringValue> | <IDENTIFIER>;
+<password>			::= <StringValue> | <IDENTIFIER> ;
+
+<drop_table>			::= "DROP" ["TEMPORARY"] ["FOREIGN"] "TABLE" [(<database_user_name> ".")*] <tbl_as_string>
+							["ALL"] [";"];
+						
+<drop_error_table>		::= "DROP" "ERROR" "TABLE" (
+							("FOR" [ (<database_user_name> ".")* ] <tbl_as_string>) |
+							([ (<database_user_name> ".")* ] <tbl_as_string>)
+							) [";"]
+							;
+
+<drop_view>				::= "DROP" "VIEW" [ (<database_user_name> ".")* ] <view_name> [";"]; 
+
+<drop_join_index>   	::= "DROP" "JOIN" "INDEX" [ (<database_user_name> ".")* ] <join_index_name> [";"];
+
+<drop_hash_index>   	::= "DROP" "HASH" "INDEX" [ (<database_user_name> ".")*  ] <hash_index_name> [";"];
+
+<drop_authorization> 	::= "DROP" "AUTHORIZATION" [ (<database_user_name> ".")* ] <authorization_name> [";"];
+
+<drop_procedure>     	::= "DROP" "PROCEDURE" [ (<database_user_name> ".")* ] <procedure_name> [";"];
+
+<drop_macro>        	::= "DROP" "MACRO" [ (<database_user_name> ".")*  ] <macro_name> [";"];
+
+<macro_name>         	::= <IDENTIFIER> ;
+
+<drop_function_mapping> ::= "DROP" "FUNCTION" "MAPPING" [ (<database_user_name> ".")*  ] <function_mapping_name> [";"];
+
+<function_mapping_name> ::= <IDENTIFIER> ;
+
+<drop_type>           	::= "DROP" "TYPE" [ (<database_user_name> ".")* ] <user_defined_type_name> [";"];
+
+<user_defined_type_name>  ::= <IDENTIFIER> ;
+
+<drop_database>       		::= "DROP" "DATABASE" <database_name> [";"];
+
+<database_name>  		::= <IDENTIFIER> ;
+
+<drop_user>     		 ::= "DROP" "USER" <user_name> [";"];
+
+<drop_constraint>		 ::= "DROP" "CONSTRAINT" <constraint_name> [";"];
+
+<drop_trigger>   		 ::= "DROP" "TRIGGER" [ (<database_user_name> ".")* ] <trigger_name> [";"];
+
+<drop_index>			::= "DROP" "INDEX" ( <drop_index_specification> | <index_definition> ) [";"];
+
+<drop_index_specification>	::= [ (<database_user_name> ".")* ] <index_name>
+								 "ON" ( <drop_index_table_specification> | <join_index_specification> )
+								;
+
+<drop_index_table_specification>	::= [ "TEMPORARY" ] [ (<database_user_name> ".")* ] <tbl_as_string>;
+
+<join_index_specification>		::= [ (<database_user_name> ".")* ] <join_index_name>;
+
+<index_definition>			::=  (("(" <column_name> ("," <column_name>)* ")") | ([ (<database_user_name> ".")* ] <index_name> ))
+								 [ <order_clause> ]
+								"ON" ( <drop_index_table_specification> | <join_index_specification> )
+								 ;
+								 
+<order_clause>				::= "ORDER" "BY" [ "VALUES" | "HASH" ] "(" <column_name> ")";
+
+<drop_function>				::= "DROP" ( ("SPECIFIC" "FUNCTION"  [ (<database_user_name> ".")* ] <specific_function_name>) |
+								( "FUNCTION" [ (<database_user_name> ".")* ] <function_name> [ "(" [<data_type> ("," <data_type>)*] ")" ])
+								) [";"]
+								;
+								
+<drop_storage_format_schema>	::= "DROP" <storage_format> "SCHEMA" ["SYSUDTLIB" "." ] <schema_name> [";"];	
+
+<storage_format>		::= <IDENTIFIER> ;
+
+<drop_role>				::= "DROP" ["EXTERNAL"] "ROLE" [(<database_user_name> ".")* ] <role_name> [";"];
+
+<role_name>				::= <IDENTIFIER> ;
+
+
+<help_column>			::= "HELP" "COLUMN" ( ("*")|( [(<database_user_name> ".")*]  [(<column_name> | "*") ("," (<column_name> | "*"))*])) 
+							[("FROM" [ "ERROR" "TABLE" "FOR"] (<source> ("," <source>)*)) | (<help_expression> ("," <help_expression>)*)]
+							[";"] ;
+
+<source> 				::= [ (<database_user_name> ".")* ]
+							 ( <tbl_as_string> | <join_index_name> | <hash_index_name> )
+							;
+							
+							
+<help_expression>		::= ("(" <SelectQuery> ")")
+							|([(<NUMBER> ".")*] <NUMBER> [(("e1")|("e2")|("e3")| ("e4") |("e5") | ("e6") |("e7") | ("e8") | ("e9")) ] [<comparison_Operator>]  [(<NUMBER> ".")*] [<NUMBER>] ["*" "(" "HASHAMP" "(" ")" "+" <NUMBER> ")" ]) 
+							| (<StringValue> [<comparison_Operator>] [<StringValue>])
+							| ( [(<database_user_name> ".")*]  [(<column_name> | "*") ("," (<column_name> | "*"))*  [("*"|"+") [<NUMBER>] ["."] [<NUMBER>]] ["(" skipBalanced("(" , ")") ")"]]); 
+							
+<help_constraint>		::= "HELP" "CONSTRAINT" [ (<database_user_name> ".")* ]
+								 <constraint_name> [";"];
+
+<help_error_table>		::= "HELP" ["ERROR"|"VOLATILE"] ("TABLE"|"VIEW"|"MACRO") ["FOR"] [ (<database_user_name> ".")*] <tbl_as_string>  [";"] ;
+				
+				
+<delete_table>				::= ( "DELETE" | "DEL" ) 
+							skip("FROM")
+							 ["FROM" <table_spec> ("," <table_spec>)* ] 
+							 [ <where_condition> | "ALL" ] [";"]
+							;
+							
+<with_isolated_loading> ::= "WITH" ["NO"] ["CONCURRENT"] "ISOLATED" "LOADING";
+
+<table_spec>			::= <tbl_as_string> [ <where_condition> | "ALL" ] [ [ "AS" ] <correlation_name> ] ;
+
+
+<correlation_name>	::= <IDENTIFIER>;
+
+<insert>			::= ("INSERT" | "INS" ) [ <with_isolated_loading> ] [ "INTO" ] <tbl_as_string>
+								 ( 
+									["(" <column_name> ("," <column_name>)* ")"] [ "VALUES" ] ["(" skipBalanced("(" , ")") ")"]
+									[<SelectQuery>]
+									 [ <hash_by> ]
+									 [ <local_order_by> ]
+									 [ <logging_errors> ] 
+									 ["JSON"  <StringValue>] 
+									 ["DEFAULT" "VALUES"]
+								 ) [";"]
+								;
+							
+<hash_by> 			::= ("HASH" "BY" <hash_list> ("," <hash_list>)*) | ("RANDOM") ; 		
+
+<hash_list>			::= ( ([(<database_user_name> ".")*] <column_name> ) | <column_position> | <column_expression> )		;
+
+<column_position>	::= <NUMBER> ;
+<column_expression>	::= <StringValue> ;
+
+<local_order_by>	::= "LOCAL" "ORDER" "BY" <local_order_by_spec> ("," <local_order_by_spec>)*;
+
+<error_limit>		::= <NUMBER> ;
+
+<logging_errors>	::= "LOGGING" [ "ALL" ] "ERRORS" [ "WITH" ( ("NO" "LIMIT") | ("LIMIT" "OF"  <error_limit>) ) ];
+
+<local_order_by_spec>	::= <hash_list>	 [ "ASC" | "DESC" ] [ "NULLS" ( "FIRST" | "LAST" ) ]
+;
+
+<update>			::= ( "UPDATE" | "UPD" )
+						 [ <with_isolated_loading> ]
+						 <tbl_as_string>
+						 [ ("SET" <set_spec> ("," <set_spec>)*)]
+						[ (<where_condition>  ["ELSE" <insert_for_update>])| "ALL" ] 
+						 [ ["FROM"] (<update_form_clause> ("," <update_form_clause>)*) ]
+						[ ("SET" <set_spec> ("," <set_spec>)*)]
+						 [ (<where_condition>  ["ELSE" <insert_for_update>])| "ALL" ] 
+						 
+						 [";"]
+						;
+						
+<insert_for_update>	::= ("INSERT" | "INS" ) [ <with_isolated_loading> ] [ "INTO" ] <tbl_as_string>
+								 ( 
+									["(" <column_name> ("," <column_name>)* ")"] [ "VALUES" ] ["(" skipBalanced("(" , ")") ")"]
+									[<SelectQuery>]
+									 [ <hash_by> ]
+									 [ <local_order_by> ]
+									 [ <logging_errors> ] 
+									 ["JSON"  <StringValue>] 
+									 ["DEFAULT" "VALUES"]
+								 ) 
+								;
+						
+<set_spec>			::= [(<database_user_name> ".")*] <column_name> "=" <update_expression>;
+
+<update_expression>	::= <help_expression>;	
+
+<update_form_clause>	::= [<tbl_as_string>] ["AS"] <correlation_name>;		
+
+<create_macro>			::= ( ("CREATE" "MACRO") | ("CM") | ("REPLACE" "MACRO") ) [(<database_user_name> ".")*] <macro_name>
+							 [ "(" <marco_parm> ("," <marco_parm>)* [")"] ]
+							 "AS" "(" <macro_clause>*
+							 
+							 ")" [";"]
+							 ;
+
+<macro_clause>			::=  ("INSERT" | "DELETE" | "UPDATE"|"SET" |"ABORT" | "CALL"|"SELECT") skip(";") ";";
+
+<marco_parm>			::=  <column_name> ["("] <data_type> [")"] ["NOT" "NULL"];
+
+<create_type>			::= "CREATE" "TYPE" [ "SYSUDTLIB" "." ] <UDT_name> "AS" 
+							(("(" <attribute_specification> ("," <attribute_specification>)* ")") | (<array_oracle>) | (<returns_parameter_specification>)  )
+							 [ "INSTANTIABLE" ] ["NOT"] ["FINAL"] [ <method_specification> ("," <method_specification>)* ] [";"]
+							;
+							
+
+<attribute_name>			::= <IDENTIFIER> ;	
+
+<attribute_specification>	::= <attribute_name> (
+							 (<data_type> [ "CHARACTER" "SET" <server_character_set> ] )|
+							 <UDT_name>
+							)
+							;		
+
+<method_specification>		::= [ "INSTANCE" | "CONSTRUCTOR" ] "METHOD" [ "SYSUDTLIB" "." ] <method_name>
+								 "(" [<method_parameter_specification> ("," <method_parameter_specification>)*] ")"
+								"RETURNS" <returns_parameter_specification> [ "AS" "LOCATOR" ]
+								 [ "CAST" "FROM" ( <data_type> | ([ "SYSUDTLIB" "." ] <UDT_name>) ) 
+								[ "AS" "LOCATOR" ] ]
+								 [ "SPECIFIC" [ "SYSUDTLIB" "." ] <specific_method_name> ]
+								 [ "SELF" "AS" "RESULT" ]
+								 ["DEFAULT" "NULL"]
+								 (<language_and_access_specification> |
+								 <type_attribute>)* ;		
+
+<method_name>			::= <IDENTIFIER> ;								 
+<specific_method_name>			::= <IDENTIFIER> ;								 
+
+<method_parameter_specification>	::= <method_parm_spec_value> [ "AS" "LOCATOR" ];				
+
+<method_parm_spec_value>		::= 	 (<data_type> [ "CHARACTER" "SET" <server_character_set> ]) |
+										 ([ "SYSUDTLIB" "." ] <UDT_name>);
+
+<type_attribute>  		::= ("SPECIFIC" [ "SYSUDTLIB" "." ] <specific_method_name>) |
+							 ("PARAMETER" "STYLE" ( "SQL" | "TD_GENERAL" ) )|
+							 (["NOT"] "DETERMINISTIC") |
+							 ("CALLED" "ON" "NULL" "INPUT") |
+							 ("RETURNS" "NULL" "ON" "NULL" "INPUT");
+							 
+<returns_parameter_specification>	::= ((<data_type> ["ARRAY"] [ ("CHARACTER" "SET" <server_character_set>) | 
+										(("["[<NUMBER>	 ":"] <NUMBER> "]")*)  ]) |
+										 ([ "SYSUDTLIB" "." ] <UDT_name>))
+										 [ "AS" "LOCATOR" ]
+										  ["DEFAULT" "NULL"];
+										 
+<array_oracle>				::=  ( ("VARYING" "ARRAY") | "VARRAY" ) ("(" [<NUMBER> ":"] <NUMBER> ")")* ["OF"] <data_type>  ["DEFAULT" "NULL"]; 
+
+<create_storage_format_schema>	::= "CREATE" <storage_format> "SCHEMA" ["SYSUDTLIB" "."] <schema_name> "AS" <schema> [";"];
+
+<schema>		::= <StringValue> ;			
+
+<create_database>	::= ( ("CREATE" "DATABASE") | "CD" ) <name> [ "FROM" <database_name> ] "AS"
+						 ( "PERMANENT" | "PERM" ) "=" ( (<NUMBER>) ) [ "BYTES" ] [","]
+						 [ "SKEW" "=" ( (<NUMBER>) | "DEFAULT" ) [ "PERCENT" ] ]  [","]
+						 [ <database_attribute> ([","] <database_attribute>)*] [";"]
+						 ;
+
+<database_attribute>	::= (( ( "SPOOL" | "TEMPORARY" ) "=" (<NUMBER>) [ "BYTES" ]
+							[ "SKEW" "=" ( (<NUMBER>) | "DEFAULT" ) [ "PERCENT" ] ] )
+							| ("ACCOUNT" "=" <StringValue> )
+							| ("DEFAULT" "MAP" "=" ( "NULL" |<map_name>  ) [ "OVERRIDE" ["NOT"] "ON" "ERROR" ] )
+							|(["NO"] "FALLBACK" ["PROTECTION"] )
+							|([ "NO" | "DUAL" ] ["BEFORE"] "JOURNAL" )
+							|([ "NO" | "DUAL" | (["NOT"] "LOCAL") ] "AFTER" "JOURNAL" )
+							| ("DEFAULT" "JOURNAL" "TABLE" "=" [ <database_name> "." ] <tbl_as_string>)
+						)
+						;	
+
+<create_role>			::= "CREATE" ["EXTERNAL"] "ROLE" <role_name> [";"];		
+
+				
+<create_user>			::= "CREATE" "USER" <user_name> [ "FROM" <database_name> ] "AS"
+						(([","] <user_values>)*) [";"]
+						;
+						
+<user_values>			::= <permanent_clause> | <pswd_values> | <user_attribute>;
+
+<permanent_clause>		::= ( "PERMANENT" | "PERM" ) "=" <perm_expr> ["BYTES"] [ <skew_specification> ] ;						
+<skew_specification>		::= "SKEW" "=" ( <NUMBER> | "DEFAULT" ) ["PERCENT"] ;
+
+<pswd_values>			::= "PASSWORD" "=" (("(" "EXPIRE" "=" <NUMBER>  ")")|<password>);
+
+<user_attribute>		::= ( ("STARTUP" "=" <StringValue>) |
+							 (( "TEMPORARY" | "SPOOL" ) "=" ( <perm_expr> ) ["BYTES"] [ <skew_specification> ] )
+							| ("DEFAULT" "DATABASE" "=" <database_name>)
+							| ("COLLATION" "=" <collation_sequence>)
+							| ("ACCOUNT" "=" ((["("] <StringValue> ("," <StringValue>)* [")"])  | "NULL" ))
+							| ("DEFAULT" "MAP" "=" ( "NULL" |<map_name>  ) [ "OVERRIDE" ["NOT"] "ON" "ERROR" ] )
+							| (["NO"] "FALLBACK" ["PROTECTION"])
+							| ([ "NO" | "DUAL" ] ["BEFORE"] "JOURNAL" )
+							| ([ "NO" | "DUAL" | (["NOT"] "LOCAL") ] "AFTER" "JOURNAL")
+							| ("DEFAULT" "JOURNAL" "TABLE"  "=" [ <database_name> "." ] <tbl_as_string> )
+							| ("TIME" "ZONE" "=" ( ("LOCAL") | ( <StringValue> )|	("NULL") ))
+							| ("DATEFORM" "=" ( "INTEGERDATE" | "ANSIDATE" | "NULL" ))
+							| ("DEFAULT" "CHARACTER" "SET" <server_character_set> )
+							| ("DEFAULT" "ROLE" "=" ( "NONE" | "NULL" | "ALL" |<role_name> ) )
+							| ("PROFILE" "=" ( "NULL" | <profile_name> ) )
+							| ("TRANSFORM" "(" <transform_specification> ("," <transform_specification>)* ")" ) 
+							| ("DBA")
+							| ("CONSTRAINT" "=" ( <constraint> ("," <constraint>)* ))
+							| ("EXPORTWIDTH" "=" ( <StringValue> | "DEFAULT" | "EXPECTED"))
+						)
+						;
+						
+<perm_expr>				::= <help_expression>;	
+						
+<collation_sequence>		::= "ASCII"	| "CHARSET_COLL" | "EBCDIC" | "HOST" | "JIS_COLL" | "MULTINATIONAL" ;
+
+<profile_name>			::= <IDENTIFIER>;
+
+<transform_specification>	::= <data_type> "="  <group_name>;
+
+<group_name>			::= <IDENTIFIER>;
+
+<constraint>			::= <column_name> (
+							 ( "(" <level_name> ("," <level_name>)* ")" ) |
+							 ( "(" "NULL" ")" )
+							)
+							;
+							
+<level_name>		::= <IDENTIFIER> ["DEFAULT"];
+
+
+<alter_table>		::= mapRight([ "NONTEMPORAL" ] "ALTER" "TABLE" [ (<database_user_name> ".") ] node("OWNER",((attribute("NAME",<table_name>))|<StringAsName>)),
+						(
+							("RELEASE" [ "DELETED" ] "ROWS" [ "AND" "RESET" "LOAD" "IDENTITY" ])
+							|("REVALIDATE" [ "WITH" ( ("INSERT" [ "INTO" ] <tbl_as_string>) |( "DELETE" )) ]  )
+							|(<j_add_option> ("," <j_add_option>)* )
+							|(<alter_option> ("," <alter_option>)*)
+							|( [","](<table_option> ("," <table_option>)*) [ <alter_option> ("," <alter_option>)* ])
+							|( <normalize> )
+							|("DROP" "NORMALIZE" )
+							|(<modify_primary>)
+							|( "MODIFY" "NO" "PRIMARY" [ "INDEX" ] [<alter_partitioning>] )
+							|("MODIFY" <alter_partitioning> )
+							|("FROM" "TIME" "ZONE" "=" [ <DELIMITER> ] <StringValue> ["," "TIMEDATEWZCONTROL" "=" <NUMBER> ] ["," "WITH" "TIME" "ZONE" ] )
+							|(( "SET" | "RESET" ) "DOWN")
+						))
+						[";"];
+	
+	
+<j_add_option>		::= "ADD" ( (( "COLUMN" | "ROW" | "SYSTEM" ) "(" <column_name> ")" [ ["NO"] "AUTO" "COMPRESS" ] )
+							| ("(" <column_name> ")" ["NO"] "AUTO" "COMPRESS")
+						 )
+						; 
+						
+<alter_option>		::= ( ("ADD" <add_option>)
+							|( "MODIFY" [ [ "CONSTRAINT" ] <name> ] "CHECK" "(" <boolean_condition> ")")
+							|( "RENAME" ( <col_or_const_name> ( "AS" | "TO" )   <col_or_const_name> )) 
+							|( "DROP" <drop_option>)
+						);
+						
+<col_or_const_name>	::= <IDENTIFIER>;
+
+						//Raji_07102026_071001005_Updated the grammar file to add an operation node for CHECK constraints.
+
+<add_option>		::= ( (node("OPERATION",
+								[ "CONSTRAINT" ((attribute("NAME",<IDENTIFIER>))|<StringAsName>) ] 
+								( ("FOREIGN" "KEY"  <constraint_columns> <references>  ))
+									|( ( "UNIQUE" attributeEx("EASTEREOTYPE","Teradata::unique") | "PRIMARY" "KEY" attributeEx("EASTEREOTYPE","Teradata::PK") )  <constraint_columns>*) ) 
+									|(node("OPERATION", [ "CONSTRAINT" ((attribute("NAME",<IDENTIFIER>))|<StringAsName>) ] "CHECK" attributeEx("EASTEREOTYPE","Teradata::check") "("attribute("CODE", <boolean_condition> )")")))
+							|(  ( <column_specification> ("," <column_specification>)* ) [ "INTO" <column_name> ] )
+							| ([ "COLUMN" | "ROW" | "SYSTEM" ] "(" ( <column_name> | (<column_specification> ("," <column_specification>)*) ) ")" 
+								[ ["NO"] "AUTO" "COMPRESS" ] )
+							| ("(" <column_name> ")" ["NO"] "AUTO" "COMPRESS")
+							|( "PERIOD" "FOR" <period_name> "(" <period_begin> "," <period_end> ")") 
+							| ( <col_or_const_name> ("," <col_or_const_name>)* "CONSTRAINT")
+						)
+						;
+						
+<period_begin>  ::= <NUMBER> ;
+<period_end>  ::= <NUMBER> ;
+
+<drop_option>	::= ( ("PERIOD" "FOR" <period_name>) 
+						| (<name> [ "IDENTITY" ] )
+						| ("CONSTRAINT" <name>) 
+						| ([ "CONSTRAINT" <name> ] "FOREIGN" "KEY" "(" <column_name> ("," <column_name>)* ")" <references> )
+						| ([ [ "CONSTRAINT" ] <name> ] "CHECK")
+						| ("INCONSISTENT" "REFERENCES" )
+						| ( <col_or_const_name> ("," <col_or_const_name>)* "CONSTRAINT")
+					);
+					
+<normalize>		::= "ADD" "NORMALIZE" [ "ALL" "BUT" "(" <column_name> ("," <column_name>)* ")" ]
+					"ON" <column_name> [ "ON" ( ("MEETS" "OR" "OVERLAPS") | ("OVERLAPS" "OR" "MEETS") ) ];
+					
+
+<modify_primary>	::= "MODIFY" [ ["NOT"] "UNIQUE" ] "PRIMARY" [ "AMP" ] [ "INDEX" ]
+						 [ <index_name> | ("NOT" "NAMED") ] [ "(" <column_name> ("," <column_name>)* ")" ] [ <alter_partitioning> ]
+						;
+						
+<alter_partitioning> ::= (  "PARTITION" "BY" (( <partitioning_level> )| ("(" <partitioning_level> ("," <partitioning_level>)* ")") )) 
+							| ((<drop_and_add_range> ("," <drop_and_add_range>)* )  [ "WITH" ( ("INSERT" [ "INTO" ] <tbl_as_string>) | "DELETE" ) ] )
+							| ("NOT" "PARTITIONED")
+						;	
+						
+<drop_and_add_range> ::= ["DROP" <range_expression>] [ "ADD" <range_expression> ] ;
+
+<range_expression>	::= ("RANGE" | "RANGE#Ln")
+							( ("BETWEEN" (<range> ("," <range>)*) ["," ( ("NO" "RANGE" [ ( "OR" | "," ) "UNKNOWN" ])| "UNKNOWN" ) ])
+							 |("NO" "RANGE" [ ( "OR" | "," ) "UNKNOWN" ]) 
+							 |("UNKNOWN")
+							 |(<where_condition>)
+						 );
+						 
+<range>				::= <start_expression> [ "AND" <end_expression> ] [ "EACH" <range_size> ] ;
+
+<start_expression>	::= <NUMBER>;
+<end_expression>	::= <NUMBER>;
+<range_size> 		::= <NUMBER>;
+
+<alter_Foreign_table>			::= "ALTER" "FOREIGN" "TABLE" [<database_name> "."]<tbl_as_string>
+									[[","] (<table_option>(","<table_option>)*) ]
+									[ <column_option> ]
+									[ "UPDATE" <update_specification> ]
+									[ "MODIFY" "PARTITION" "BY" "("( <Modify_partiton_by>(","<Modify_partiton_by>)*) ")" ][";"];
+
+<Modify_partiton_by>			::=	[ "COLUMN" "," ] (<partition_column_spec>(","<partition_column_spec>)* ) ;
+
+<partition_column_spec>			::= <column_name> <partition_column_data_type>;
+
+<partition_column_data_type>	::= ( "BYTEINT"|"SMALLINT"|"INTEGER"|"BIGINT"|"VARCHAR"|"CHAR"|"DATE" );
+
+<update_specification>			::=	<foreign_table_expression>;
+
+<column_option>					::= ( 		"ADD" (
+										<add_char_set>
+										| <column_name>  <column_change>
+										|(<named_column_specification>(","<named_column_specification>)*) "INTO" <column_name> 
+										|[ "COLUMN" | "ROW"] (<named_column_specification>(","<named_column_specification>*)) [ ["NO"] "AUTO" "COMPRESS" ]
+										|[ 	"COLUMN" | "ROW" | "SYSTEM" ] (<column_name>) [ ["NO"] "AUTO" "COMPRESS" ]
+											)
+										|"DROP" <column_name> [ "IDENTITY" ]
+										|"RENAME" <column_name> ( "AS" | "TO" ) <column_name>
+									);
+									
+<add_char_set>					::=		<location_payload> <format_type> "(" <NUMBER>")" "INLINE" "LENGTH" <NUMBER> "CHARACTER" "SET" "UNICODE";
+				
+<location_payload>				::= ( "LOCATION" | "PAYLOAD" );
+
+<format_type>					::= <IDENTIFIER>;
+				
+<column_change>					::= ( <named_column_specification> [ "INTO" <column_name> ] 
+										|<data_type_attributes>
+										|(node("OPERATION",[ "CONSTRAINT" ((attribute("NAME",<constraint_name>))|<StringAsName>) ] <column_constraint_values>))
+										| "NULL"
+										|	<security_constraint_column_declaration> 
+								
+									);
+							
+<named_column_specification>	::= [<column_name>] <data_type> [ <data_type_attributes> ];
+							
+<security_constraint_column_declaration> ::= <IDENTIFIER>;
+							
+<data_type_attributes>			::=	( "NOT" "NULL" 
+										|( "UPPERCASE" | "UC" ) 
+										| ["NOT"] ( "CASESPECIFIC" | "CS" ) 
+										| "FORMAT" <StringValue> 
+										|  "TITLE" <StringValue>
+										|  "NAMED" <name>
+										| "CHARACTER" "SET" <server_character_set>
+										);
+
+
+<alterTableToCurrent>			::= "ALTER" "TABLE" ( <tbl_as_string>| <join_index_name> ) "TO" "CURRENT"
+									[ "WITH" [ "INSERT" ["INTO"] <save_table>  | "DELETE" ] ] [";"] ;
+  
+<save_table>					::= <IDENTIFIER>;
+
+
+
+<alterIndex>				::= "ALTER" ("JOIN"|"HASH") "INDEX" [<database_name> "."]<tbl_as_string> ","
+									"MAP" "=" <map_name> [ "COLOCATE" "USING" <colocation_name> ] [";"];
+									
+									
+<alter_procedure>			::= "ALTER" "PROCEDURE" [<database_name> "."]<tbl_as_string> (<External_form>|<SQL_Form>);
+									
+									
+<External_form>				::="LANGUAGE" ( "C"| "CPP" | "JAVA" )
+								( "COMPILE" ["ONLY"] [ "AT" "TIME" "ZONE" ( "LOCAL" | [ "sign" ] <StringValue> ) ]	| "EXECUTE" ["NOT"] "PROTECTED" ) [";"] ;
+									
+<SQL_Form>					::=	[ "LANGUAGE" "SQL" ] "COMPILE" [ "WITH" ( <compile_with>("," <compile_with>)* ) ]
+								[ "AT" "TIME" "ZONE" ( "LOCAL" | [ "sign" ] <StringValue> ) ]  [";"]  ;
+								
+								
+<compile_with>				::= ["NO"] "SPL" | ["NO"] "WARNING";
+
+
+<alter_function>			::= "ALTER" ( ["SPECIFIC"] "FUNCTION" [<database_name> "."]<tbl_as_string>[ "(" ( <function_datatype>("," <function_datatype>)* ) ")" ] )
+								( "EXECUTE" ["NOT"] "PROTECTED" | "COMPILE" ["ONLY"] ) [";"]
+								;
+	  
+<function_datatype>			::= <data_type> | ["SYSUDTLIB" "."] <UDT_name> 	;
+
+<alter_type>				::= "ALTER" "TYPE" ["SYSUDTLIB" "."] <UDT_name> 
+								(
+								[ "ADD" | "DROP" ] ( <attribute_clause> | <method_clause> | <specific_method_clause> ) 
+								|"COMPILE" ["ONLY"]
+								) [";"] ;
+								
+<attribute_clause>			::= ( "ATTRIBUTE" <attribute_specification_func>(","  <attribute_specification_func>)* )  ;
+
+<method_clause>				::= [ "INSTANCE" | "CONSTRUCTOR" ] "METHOD" ["SYSUDTLIB" "."] <method_name>
+									[ "(" [<data_type_or_UDT_name>(","<data_type_or_UDT_name>)*] ")" ]
+								<type_properties>*;
+									
+<type_properties>			::= ( <returns_clause> 
+								|"LANGUAGE" ( "C" | "CPP" )
+								|"PARAMETER" "STYLE" ( "SQL" | "TD_GENERAL" ) 
+								|["NOT"] "DETERMINISTIC"
+								|"NO" "SQL"
+									);
+									
+<data_type_or_UDT_name>		::= ( <data_type> | ["SYSUDTLIB" "."] <UDT_name> ) ;
+
+<returns_clause>			::= "RETURNS" <data_type_or_UDT_name> ["CAST" "FROM" <data_type_or_UDT_name>] ;
+
+<specific_method_clause>	::= "SPECIFIC" "METHOD" ["SYSUDTLIB" "."] <method_name>
+									[ "(" <data_type_or_UDT_name>("," <data_type_or_UDT_name>)* ")" ]
+									"FOR" ["SYSUDTLIB" "."] <UDT_name> ;
+									
+<attribute_specification_func>	::=	<attribute_name> [<data_type_or_UDT_name>];
+
+
+
+<alter_trigger>				::= "ALTER" "TRIGGER" [ <database_name> "."]
+								( <trigger_name> ( "ENABLED" | "DISABLED" | "TIMESTAMP" ) |
+								<tbl_as_string> ( "ENABLED" | "DISABLED" )
+								) [";"] ;
+								
+<createConstraint>			::= "CREATE" "CONSTRAINT" <constraint_name> <data_type> ","
+									  [ ["NOT"] "NULL" "," ]
+									  "VALUES" "(" <name_value> ")" ","( <Constraint_def>(","<Constraint_def>)*) [";"] ;
+									  
+									  
+<name_value>				::= ((<name> ":"<value>(","<name> ":"<value>)*));
+
+<Constraint_def>			::= ( ("DELETE"|"INSERT"|"SELECT"|"UPDATE") "SYSLIB" "." <name>
+								)* ;
+								
+								
+<AlterConstraint>			::= "ALTER" "CONSTRAINT" <constraint_name> "AS"
+									(( "VALUES" "("<name_value>")") |
+										("FUNCTION" ( (( "ADD" | "REPLACE" ) <action> "SYSLIB" "." <name> )| "DROP" <action> ))
+									) [";"] ;
+									
+<action>					::=( "DELETE" | "INSERT" | "SELECT" | "UPDATE" ) ;
+
+
+								
+<help_index>				::= "HELP" ["JOIN"|"HASH"] "INDEX" ["TEMPORARY"] [ <database_name> "."  ] <tbl_as_string>
+												 [ "(" <column_name> (","<column_name>)* ")" ] [";"] ;
+												 
+<help_procedure>			::= "HELP" "PROCEDURE" [ <database_name> "."] <name> [ "ATTRIBUTES" | "ATTR" | "ATTRS" ] [";"] ;
+
+<help_function>				::= "HELP"  ["SPECIFIC"] "FUNCTION" [ <database_name>["."] ] <name>  ["(" <data_type> ("," <data_type>)*")"] [";"] ;
+
+<help_type>					::= "HELP" "TYPE" ["SYSUDTLIB" "."] <name> [ "ATTRIBUTE" | "METHOD" ] [";"] ;
+
+<help_user>					::= "HELP" "USER" <name> [";"] ;
+
+<help_trigger>				::= "HELP" "TRIGGER" [ <database_name> "." ]  <tbl_as_string>  [";"] ;
+
+<Show_Common_commands>				::= "SHOW" ["IN" "XML"] ["TEMPORARY"] ("TABLE"|"FUNCTION" "MAPPING"|"MAP") [ <database_name> "."] <tbl_as_string> [";"] ;
+
+<set_role>					::= "SET" "ROLE" ( "EXTERNAL" | "NONE" | "NULL" | "ALL"| <name> ) [";"] ;
+
+<set_session_constraint>	::= ( "SET" "SESSION" | "SS" ) (<set_constraint> (","<set_constraint>)*) [";"] ;
+
+<set_constraint>				::= "CONSTRAINT" "=" <name> "(" (<name> (","<name>)* | "NULL" )")" ;
+
+<set_session_database>			::= ( ("SET" "SESSION") | "SS" ) "DATABASE" <database_name> [";"] ;
+
+<set_session_func_trace>		::= ( "SET" "SESSION" | "SS" ) "FOR" ["NO"] ["CONCURRENT"] "ISOLATED" "LOADING" [";"] ;
+
+<modify_user>					::= "MODIFY" "USER" <name> "AS" (<user_values> (","<user_values>)*) [";"] ;
+
+<delete_databases>				::= ( "DELETE" | "DEL" ) "DATABASE" <database_name> ["ALL"] [";"] ;
+
+<delete_user>					::= ( "DELETE" | "DEL" ) "USER" <name> ["ALL"] [";"] ;
+
+<database_command>				::="DATABASE" <database_name> [";"];
+
+<Schema_comment>						::= "COMMENT" ["ON"] ( <object_kind_1> | <object_kind_2> )
+									[ <database_name> "." ] <name>
+									[ [( "AS" | "IS" )] <StringValue> ] [";"] ;
+									
+<object_kind_1>					::=("COLUMN"| "GLOP" "SET"| "MACRO"| "MAP"| "METHOD"| "PROCEDURE" "PROFILE"| "ROLE"| "TRIGGER"|"TYPE"| "VIEW") ;
+
+<object_kind_2>					::=("DATABASE"|"FILE"|"TABLE"|"USER");
+
+
+<create_glop>					::= "CREATE" "GLOP" "SET" [ <database_name> "." ] <name> [";"] ;
+
+
+<Create_method>					::= "CREATE" [ ("INSTANCE" | "CONSTRUCTOR") ] "METHOD" ["SYSUDTLIB" "."] <name>
+										"(" <locator_specification> ("," <locator_specification>)* ")"
+									"RETURNS" <data_type> [ "CAST" "FROM" <data_type> ] "FOR" <name>
+									[ "USING" "GLOP" "SET" <name> ]
+										"EXTERNAL" [ "NAME" ( <name> | skipBalanced("\'","\'") ) ]
+										[ "EXTERNAL" "SECURITY" ( "DEFINER" [ <name> ] | "INVOKER" ) ] [";"] ;
+
+
+<locator_specification>			::= (<data_type>(","<data_type>)*) ;
+ 
+<Create_cast>					::=( "CREATE" | "REPLACE" ) "CAST" "(" <source_target_cast> "AS" <source_target_cast> ")"
+										"WITH" ( <cast_specifi_method> | <cast_specific_function> )
+										[ "AS" "ASSIGNMENT" ] [";"] ;
+
+<source_target_cast>					::= ( <data_type> | ["SYSUDTLIB" "."] <name> ) ;
+
+<cast_specifi_method>			::= ( "SPECIFIC" "METHOD" ["SYSUDTLIB" "."] <name> |
+										[ "INSTANCE" ] "METHOD" ["SYSUDTLIB" "."] <name> "(" [<name> (","<name>)*] ")") "FOR" <name> ;
+										
+<cast_specific_function>		::= ( "SPECIFIC" "FUNCTION" ["SYSUDTLIB" "."]<name> |  "FUNCTION" <name> "(" [<name> (","<name>)*]")") ;
+
+<Create_Ordering>				::=( "CREATE" | "REPLACE" ) "ORDERING" "FOR" [ "SYSUDTLIB" "." ] <name>
+										"ORDER" "FULL" "BY" "MAP" "WITH" ( <ordering_method_specification> | <ordering_function_specification> ) [";"] ;
+										
+<ordering_method_specification>		::=( ("SPECIFIC" "METHOD" [ "SYSUDTLIB" "." ] <name>) |
+											([ "INSTANCE" ] "METHOD" [ "SYSUDTLIB" "." ] <name> "("
+											[ (( <data_type> | [ "SYSUDTLIB" "." ] <name> ) (","( <data_type> | [ "SYSUDTLIB" "." ] <name> ) )*) ] ")") )"FOR" <name> ;
+
+<ordering_function_specification>	::=( ["SPECIFIC"] "FUNCTION" [ "SYSUDTLIB" "." ] <name> 
+										"("[ (( <data_type> | [ "SYSUDTLIB" "." ] <name> ) (","( <data_type> | [ "SYSUDTLIB" "." ] <name> ))*) ]")" ) ;
+	 
+	 
+<Create_transform>					::= ( "CREATE" | "REPLACE" ) "TRANSFORM" "FOR" ["SYSUDTLIB" "."] <name><transform_specifications>* [";"] ;
+  
+<transform_specifications>	::= (<transform_group> "(" "TO" "SQL" "WITH" <method_or_function> "FROM" "SQL" "WITH" <method_or_function> ")" ) ;
+
+<transform_group>			::= <IDENTIFIER> ;
+  
+<method_or_function>		::=( <specific_method> | <instance_method> | <specific_function>  ) ;
+
+<specific_method>			::=( "SPECIFIC" ["SYSUDTLIB" "."] <name> "FOR" ["SYSUDTLIB" "."] <name> );
+
+<instance_method>			::=["INSTANCE"] "METHOD" ["SYSUDTLIB" "."] <name>
+							  "(" [( <data_type> | ["SYSUDTLIB" "." ] <name>  (","<data_type> | ["SYSUDTLIB" "." ] <name>) )*] ")"
+							  "FOR" ["SYSUDTLIB" ". "] <name> ;
+  
+<specific_function>			::=("SPECIFIC" "FUNCTION" ["SYSUDTLIB" "."] <name> 
+								["(" [ ((<data_type> | ["SYSUDTLIB" "."] <name> ) (","(<data_type> | ["SYSUDTLIB" "."] <name> ) )*)] ")"]) ;
+
+  
+<create_profile>			::= "CREATE" "PROFILE" <name> [ "AS" <profiles> ] [";"] ;
+
+<profiles>					::=(<profile>(","<profile>)*) ;
+
+<profile>					::=( ("ACCOUNT" "=" ( <StringValue> | "("(<StringValue> (","<StringValue>)*) ")" | 
+								"NULL" )) |
+								("DEFAULT" "MAP" "=" ( <name> | "NULL" ) [ "OVERRIDE" ["NOT"] "ON" "ERROR" ] )|
+								("DEFAULT" "DATABASE" "=" ( <database_name> | "NULL" ) )|
+								  ("SPOOL" "=" ( (  <constant_expression> ) ["BYTES"] | "NULL" ) )|
+
+								  ("TEMPORARY" "=" ( (  <constant_expression> ) ["BYTES"] | "NULL" )) |
+
+								  ("PASSWORD" ["ATTRIBUTES"] "=" ( "(" <attribute_profile> ("," <attribute_profile>)*")" | "NULL" ) )|
+
+								  ("QUERY_BAND" "=" skipBalanced("\'","\'") [ "("["NOT"] "DEFAULT" ")" ] )|
+
+								  ("IGNORE" "QUERY_BAND" "VALUES" "=" skipBalanced("\'","\'") )|
+
+								  ("TRANSFORM" "(" <transformation> (","<transformation>)* ")" )|
+
+								  ("COST" "PROFILE" "=" (   "NULL"|<name> ) )|
+
+								 ( "CONSTRAINT" "=" (<constraint_specification> (","<constraint_specification>)*))
+								) ;
+
+<attribute_profile>				::=<name> "=" (  "NULL" |<value> ) ;
+
+<transformation>				::= (<data_type> "=" <name>);
+
+<constraint_specification>		::=(<name>  "(" ( "NULL" | (<level_specification> (","<level_specification>)*) | (<name> (","<name>)*) )")" );
+
+<level_specification>			::= <name> ["DEFAULT"] ;
+
+<constant_expression>			::=<NUMBER> ["*" "(" "HASHAMP" "(" ")" "+" <NUMBER> ")"] ;
+
+<Create_map>					::= "CREATE" "MAP" <name> "FROM" <name> "SPARSE" "AMPCOUNT" "=" <NUMBER> [";"] ;
+
+<create_zone>					::= "CREATE" "ZONE" <name> [ "ROOT" ( <database_name>) ] [";"] ;
+
+<Alter_method>					::= "ALTER" ( <Alter_specific_method_clause> | <altermethodclause> ) 
+									["FOR" ["SYSUDTLIB" "."] <name>] ( "EXECUTE" ["NOT"] "PROTECTED" | "COMPILE" ["ONLY"] ) [";"] ;
+  
+<altermethodclause>				::= ([ "INSTANCE" | "CONSTRUCTOR"] "METHOD" ["SYSUDTLIB" "." ] <name> 
+									[ "(" [( <data_type> | ["SYSUDTLIB" "."] <name> ) ("," ( <data_type> | ["SYSUDTLIB" "."] <name> ))* ]")" ] );
+
+<Alter_specific_method_clause>		::= "SPECIFIC" "METHOD" ["SYSUDTLIB" "."] <method_name> ;
+
+<Alter_zone>						::= "ALTER" "ZONE" <name> [ ( ("ADD" "ROOT"  <database_name>)  | ("DROP" "ROOT" )) ] [";"] ;
+
+<drop_golp_set>						::= "DROP" "GLOP" "SET" [ <database_name> "." ] <name> [";"] ;
+
+<drop_cast>							::= ("DROP" "CAST" [ <database_name> "." ] "(" <data_type> "AS" <data_type> ")" )[";"] ;
+
+<drop_ordering>						::= "DROP" "ORDERING"  ["FOR"] [ <database_name> "." ]<name> [";"] ;
+
+<drop_transform>					::= "DROP" "TRANSFORM" [ <database_name> "." ] ( "ALL"|<name>)
+										"FOR" [ <database_name> "." ]  <name> [";"] ;
+  
+<drop_profile>						::= "DROP" "PROFILE" <name> [";"] ;
+
+<drop_map>							::= "DROP" ("MAP"|"ZONE") <name> [";"] ;
+
+<drop_statistic>					::= "DROP" ( "STATISTICS" | "STATS" | "STAT" ) [ (<statistic> (","<statistic>)*)] "ON" <indexed_item> [";"] ;
+
+<statistic>							::= ( (["UNIQUE"] "INDEX" [ <name> ] ["ALL"] ["(" <column_name> ("," <column_name>)*")"]
+											[ "ORDER" "BY" [ "VALUES" | "HASH" ] "(" <column_name> ")" ] )|
+											( "COLUMN" ( <column_index> | "(" <column_index> (","<column_index>)* ")" ))
+										) ;
+
+<column_index>						::= ( (<column_name> [ ["AS"] <name> ]) | "PARTITION" ) ;
+
+<indexed_item>						::= ( (["TEMPORARY"] [ <database_name> "."  ] <tbl_as_string>) |
+  ([ <database_name> "."]  <name> )
+);
+
+
+<help_method>						::= "HELP" <help_method_clause>   [";"] ;
+
+<help_method_clause>				::= [ "INSTANCE" | "CONSTRUCTOR" |"SPECIFIC" ] "METHOD" 
+										[<database_name> "."] <name>
+											[ "(" <name> (","<name>)* ")" ] ["FOR" <name>] ;
+  
+<help_storage_format>				::= "HELP" <storage_format> "SCHEMA" ["SYSUDTLIB" "."] <name> [";"] ;
+  
+<help_cast>							::= "HELP" "CAST" ["SYSUDTLIB" "."] <name> [ "SOURCE" | "TARGET" ] [";"] ;
+
+<help_transform>					::= "HELP" "TRANSFORM" [ <database_name> "."  ] <name> [";"] ;
+
+<help_database>						::= "HELP" "DATABASE" <database_name> [";"] ;
+
+<help_session>						::= "HELP" "SESSION" ["CONSTRAINT"] [";"] ;
+
+<help_statistics>				::= "HELP" ["CURRENT"] "STATISTICS"
+									  ["ON"] ["TEMPORARY"] [ <database_name> "."] <name>[ "FROM" <name>  [ "FOR" "QUERY" <query_ID> ]  
+									  [ "SAMPLID" <statistics_ID> ]
+									  [ "USING" "MODIFIED" ] ][";"] ;
+  
+<query_ID>						::= <IDENTIFIER> ;
+ 
+<statistics_ID>					::= <IDENTIFIER> ;
+
+
+<Show_query_logging>			::= "SHOW" "QUERY" "LOGGING" "ON" (
+									  <account_specification> |
+									  (( <database_name>  (","<database_name>)*)) |
+									  <application_specification> 
+									) [";"] ;
+
+<account_specification>			::= ("ALL" ["RULES"] | <user_name> ) [ "ACCOUNT" "=" ( <StringValue>  | ("(" <StringValue>(","<StringValue>)* ")"))  ]  ;
+
+<application_specification>		::= "APPLNAME"  "=" ( skipBalanced("\'","\'")  | ("("(skipBalanced("\'","\'")(","skipBalanced("\'","\'") ) )* ")") ) ;
+
+
+<Show_statistics>				::= "SHOW" ["IN" "XML"] ["SUMMARY"] ["CURRENT"] ( "STATISTICS" | "STATS" | "STAT")
+									  [ "VALUES" ["SEQUENCED"] ]
+									  ( ([ "UNIQUE" ] "INDEX" <name>) |
+									   ( [ "UNIQUE" ] "INDEX" [ <name> ] ["ALL"] "(" <column_name> (","<column_name>)* ")"
+										  [ "ORDER" "BY" ( "VALUES" | "HASH" ) "(" <column_name> ")" ] )|
+										(("COLUMN" <column_statistics_specification>)("," ("COLUMN" <column_statistics_specification>) ))
+									  )
+									  "ON" <table_statistics_specification> 
+									   [ "FOR" "QUERY" <query_id> ]
+									   [ "SAMPLEID" <statistics_id> ]
+									   [ "USING" "MODIFIED" ] [";"]
+									  [";"] ;
+  
+<column_statistics_specification>	::= ( ( <column_expre>)| ("(" <column_expre> (","<column_expre>)*")"  "AS" <name>) |
+											  ( <name> |
+												"PARTITION" |(
+												"(" (( <name> | "PARTITION" ) (","( <name> | "PARTITION" ))*) ")"
+											   )[ ["AS"] <name> ]
+											) );
+
+<column_expre>				::=<IDENTIFIER> ;
+
+<table_statistics_specification>		::=(["TEMPORARY"] [ <database_name> "."] <tbl_as_string> );
+
+
+<Show_object>				::= "SHOW" ([ "IN" "XML" ] (<Show_object_type>) [ <database_name> "."] <name> 
+														  | ( "FUNCTION" [ <database_name> "." ] <name>
+															[ "(" ( <data_type> | <name> )(","( <data_type> | <name> ))* ")" ])
+														  |( [ "INSTANCE" | "CONSTRUCTOR" ] "METHOD" ["SYSUDTLIB" "."] <name>
+														  [ "(" ( <data_type> | <name> )(","( <data_type> | <name> ))* ")" ]
+														  "FOR" <name>) 
+														  |<Show_object_storage_format> "SCHEMA" ["SYSUDTLIB" "."] <name> ) ;
+
+<Show_object_storage_format> ::= "STORAGE" "FORMAT" ( "Avro" | "CSV" [ "CHARACTER" "SET" ( "UNICODE" | "LATIN" ) ] )
+									[ "WITH" "SCHEMA" [ <database_name> "." ] <name> ]  [";"] ;
+
+
+<Show_object_type>			::=(("HASH" "INDEX") |
+								("JOIN" "INDEX") |
+								"MACRO"|
+								([ "TEMPORARY" ] "TABLE")|
+								("ERROR" "TABLE" "FOR")|
+								"TRIGGER"|
+								"VIEW"|
+								"PROCEDURE" |
+								("SPECIFIC" "FUNCTION")|
+								("SPECIFIC" "METHOD") | "CAST"|
+								"TYPE"|
+								"FILE"|
+								"CONSTRAINT"|
+								"AUTHORIZATION"|
+								("GLOP" "SET")
+								) ;
+								
+<Show_request>				::= "SHOW" ["IN" "XML"] ["QUALIFIED"] <SelectQuery> [";"] ;
+
+<Replace_method>			::= "REPLACE" ["SPECIFIC"| "INSTANCE" | "CONSTRUCTOR" ]  "METHOD"
+								skip("EXTERNAL") "EXTERNAL" [ "NAME" ( <name> | "," <item_list> [ <DELIMITER>* ] "," ) ] [<StringValue>][";"] ;
+ 
+<item_list>					::=( "S" | "C" ) <S_or_C_item> ;
+
+<S_or_C_item>				::= (( "I" <DELIMITER> <name> <DELIMITER> <name>) |
+								 ( "L" <DELIMITER> <name>) |
+								  ("O" <DELIMITER> <name> <DELIMITER> <name>) |
+								  ("S" <DELIMITER> <name> <DELIMITER> <name>)
+								);
+
+
+<Replace_query_logging>		::= "REPLACE" "QUERY" "LOGGING"
+  skip("ON")
+  "ON" <on_items> [";"] ;
+  
+<on_items>					::=( (( "ALL" | <name> ) [ "ACCOUNT" "=" ( <StringValue>  | ("(" <StringValue>(","<StringValue>)* ")"))  ]) |
+								(<database_name> (","<database_name>)*) |
+								("APPLNAME" "=" ( skipBalanced("\'","\'")|"(" (skipBalanced("\'","\'")(","skipBalanced("\'","\'") ) )* ")" ))
+								);
+
+<set_transform_group>			::= "SET" "TRANSFORM" "GROUP" "FOR" "TYPE" <data_type> <transform_group> [";"] ;
+
+<set_session>					::=(("SET" "SESSION") |"SS") (<set_session_common>
+																|<set_session_Account>
+																|<set_session_charater_unicode>
+																|<Set_session_debug>
+																|<set_session_isolation>
+																|<set_json_ignore>
+																|<set_session_dot_natation>
+																|<set_searchudf>
+																|<set_transaction_level>
+																|<Set_udft_search>) ;
+
+<set_session_common>					::=  (<session_keyword> ["="] <IDENTIFIER> [";"]) ;
+
+<session_keyword>				::=("KEYWORD"|"CALENDAR"|"COLLATION"|"DATEFORM") ;
+
+<set_session_Account>			::= ( "ACCOUNT" "=" (<StringValue>)"FOR" ( "SESSION" | "REQUEST" )) [";"] ;
+
+<set_session_charater_unicode>	::= "CHARACTER" "SET" "UNICODE" "PASS" "THROUGH" [ "ON" | "OFF" ] [";"] ;
+
+<Set_session_debug>				::= "DEBUG" (
+												("FUNCTION"|"PROCEDURE"|"METHOD") [ <database_name> "."] <name>  )
+												( "ON" | "OFF" ) [";"] ;
+  
+<set_session_dot_natation>		::=  "DOT" "NOTATION" ( "DEFAULT" | "LIST" | "NULL" |  "ERROR"  ) "ON" "ERROR" [";"] ;
+
+<set_session_isolation>			::= "FOR" ["NO"] ["CONCURRENT"] "ISOLATED" "LOADING" [";"] ;
+
+<set_json_ignore>				::= "JSON" "IGNORE" "ERRORS" ( "ON" | "OFF" ) [";"] ;
+
+<set_searchudf>					::= "SEARCHUIFDBPATH" "=" [ (<database_name> ("," <database_name>)*)] [";"] ;
+
+<set_transaction_level>			::= "CHARACTERISTICS" "AS" "TRANSACTION" "ISOLATION" "LEVEL" <isolation_level> [";"] ;
+
+<isolation_level>				::= ( "READ" "UNCOMMITTED" | "RU" | "SERIALIZABLE" | "SR" ) ;
+
+<set_session_query_barnd>		::= "SET" "QUERY_BAND" "=" ( <StringValue> | "NONE" ) [ "UPDATE" ]
+									"FOR" ( ("SESSION" ["VOLATILE"]) | "TRANSACTION" ) [";"] ;
+  
+<set_time_zone>					::= "SET" "TIME" "ZONE" ("LOCAL" |  "USER" | <time_expression> |  [ ("+"|"-") ] <NUMBER> | <StringValue> )[";"] ;
+
+<time_expression>				::= "INTERVAL" <StringValue> ("HOUR"|"MINUTE"|"SECONDS") "TO" ("HOUR"|"MINUTE"|"SECONDS") ;
+
+<Set_udft_search>				::= ( "UDFSEARCHPATH" "=" (<database_name> ( "," <database_name>)*)) ("FOR" "FUNCTION" "=" (<name> ("," <name>)*)) [";"] ;
+
+<modify_profile>				::= "MODIFY" "PROFILE" <name> "AS" <profile> [";"] ;
+
+<logging_incremental_objectlist>	::= "LOGGING" "INCREMENTAL" "ARCHIVE" ("ON"|"OFF") "FOR" (<object_list> (","<object_list>)*) [ "DELETE" "LOG" "ROWS" ] [";"] ;
+
+<object_list>					::= ((<database_name>["." <tbl_as_string>])(","(<database_name>["." <tbl_as_string>]))*) ;
+
+<incremental_restore>			::="INCREMENTAL" "RESTORE" "ALLOW" "WRITE" "FOR" <object_list> [";"] ;
+
+<begin_isolated_load>			::="BEGIN" ["CONCURRENT"] "ISOLATED" "LOADING" "ON" (<object_list> (","<object_list>)*) "USING" "QUERY_BAND"
+									<StringValue>  [ ["IN"] ( "SINGLE" | "MULTIPLE" ) "SESSION" ] [";"] ;
+
+<checkpoint_isolated_load>		::= "CHECKPOINT" ["CONCURRENT"] "ISOLATED" "LOADING" "FOR" "QUERY_BAND" <StringValue> [";"] ;
+
+<end_isolated_laoding>			::= "END" ["CONCURRENT"] "ISOLATED" "LOADING" "FOR" "QUERY_BAND" <StringValue> 
+									[ "OVERRIDE" "SESSION" ] [";"] ;
+
+<Being_logging>					::= "BEGIN" "LOGGING" ["DENIALS"] ["WITH" "TEXT"] "ON"
+									[ <logging_frequency> ]
+									( "ALL" | (<operation_begins> (","<operation_begins>)*)| "GRANT" )
+									[ "FOR" "CONSTRAINT" <name> ]
+									[ "BY" <name> (","<name>)*] 
+									[ "ON" (<begin_item_list> (","<begin_item_list>)*)] [";"] ;
+									
+<operation_begins>				::=( <row_level_security_logging>|<operation_begin>);
+									
+<logging_frequency>				::=  ( "FIRST" | "LAST" | ("FIRST" "AND" "LAST") | "EACH" ) ;
+
+<operation_begin>				::=( ("ALTER" "EXTERNAL" "PROCEDURE")|("ALTER" ("FUNCTION"| "PROCEDURE"))|
+										"CHECKPOINT"|
+										(("CREATE"|"DROP") ("AUTHORIZATION"|"DATABASE"|( "EXTERNAL" "PROCEDURE")|"FUNCTION"|("GLOP" "SET")|
+															"MACRO"|"PROCEDURE"|"PROFILE"|"ROLE"|"TABLE"|"TRIGGER"|"USER"|"VIEW"
+															)
+										)|
+										"DATABASE"|"DELETE"|"DUMP"|"EXECUTE"|("EXECUTE" "FUNCTION")|("EXECUTE" "PROCEDURE")|"GRANT" |"INDEX"|
+										"INSERT"|"MACRO"|"PROCEDURE"|"REFERENCES"|"RESTORE"|("ROLLBACK" "DATABASE")|("ROLLFORWARD" "DATABASE")|
+										"SELECT"|"TABLE"|"TRIGGER"|"UDTMETHOD"|"UDTTYPE"|"UDTUSAGE"|"UPDATE"|"USER"|"VIEW"
+									) ;
+<row_level_security_logging>	::= ( "OVERRIDE"( "DELETE"|"DUMP"|"INSERT"|"RESTORE"|"SELECT"|"UPDATE"))"CONSTRAINT" ;
+
+<begin_item_list>				::=( ("AUTHORIZATION" <name>) |
+									("DATABASE" <database_name>) |
+									("USER" <name>) |
+									(( "TABLE" | "VIEW" | "MACRO" | "PROCEDURE" | "FUNCTION" | ("FUNCTION" "MAPPING" )| "TYPE")
+									[ <database_name> "." ] <name>)) ;
+
+<begin_query_capure>			::= "BEGIN" "QUERY" "CAPTURE"
+									  [ "FOR" "INDEX" "ANALYSIS" ]
+									  [ "WITH" ( "VERBOSE" | [ "DETAILED" ] "STATSUSAGE" )(","( "VERBOSE" | [ "DETAILED" ] "STATSUSAGE" )) ]
+									  [ "INTO" <name> ]
+									  "AS" "WORKLOAD" <name> [";"] ;
+									
+<begin_query_logging>			::= "BEGIN" "QUERY" "LOGGING" skip("ON")
+									
+									"ON" <on_items> [";"] ;
+									
+<flush_query_logging>			::="FLUSH" "QUERY" "LOGGING" "WITH" <flush_option> [";"] ;
+
+<flush_option>					::=<IDENTIFIER>;									
+
+<end_logging>					::= "END" "LOGGING" [ "DENIALS" ] [ "WITH" "TEXT" ] "ON" ( 
+									(<operation_specification>(","<operation_specification>)*) | "ALL" )
+									[ "FOR" "CONSTRAINT" <name> ]
+									[ "BY" <name> ("," <name>) ]
+									[ "ON" (<begin_item_list> (","<begin_item_list>)*) ] [";"] ;
+									
+<operation_specification>		::= (<operation_begins> | "GRANT" ) ;
+
+<end_query_capture>				::= "END" "QUERY" "CAPTURE" [";"] ;
+
+<end_query_logging>				::= "END" "QUERY" "LOGGING" "ON" 
+									(
+									<account_specification> |
+									(( <database_name>  (","<database_name>)*)) |
+									<application_specification> 
+									) [";"] ; 

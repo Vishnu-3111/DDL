@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG-Hadoop --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\hadoop\Hadoop_MDG_Sourcefile\MDG-Hadoop.qea;UID=;PWD=;">
+	<Technology id="DW_H" name="Hadoop" version="1.0" notes="datawarehouse artifacts for hadoop" filename="D:\Datawarehouse project\datawarehouse\datawarehouse\hadoop\Hadoop_MDG_Sourcefile\Hadoop_MDG.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\hadoop\Hadoop_MDG_Sourcefile" files="profile.xml"/>
+	<TagVals tags="Check Constraint,Class Name,Clustered By,Clustered On,Column Comment,Default,Deferred Rebuild,Disable Rewrite,Distributed on,Field Value Types,Function values,Index Comment,Index Properties,Index Table,Index Type,Location,Not Exists,NoValidate,Number of Buckets,Partitioned On,Row Format,Schema and Database,Select Query,Skewed By,Skewed data definition,Sorted By,Stored As,Stored As Directories,Stored By,Stored on,Table Comment,Table Properties,Target Table schema,View Columns,View Comment,viewdef,With SerdeProperties"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\hadoop\Hadoop_MDG_Sourcefile" files="diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\hadoop\Hadoop_MDG_Sourcefile" files="toolbox.xml"/>
+</MDG.Selections>

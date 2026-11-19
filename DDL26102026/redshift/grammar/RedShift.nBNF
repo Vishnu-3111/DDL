@@ -1,0 +1,1304 @@
+// 
+// This file is conversion of the syntax from following web site:
+// https://docs.aws.amazon.com/redshift/latest/dg/c_SQL_commands.html
+// 
+
+caseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>							::= <WHITESPACE> |
+										<COMMENT> |
+										token(<NUMBER>) |
+										(<STRING>) |
+										token(<IDENTIFIER>) |
+										token(keywords());
+
+<DELIMITER>							::= "\n" | "\r" | "\t" | " "  | "~"  |
+										"`"  | "!"  | "@"  | "#"  | "$"  |
+										"%"  | "^"  | "&"  | "*"  | "("  |
+										")"  | "-"  | "+"  | "="  | "("  | 
+										"["  | ")"  | "]"  | ";"  | ":"  | 
+										"\\" | "\'" | "\"" | ","  | "<"  | 
+										">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>						::= " "  | "\r" | "\n" | "\t";
+
+// Not sure about comment like /*...*/?
+<COMMENT>							::= "//" skip(<eol>) <eol> |
+										"/*" skip("*/") "*/";
+
+<EOL>								::= "\r" "\n" |
+										"\n";
+
+<NUMBER>							::= ["$"]"0".."9"+;
+
+<DECIMAL>							::= ["."]<NUMBER>[("."<NUMBER>)*] ;
+
+
+// Not sure about string wrapped by double quota (i.e. ")
+<STRING>			::= token("\"") token(<STRINGDBODY>) token("\"") | 
+						token("\'") token(<STRINGSBODY>) token("\'");
+<STRINGSBODY>		::= skip("\'", "\\\'");
+<STRINGDBODY>		::= skip("\"", "\\\"");
+
+<StringValue>		::=( "\""  <STRINGDBODY> "\"" )| 
+						("\'"  <STRINGSBODY> "\'");	
+
+<StringAsName>		::= ( "\"" attribute("NAME", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("NAME", <STRINGSBODY>) "\'");
+						
+<StringAsValue>		::= ( "\"" attribute("VALUE", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("VALUE", <STRINGSBODY>) "\'");
+
+
+<IDENTIFIER>						::=  ("a".."z" | "_") ("a".."z" | "0".."9" | "_")*;
+
+// Parser rules
+<language>							::= attributeEx("EAGENTYPE", "Redshift") attributeEx("EAMAPPING", "DDL") <statements>*;
+
+<statements> 					::= <create_commands>
+								   | <drop_commands>
+								   | <alter_commands>
+								   | <other_commands> ;
+
+<create_commands> 				::= <Create_Ex_Schema>
+									   | <Create_Schema>								
+									   | <CreateProcedure>
+									   | <CreateFunction>
+									   | <CreateTable>
+									   | <create_database>
+									   | <create_external_table>
+									   | <create_view>									 
+									   | <CreateGroup>
+									   | <create_role>
+									   | <create_rls_policy>
+									   | <create_model>
+									   | <create_masking_policy>
+									   | <create_library>
+									   | <create_id_provider>
+									   | <create_datashare>
+									   | <create_user>									
+									   ;  
+
+<alter_commands> 					::= <Alter_procedure>
+									  | <Alter_mat_View>
+									  | <Alter_Database>
+									  | <Alter_Schema>
+									  | <alter_table>
+									  | <alter_user>
+									  | <alter_table_append>
+									  | <alter_role>
+									  | <alter_rls_policy>
+									  | <alter_masking_policy>
+									  | <alter_id_provider>
+									  | <alter_group>
+									  | <alter_default_privileges>
+									  | <alter_datashare>
+									  |<alter_function>
+									  |<alter_system>
+									  ; 	
+
+<drop_commands> 					::= <droptable>
+									 | <dropUser>
+									 | <dropView>
+									 | <truncate>
+									 | <dropDatabase>
+									 | <dropDatashare>
+									 | <drop_procedure>
+									 | <drop_mat_view>
+									 | <dropmodel>
+									 | <drop_masking_policy>
+									 | <drop_library>
+									 | <drop_identity_provider>
+									 | <drop_group>
+									 | <drop_function>									 
+									 ;  
+
+<other_commands>     	             ::= <Select>
+										 | <fetch>
+										 | <Insert>
+										 | <abort>
+										 | <analyze_compression>
+										 | <analyze>
+										 | <beign>
+										 | <start>
+										 | <call>
+										 | <cancel>
+										 | <close>
+										 | <comment_query>
+										 | <End>
+										 | <vacuum>
+										 | <update>
+										 | <unload>
+										 | <revoke_or_grant>
+										 | <prepare>
+										 | <merge>
+										 | <explain>
+										 | <delete>
+										 | <declare>
+										 | <copy>
+										 | <show_view>
+										 | <show_tables>
+										 | <show_table>
+										 | <show_datashare>
+										 | <show_procedure>
+										 | <show_model>
+										 | <show_database>
+										 | <show_ext_table>
+										 | <show_columns>
+										 | <show_schemas>
+										 | <show>
+										 | <set_session_auth>
+										 | <set>
+										 | <roll_back>
+										 | <reset>
+										 | <refresh_mat_view>
+										 | <lock>
+										 | <execute>
+										 | <dropSchema>
+										 | <dropRole>
+										 | <drop_rls_policy>
+										 | <desc_identity_provider>
+										 | <desc_datashare>
+										 | <deallocate>
+										 | <detach_rls_policy>
+									     | <detach_masking>
+										 | <attach_rls_policy> 
+										 | <attach_masking_policy> 
+										 | <commit> 
+										 ;
+											
+<table_name_as_string>				::=<IDENTIFIER>|<StringValue> |<NUMBER>;	
+
+<column_name_as_string>				::=<IDENTIFIER>|<StringValue> ;										
+											
+<Alter_procedure>					::= "ALTER" "PROCEDURE" <sp_name> [ "(" [<arg_datas> ("," <arg_datas>)*] ")" ]
+										["RENAME" "TO" <new_name>]
+										 ["OWNER" "TO" (  "CURRENT_USER" | "SESSION_USER"|<new_owner> )]";" ;	
+									
+											
+<Alter_mat_View>					::= "ALTER" ("MATERIALIZED"|"EXTERNAL") "VIEW" [<schema_name>"."]<mv_name>
+										[<external_view_pro>]
+										[ "AUTO" "REFRESH" ( "YES" | "NO" ) ]
+										[ "ROW" "LEVEL" "SECURITY" ( "ON" | "OFF" )[ "CONJUNCTION" "TYPE" ( "AND" | "OR" ) ] ["FOR" "DATASHARES"] ]
+										[["FORCE"] ( ("AS" "("<SelectQuery>")") | ("REMOVE" "DEFINITION" ))][";"] ;
+											
+<Alter_Database>					::= "ALTER" "DATABASE" <database_name>
+										[ (("RENAME" "TO" <new_name>)
+										| ("OWNER" "TO" <new_owner>)
+										| ("CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ))
+										| ("COLLATE" ( "CASE_SENSITIVE" | "CASE_INSENSITIVE" ) )
+										|("ISOLATION" "LEVEL" ( "SERIALIZABLE" | "SNAPSHOT" ))
+										|("INTEGRATION" "REFRESH" ((( "ALL" | "INERROR" ) "TABLES" 
+										["IN" "SCHEMA" <schema_name> ("," <schema_name>)*]) 
+										|("TABLE" [<schema_name>"."]<table_name_as_string> ("," [<schema_name>"."]<table_name_as_string>)*))))] [";"]
+										;
+
+											
+<Create_Ex_Schema>					::=	"CREATE" "EXTERNAL" "SCHEMA" [ ["["] "IF" "NOT" "EXISTS" ["]"] ] <schema_name>
+										"FROM" (  "DATA" "CATALOG"  | "HIVE" "METASTORE" | "POSTGRES" | "MYSQL" | "KINESIS" | "MSK" | "REDSHIFT" )
+										[ "DATABASE" <StringValue> ]
+										[ "SCHEMA" <StringValue> ]
+										[ "REGION" <StringValue> ]
+										[ "URI" <StringValue> [ "PORT"  <port_number> ] ]
+										["IAM_ROLE" ( "DEFAULT"| <StringValue> )]
+										[ "SECRET_ARN" <StringValue> ]
+										[ "AUTHENTICATION" ( "NONE" | "IAM" ) ]
+										[ "CLUSTER_ARN" <StringValue> ]
+										[ "CATALOG_ROLE" ( <StringValue> ) ]
+										[ "CREATE" "EXTERNAL" "DATABASE" "IF" "NOT" "EXISTS" ]
+										[ "CATALOG_ID" <StringValue> ] ";"
+										;
+										
+<port_number>						::= <NUMBER> ;
+
+<Create_Schema>						::= "CREATE" "SCHEMA" [ "IF" "NOT" "EXISTS" ] <schema_name> [ "AUTHORIZATION" <username> ]
+										[ "QUOTA" (<quota> ["MB" | "GB" | "TB"] | "UNLIMITED") ] [ <schema_element> ("," <schema_element>)* ]	";" ;	
+
+<schema_element>					::= <IDENTIFIER> ;										
+											
+<Alter_Schema>						::= "ALTER" "SCHEMA" <schema_name>
+										(	("RENAME" "TO" <new_name>) |
+											("OWNER" "TO" <new_owner>) |
+											("QUOTA" ( <quota> ["MB" | "GB" | "TB"] | "UNLIMITED" ))
+										) ";"
+										;
+										
+<quota>								::= <NUMBER>;
+											
+
+										
+<milliseconds>						::= <NUMBER> ;
+<count>								::= <NUMBER> ;
+<size>								::= <NUMBER> ;
+
+<CreateFunction>					::=  node("ELEMENT", 
+												attributeEx("EATYPE", "Class")
+												attributeEx("EASTEREOTYPE", "Redshift::function")
+												"CREATE" 
+												[ ("OR" "REPLACE" node("REPLACE" , attributeEx("VALUE" , "True")))]
+												[("EXTERNAL" node("EXTERNAL" , attributeEx("VALUE" , "True")))]												
+												"FUNCTION" [node("Schema and Database" , ((attribute("VALUE" ,<IDENTIFIER>))|<StringAsValue>) ".")]
+												((attribute("NAME", <f_function_name>))|<StringAsName>)
+												[node("Arguments" , attribute("VALUE", <arguments>))]
+												["RETURNS" node("RETURN" , attribute("VALUE" , <data_type>) ) ]	
+												
+												(
+													( 
+														("VOLATILE" node("Volatility Category", attributeEx("VALUE" , "Volatile")))
+														| ("STABLE"  node("Volatility Category", attributeEx("VALUE" , "Stable")))
+														| ("IMMUTABLE" node("Volatility Category", attributeEx("VALUE" , "Immutable")))
+													)													
+																								
+													|("AS"node("funcdef" , attribute("value", (<function_definition>))))
+												
+													|("LANGUAGE" node("Function Language" , attribute("VALUE" , ("PLPYTHONU"|"SQL"))) )
+												
+												
+													|(
+														("LAMBDA" node("LAMBDA" ,  attribute("VALUE" , <StringValue>) )) 
+														|("SAGEMAKER" node("SAGEMAKER" , attribute("VALUE" , <StringValue>) ))
+														)												
+													|("IAM_ROLE" node("IAM ROLE" , attribute("VALUE" , ( "DEFAULT" | <StringValue> )) ))			
+													|("RETRY_TIMEOUT" node("RETRY TIMEOUT" , attribute("VALUE" , <milliseconds>) ))
+													|(("MAX_BATCH_ROWS" node("MAX BATCH ROWS" , attribute("VALUE" , <count>) )))	
+													|("MAX_BATCH_SIZE" node("MAX BATCH SIZE" , attribute("VALUE" , (<size> [ "KB" | "MB" ])) ))
+												)*												
+												[";"] 
+											);
+											
+<arguments>							::= "("  skipBalanced("(",")") ")";					
+
+<CreateProcedure>					::= node("ELEMENT",
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "Redshift::procedure")
+											"CREATE" 
+											[ "OR" "REPLACE" node("REPLACE" , attributeEx("VALUE" , "True"))]
+											"PROCEDURE" [node("Schema and Database" , ((attribute("VALUE" ,<IDENTIFIER>))|<StringAsValue>) ".")]
+											((attribute("NAME", <sp_procedure_name>))|<StringAsName>)  
+											[node("Arguments" , attribute("VALUE", <arguments>))]
+											
+											(
+												( "NONATOMIC"  node("NONATOMIC" , attributeEx("VALUE" , "True")))
+												|("AS" node("procdef" , attribute("value", 	(<procedure_body>)) ))	
+												|("LANGUAGE" "plpgsql")
+												|("SECURITY" 
+													(
+														("INVOKER" node("SECURITY" , attributeEx("VALUE" , "Invoker" ) ))
+														|("DEFINER" node("SECURITY" , attributeEx("VALUE" , "Definer" ))) 	
+													)
+												)											
+												|("SET" node("SET Configuration" , attribute("VALUE" , <config_values> ) ))
+											)*
+											
+											[";"] 
+										);
+										
+<config_values>						::= <configuration_parameter> ("TO" | "=")  <value>;
+
+<sp_procedure_name>					::= <IDENTIFIER> ;
+<procedure_body>					::= (<StringValue>|("$_$" skip("$_$")"$_$" )|("$__$" skip("$__$") "$__$")|("$$" skip("$$")"$$")) ;
+<configuration_parameter>			::= <IDENTIFIER> ;
+<value>								::= <IDENTIFIER> ;										
+
+<f_function_name>					::= <IDENTIFIER> ;
+<py_arg_name>						::= <IDENTIFIER>;
+<py_arg_data_type>					::= <data_type> ;
+<sql_arg_data_type>					::= <data_type>;
+<arg_datas>							::= <py_arg_name>  [<argmode>] <py_arg_data_type> | <sql_arg_data_type> ;
+
+<function_definition>				::= (<StringValue>|("$_$" skip("$_$")"$_$" )|("$__$" skip("$__$") "$__$")|("$$" skip("$$")"$$")) ;
+											
+<create_database>					::= "CREATE" "DATABASE" 
+										 <database_name> [ "WITH" ]
+										[ "OWNER" ["="] <db_owner> ]
+										[ "CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED ") ]
+										[ "COLLATE" ( "CASE_SENSITIVE" | "CASE_INSENSITIVE" ) ]
+										[ "ISOLATION" "LEVEL" ( "SERIALIZABLE" | "SNAPSHOT" ) ]
+										[["WITH" "PERMISSIONS"]"FROM" [ ("DATASHARE" <datashare_name>) | ("ARN" <StringValue>) ] "OF" [ "ACCOUNT" <account_id_db> ] ["NAMESPACE" <namespace_guid>]]
+										[ "WITH" "DATA" "CATALOG" "SCHEMA" <StringValue> | "WITH" "NO" "DATA" "CATALOG" "SCHEMA" ] 
+										
+										[";"] ;
+											
+<create_external_table>				::= node("ELEMENT", 
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "Redshift::table")	
+											"CREATE"
+											("EXTERNAL" node("Is External" , attributeEx("VALUE" , "True")))
+											"TABLE"
+											[node("Schema and Database" , (<StringAsValue>".")|(attribute("VALUE" ,(<IDENTIFIER>".")*))) ]
+											((attribute("NAME", <external_table_name>))|<StringAsName>)	
+											["(" <partion_values> ("," <partion_values>)* ")"]										
+											
+											["PARTITIONED" "BY" "(" (node("PARTITIONED BY" , attribute("VALUE" , (<partition_by_values> ("," <partition_by_values>)*)))) ")"]							
+											
+											
+											[ ( "ROW" "FORMAT" "DELIMITED" node("ROW FORMAT DELIMITED" , attribute("VALUE" , <row_format>)) )
+											 |  (( "ROW" "FORMAT" "SERDE" node("ROW FORMAT SERDE" , attribute("VALUE" , <StringValue>)) )
+											  [( "WITH" "SERDEPROPERTIES" ["("] (node("WITH SERDEPROPERTIES" , attribute("VALUE" , <property_condtions> ("," <property_condtions>)*)))[")"] )]
+											
+											)]
+											["STORED" "AS" <file_format>]
+											["LOCATION" node("LOCATION" ,attribute("VALUE" , <StringValue>) )]
+											["TABLE" "PROPERTIES" "(" node("TABLE PROPERTIES" , attribute("VALUE" , <property_condtions> ("," <property_condtions>)*))   ")"]
+											["AS" (node("Select Query" , attribute("VALUE" , <SelectQuery> )))]
+										)
+										[";"] ;
+									
+									
+<external_table_name>				::= <table_name> ;
+									
+<db_owner>							::= <IDENTIFIER> ;
+<account_id_db>						::= <IDENTIFIER>;
+										
+<partion_values>					::=  node("ATTRIBUTE", attributeEx("EASTEREOTYPE", "Redshift::column")
+											 ((attribute("NAME", <column_name> ))|<StringAsName>) [<column_Vlaue>] [<column_constraints>] [<column_attributes>]
+											 );
+											 
+<partition_by_values>				::= <column_name_as_string> [<col_type>]  [<column_constraints>] [<column_attributes>];
+											 
+											 
+										
+<property_condtions>				::=  <property_name> "=" <property_value> ;										
+									
+<file_format>						::= (
+											node("Stored AS",attributeEx("VALUE","Format Options")) 
+											"INPUTFORMAT" node("Input Format",attribute("VALUE",<StringValue>))
+											"OUTPUTFORMAT" node("Output Format",attribute("VALUE",<StringValue>)) 
+										 )
+										|("PARQUET" node("Stored AS",attributeEX("VALUE","PARQUET")))
+										|("SEQUENCEFILE" node("Stored AS",attributeEX("VALUE","SEQUENCEFILE")))
+										|("TEXTFILE" node("Stored AS",attributeEX("VALUE","TEXTFILE")))
+										|("ORC" node("Stored AS",attributeEX("VALUE","ORC")))
+										|("AVRO" node("Stored AS",attributeEX("VALUE","AVRO")))
+										;										
+	
+<property_name>						::= <StringValue> ;	
+<property_value>					::= <StringValue> ;	
+
+<row_format> 						::= ["FIELDS" "TERMINATED" "BY" <StringValue> ] 
+										["LINES" "TERMINATED" "BY" <StringValue>] [<StringValue>] ;
+										
+<external_schema>					::= (<IDENTIFIER>|<StringValue>) ;
+
+
+										
+<alter_table>						::=   mapRight("ALTER" "TABLE" [(<IDENTIFIER>|<StringValue>)"."]
+										node("OWNER",((attribute("NAME", <table_name>))|<StringAsName>)),
+												(	
+														<alter_add_table>  	| 	<alter_ex_table>						
+													
+												))[";"];
+										
+<alter_add_table> 					::= 	"ADD" [["IF" "NOT" "EXISTS"] (<add_if_not_exist> ( [","] <add_if_not_exist>)*)]   			[(((node("OPERATION",(<table_constraints>)))|(node("FOREIGNKEY",<foreign_key>)))| 
+([ "COLUMN" ] <column_name_as_string> <col_type>[ "DEFAULT" "NULL" |<default_expr> ]))]
+											| ("DROP" "CONSTRAINT" <constraint_name> [ "RESTRICT" | "CASCADE" ])
+											| ("RENAME" "TO" <new_name>)
+											| ("OWNER" "TO" <new_owner>)
+											| ("RENAME" "COLUMN" <column_name_as_string> "TO" <new_name>)
+											| "ALTER" "COLUMN" <column_name_as_string> "TYPE" <data_type>
+											| "ALTER" "COLUMN" <column_name_as_string> "ENCODE" <encoding>
+											| "ALTER" "COLUMN" <column_name_as_string> "ENCODE" <encoding>","
+											| "ALTER" "COLUMN" <column_name_as_string> "ENCODE" (<encoding> ("," <encoding>)*) ";"
+											| "ALTER" "DISTKEY" <column_name_as_string>
+											| "ALTER" "DISTSTYLE" "ALL"
+											| "ALTER" "DISTSTYLE" "EVEN"
+											| "ALTER" "DISTSTYLE" "KEY" "DISTKEY" <column_name_as_string>
+											| "ALTER" "DISTSTYLE" "AUTO"
+											| "ALTER" ["COMPOUND"] "SORTKEY" "(" <column_name_as_string> ("," <column_name_as_string>)* ")"
+											| "ALTER" "SORTKEY" "AUTO"
+											| "ALTER" "SORTKEY" "NONE"
+											| "ALTER" "ENCODE" "AUTO"
+											| "ADD" [ "COLUMN" ] <column_name_as_string> <col_type>
+											[ "DEFAULT" "NULL" |<default_expr> ]
+											[ "ENCODE" <encoding> ]
+											[ "NOT" "NULL" | "NULL" ] 
+											[ "COLLATE"  <IDENTIFIER>   ] 
+											| "DROP" [ "COLUMN" ] [<partition>] [<column_name_as_string> [ "RESTRICT" | "CASCADE" ] ]
+											| "ROW" "LEVEL" "SECURITY" ( "ON" | "OFF" ) [ "FOR" "DATASHARES" ]	
+											| "SET" "LOCATION" ( <StringValue> )
+											| "SET" "FILE" "FORMAT" <format>
+											| "SET" "TABLE" "PROPERTIES" "(" (<StringValue> "=" <StringValue>)  ")"
+											| <partition>
+												"SET" "LOCATION" <StringValue>
+											| "ADD" ["IF" "NOT" "EXISTS"]
+												<partition>
+												"LOCATION" <StringValue> 										
+											| "DROP" <partition>	
+										;
+											
+											
+<alter_ex_table>					::=  "SET" "LOCATION" ( <StringValue> )
+										| "SET" "FILE" "FORMAT" <format>
+										| "SET" "TABLE" "PROPERTIES" "(" (<StringValue> "=" <StringValue>)  ")"
+										| <partition>
+										  "SET" "LOCATION" <StringValue>
+										| "ADD" ["IF" "NOT" "EXISTS"] (<add_if_not_exist> ( [","] <add_if_not_exist>)*)										
+										| "DROP" <partition>
+										;  
+										
+<add_if_not_exist>					::= 		<partition>
+												"LOCATION" <StringValue> 	;
+										
+<partition>							::= "PARTITION" "(" <IDENTIFIER>["=" <StringValue>]  ")" ;
+											
+
+<format>							::= <IDENTIFIER> ;										
+										
+										
+<new_name>							::= <IDENTIFIER>|<StringValue> ;
+<new_owner>							::= (<IDENTIFIER>|<StringValue>) ;
+
+
+<create_view> 						::= node("ELEMENT", 
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "Redshift::view")	
+											"CREATE" 
+											[(("MATERIALIZED" node("View Type", attributeEx("VALUE" , "Materialized"))) 
+											| ("OR" "REPLACE" node("View Type" , attributeEx("VALUE", "Replace")))	
+											|("EXTERNAL" "PROTECTED" node("View Type" , attributeEx("VALUE", "External"))))]	
+											
+											"VIEW" 
+											[node("Schema and Database" , ((attribute("VALUE" ,<IDENTIFIER>))|<StringAsValue>) ".")]
+											((attribute("NAME", <view_name>))|<StringAsName>)
+											 ["IF" "NOT" "EXISTS" node("Not Exists" , attributeEx("VALUE" , "True"))]
+											[ "(" node("Columns" , attribute("VALUE" , <column_names> )) ")"]
+											[
+												"BACKUP"  (("YES" node("BACKUP", attributeEx("VALUE",  "Yes" )))
+															| ("NO" node("BACKUP", attributeEx("VALUE", "No"))))
+												]	
+											
+											[ <table_attributes> ]
+
+											(("AUTO" "REFRESH" 
+													(("YES" node("AUTO REFRESH" , attributeEx("VALUE","Yes")))
+													|("NO" node("AUTO REFRESH", attributeEx("VALUE", "No"))))
+												)
+											|(node("External view Properties", attribute("VALUE",<external_view_pro>)))
+											|("AS"
+											node("viewdef" , attribute("value", <SelectQuery>))))*			
+
+											[ "WITH" "NO" "SCHEMA" "BINDING" ]
+										) ";";	
+										
+										
+<external_view_pro>					::= <catalog_name>"."[<schema_name>"."](<view_name>|<StringValue>)	;
+
+<catalog_name>						::=(<view_name>|<StringValue>) ;							
+										
+										
+<create_table_as> 					::= node("ELEMENT", 
+										attributeEx("EATYPE", "Class")
+										attributeEx("EASTEREOTYPE", "Redshift::table")	
+										"CREATE" [ [ "LOCAL" ] ( "TEMPORARY" | "TEMP" ) ]
+										"TABLE" 
+										((attribute("NAME", <table_name>))|<StringAsName>)	
+										[ "("  <column_name_as_string> ("," <column_name_as_string>)* ")" ]
+										
+										["BACKUP"    node("BACKUP", attribute("VALUE", ( "YES" | "NO" )))]
+										[ <table_attributes> ]
+										"AS" 
+																		 
+										 node("Select Query" , attribute("value", <SelectQuery>))										 
+										 ) [";"];
+										
+										
+<Select>							::=  <SelectQuery> ";"  ;				
+
+<SelectQuery> 						::= ["("]  [<with_table_expression>	 ("," <with_table_expression>)*]
+										"SELECT"  								
+										skip("FROM")										
+										[<from>] 
+										[<Join_value>*] 
+										[<groupBy>]
+										[<where_condition>] 
+										[<having>]
+										[<union_condition>] 
+										["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
+										[ "NULLS" "FIRST" | "NULLS" "LAST" ]
+										[ "OFFSET" <start> ]
+										["START" "WITH" <condition>]										
+										["CONNECT" "BY" <condition>]
+										["START" "WITH" <condition>]
+										[ "LIMIT" ( <NUMBER> | "ALL" ) ]  
+										[<groupBy>] [")"] 
+										  ;
+										  
+<with_table_expression>			::=  "WITH" ["RECURSIVE"] <column_names> "AS"  <SelectQuery> ;
+
+<having>							::= "HAVING" <condition> ;
+
+<order_expr> 						::= <column_with_expression> [ "ASC" | "DESC" ];
+
+
+<column_with_expression>			::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<table_name_as_string> "." | <SelectQuery>] ["("] (<column_name_as_string> ["/" <column_name_as_string>] | <NUMBER> | <StringValue> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
+
+<groupBy>							::= "GROUP" "BY" <group_condition>;
+
+
+<group_condition>					::= ( (<IDENTIFIER> | <NUMBER>)  ( "," (<IDENTIFIER> | <NUMBER>))*) ;
+
+<union_condition>					::= ( "UNION" [ "ALL" ] | "INTERSECT" | "EXCEPT" | "MINUS" )
+										<SelectQuery> ;
+	
+<from>								::= "FROM" (<fromClause> | <from_sub>);				
+					 
+<fromClause>                        ::=  <from_tables>;	
+
+<from_sub>							::= <from_tables> [ "NATURAL" ] ;
+
+<Join_value> 						::= <join_type> <table_name_as_string>[ (("ON" <join_con>) | "USING" "(" <column_name_as_string>  ("," <column_name_as_string>)* ")")|["."] <IDENTIFIER>]
+										[ ("ON" <join_con>) | "USING" "(" <column_name_as_string>  ("," <column_name_as_string>)* ")" ] ;
+										
+<from_table> 						::= [<IDENTIFIER> "."]*<table_name_as_string> [ <Join_value> |<groupBy>| <where_condition> | <union_condition> | "WITH" "NO" "SCHEMA" "BINDING"| "ORDER" "BY" (<order_expr> ("," <order_expr>)*)| "LIMIT" ( <NUMBER> | "ALL" ) | <having>|(<IDENTIFIER>)]  ;
+
+										
+<from_tables>						::= [<SelectQuery>]<from_table> ("," <from_table>)*;
+
+<join_type>							::= ("JOIN") |("INNER" "JOIN") | ("LEFT" "JOIN") | ("LEFT" "OUTER" "JOIN")	| ("RIGHT" "JOIN") | ("RIGHT" "OUTER" "JOIN") | ("FULL" "JOIN") |
+										("FULL" "OUTER" "JOIN") | ("CROSS" "JOIN") ;
+										
+<join_con>							::= <logical_Expression> ;	
+<join_condition>					::= (<table_name_as_string>[("."<column_name_as_string>) | "(" <column_names> ")" ] [<comparison_Operator> ] [ (<SelectQuery>) | ( [<table_name_as_string>  | <StringValue> | <NUMBER>] [("."<column_name_as_string>)| "(" (<column_names>|(<NUMBER>(","<NUMBER>)*))")" ])]);
+										
+<comparison_Operator> 				::= "=" | 
+										("<" [">"]["="]) | 										
+										">" ["="]|										
+										 "BETWEEN" | 
+										 "IN" | 
+										 ("NOT" "IN") |
+										("IS" "NULL") | ("IS" "NOT" "NULL") ;
+
+<logical_Expression>				::= <join_condition> (("AND"|"OR") <join_condition> )* ;	
+
+<where_condition>					::= "WHERE" <condition> ; 							
+<condition>							::= <join_con> ;	
+
+										
+<attach_rls_policy> 				::= "ATTACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <table_name_as_string> ("," <table_name_as_string>)*
+										"TO"  <detach_parameter> ("," <detach_parameter> )* ";" ;
+										
+<attach_masking_policy>				::= "ATTACH" "MASKING" "POLICY" <policy_name>
+									   "ON"  <table_name_as_string> 
+									   "(" skipBalanced("(",")") ")" [ "USING" ( <column_name_as_string> ("," <column_name_as_string>)* ) ]
+									   "TO" ( <detach_parameter> )
+									   [ "PRIORITY" <priority> ] ";" ;
+<priority>							::= <NUMBER> ;
+										
+<create_role> 						::= "CREATE" "ROLE" <role_name>
+										[ "EXTERNALID" <external_id> ]	";" ;	
+<external_id> 						::= <StringValue> ;										
+										
+<deallocate>						::= "DEALLOCATE" ["PREPARE"] <plan_name> ";" ;										
+										
+<desc_datashare>					::= "DESC" "DATASHARE" <datashare_name> [ "OF" [ "ACCOUNT" <account_id> ] "NAMESPACE" <namespace_guid> ]  [";"] ;	
+<account_id>						::= <StringValue> ;							
+<namespace_guid>						::= <StringValue> ;							
+										
+<desc_identity_provider> 			::= "DESC" "IDENTITY" "PROVIDER" <identity_provider_name> [";"] ;
+<identity_provider_name> 			::= <IDENTIFIER>|<StringValue>;
+										
+<detach_masking> 					::= "DETACH" "MASKING" "POLICY" <policy_name>
+										   "ON" ( <table_name_as_string> )
+										   "(" <column_name_as_string> ("," <column_name_as_string>)* ")"
+										   "FROM" ( <detach_parameter>  ) [";"] ;		
+										   
+										
+<detach_rls_policy> 				::= "DETACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <table_name_as_string> ("," <table_name_as_string>)*
+										"FROM"  <detach_parameter> ("," <detach_parameter> )* ";" ;
+<detach_parameter> 					::=  "ROLE" <role_name> | <user> | "PUBLIC" ;
+<user> 								::= <IDENTIFIER> ;
+
+										
+<drop_function> 					::= "DROP" "FUNCTION" <name>
+										"(" <Input_argument>  ")"
+										[ "CASCADE" | "RESTRICT" ] [";"] ; 
+										
+<drop_group> 						::= "DROP" "GROUP" <name> [";"] ;									
+
+<drop_identity_provider> 			::= "DROP" "IDENTITY" "PROVIDER" <identity_provider_name> [ "CASCADE" ] ";" ;
+										
+<drop_library> 						::= "DROP" "LIBRARY" <library_name> [";"] ;
+<library_name> 						::= <IDENTIFIER> |<StringValue> ;
+										
+<drop_masking_policy>				::= "DROP" "MASKING" "POLICY" <policy_name> [";"] ;
+										
+<dropmodel>							::= "DROP" "MODEL" [ "IF" "EXISTS" ] <model_name> ["." <variable_name>] [";"] ;										
+
+										 
+<drop_mat_view>						::= "DROP" ("MATERIALIZED"|"EXTERNAL") "VIEW" [ "IF" "EXISTS" ] [<schema_name>"."] <mv_name> [ "IF" "EXISTS" ]
+											[<external_view_pro>][";"] ;
+<mv_name> 							::= <IDENTIFIER> ;
+										
+<drop_procedure>					::= "DROP" "PROCEDURE" <sp_name> "("  <Input_argument> ("," <Input_argument>)* ")" [";"] ;										
+										
+<drop_rls_policy>					::= "DROP" "RLS" "POLICY" [ "IF" "EXISTS" ] <policy_name> [ "CASCADE" | "RESTRICT" ] [";"] ;
+<policy_name> 						::= <IDENTIFIER> |<StringValue>;
+										
+<dropRole> 							::= "DROP" "ROLE" <role_name> [ "FORCE" | "RESTRICT" ] [";"] ; 
+<role_name>							::= <IDENTIFIER>|<StringValue> ;
+										
+										
+<dropSchema>						::= "DROP" "SCHEMA" [ "IF" "EXISTS" ] (<name> ("," <name>)*)
+										[ "DROP" "EXTERNAL" "DATABASE" ]
+										[ "CASCADE" | "RESTRICT" ] [";"] ;										
+<name>								::= <IDENTIFIER> |<StringValue> ;
+
+<execute>							::= "EXECUTE" <plan_name> [ "(" <parameter> ("," <parameter>)*  ")" ][";"] ;
+<plan_name> 						::= <StringValue> | <IDENTIFIER> ;
+<parameter>							::= <IDENTIFIER> ;
+
+
+<lock> 								::= "LOCK" [ "TABLE" ] (<table_name_as_string> ("," <table_name_as_string>)*) [";"] ;							
+										
+<refresh_mat_view>					::= "REFRESH" "MATERIALIZED" "VIEW" <mv_name> [";"] ;
+
+
+<reset> 		 					::= "RESET" ( "ALL"|(<parameter_name> ["." <variable_name>])) [";"] ;						
+
+										
+<roll_back> 						::= "ROLLBACK" [ "WORK" | "TRANSACTION" ] [";"] ;
+										
+<set>								::= "SET"  [ "SESSION" | "LOCAL" ] ["AUTHORIZATION"]
+										<parameter_name> ["." <variable_name>] [( "TO" | "=" )]
+										[(<type_of_value> |<seedto>)]
+										 ";" ;	
+										
+<type_of_value> 					::=  <NUMBER> |<IDENTIFIER> | <StringValue> | "DEFAULT"  ; 
+<seedto> 							::=  "SEED" "TO" (<IDENTIFIER> | <NUMBER> | <StringValue>)  ; 
+										
+<set_session_auth>					::= "SET" [ "LOCAL" ] "SESSION" "AUTHORIZATION" ( <user_name> | "DEFAULT" ) [";"] ;
+<user_name> 						::= <IDENTIFIER> | <StringValue> ;
+										
+<show> 								::= "SHOW" ( <parameter_name>["." <variable_name>] | "ALL" ) [";"] ;
+<parameter_name>					::= <IDENTIFIER> ;
+<variable_name>						::= <IDENTIFIER> ;
+										
+<show_ext_table> 					::= "SHOW" "EXTERNAL" "TABLE" <external_schema>"."<table_name_as_string> [ "PARTITION" ] [";"] ;			
+						
+										
+<show_database>						::= "SHOW" "DATABASES" "FROM"
+											"DATA" "CATALOG" [ "ACCOUNT"  <StringValue> ("," <StringValue>)* ]
+											[ "LIKE" <StringValue> ] [";"] ;
+										
+<show_model> 						::= "SHOW" "MODEL" ( "ALL" | <model_name>["." <variable_name>] ) [";"] ;	
+<model_name> 						::= <IDENTIFIER> |<StringValue>;									
+									
+<show_procedure>					::= "SHOW" "PROCEDURE" <sp_name> "("  <Input_argument> ("," <Input_argument>)* ")" ";" ;
+<Input_argument> 					::= (<StringBinaryType> | <NumericType>	) | <agrwithmodetype>	;
+<agrwithmodetype>					::= [ <argmode> | <argname>| (<StringBinaryType> | <NumericType>) ] 
+										[ <argmode> | <argname>| (<StringBinaryType> | <NumericType>) ] 
+										[ <argmode> | <argname> | (<StringBinaryType> | <NumericType>) ] 
+										 ;	
+<argname>							::= <IDENTIFIER> ;
+<argmode>							::= "IN" | "OUT" | "INOUT" ;
+										
+<show_datashare>					::= "SHOW" "DATASHARES" [ "LIKE" <StringValue> ] ";" ; 
+										
+<show_table> 					    ::= "SHOW" "TABLE" [<schema_name>"."] <table_name_as_string> ";" ; 
+
+<show_tables>						::= "SHOW" "TABLES" "FROM" "SCHEMA" [<database_name>"."]<schema_name> ["LIKE" <StringValue>] ["LIMIT" <NUMBER> ] [";"] ;
+
+<schema_name>						::= <IDENTIFIER>|<StringValue> ;
+										
+<show_view>							::= "SHOW" "VIEW" [<schema_name>"."](<view_name>|<StringValue>) ";" ;
+
+<view_name> 						::= <IDENTIFIER> ;
+											
+<dropDatabase> 						::= "DROP" "DATABASE" <database_name>	";"	;		
+<database_name>						::= <IDENTIFIER> |<StringValue> ;	
+
+<dropDatashare>						::= "DROP" "DATASHARE" <datashare_name> ";" ;	
+<datashare_name> 					::= (<IDENTIFIER>|<StringValue>) ;		
+											
+<CreateGroup> 						::= "CREATE" "GROUP" <group_name>
+										[ [ "WITH" ] [ "USER" <username> ("," <username>)* ]] ";" ;
+										
+<group_name>						::= <IDENTIFIER> |<StringValue> ;
+<username>							::= <IDENTIFIER> [":"<IDENTIFIER>];
+
+											
+<commit>							::= "COMMIT" [ "WORK" | "TRANSACTION" ] ";" ;
+	
+<comment_query>  					::= "COMMENT" "ON"
+										(
+										"TABLE" <object_name> |
+										"COLUMN" <object_name>"."<column_name_as_string> |
+										"CONSTRAINT" <constraint_name> "ON" <table_name_as_string> |
+										"DATABASE" <object_name> |
+										"VIEW" <object_name>
+										)
+										"IS" (<StringValue> | "NULL")  ";" ;
+										
+
+<object_name> 						::= <IDENTIFIER> |<StringValue> ;	
+							
+											
+<close>								::= "CLOSE" <cursor> ";" ;		
+<cursor> 							::= <IDENTIFIER> |<StringValue> ;								
+											
+<cancel> 							::= "CANCEL" <process_id> [ <StringValue> ] ";" ;
+<process_id> 						::= <IDENTIFIER> | <NUMBER>;
+											
+<call> 								::=  "CALL" <sp_name> "(" <argument> ("," <argument>)* ")" ";" ;
+
+<sp_name> 							::= <IDENTIFIER>|<StringValue>;
+
+<argument> 							::= (<NUMBER>["." <NUMBER> [<IDENTIFIER>"-" <NUMBER>]]) | ( <StringValue> ["lzop"]) ;
+
+											
+<beign>								::=  "BEGIN" [ "WORK" | "TRANSACTION" ] [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+
+<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+
+<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+											
+<analyze> 							::= "ANALYZE" [ "VERBOSE" ]
+										[  <table_name_as_string>  ["(" <column_name_as_string> ("," <column_name_as_string>)* ")"] ]
+										[ "PREDICATE" "COLUMNS" | "ALL"  "COLUMNS" ] ";" ;	
+
+<analyze_compression> 				::= "ANALYZE" "COMPRESSION"
+										[ [ <table_name_as_string> ]
+										[ "(" <column_name_as_string> ("," <column_name_as_string>)* ")" ] ]
+										["COMPROWS" <NUMBER>]	";" ;										
+
+<abort>								::= "ABORT" [ "WORK" | "TRANSACTION" ] ";" ;											
+
+<End>								::= "END" [ "WORK" | "TRANSACTION" ] ";" ;
+
+<dropView> 							::= "DROP" "VIEW" [ "IF" "EXISTS" ] <column_name_as_string> ("," <column_name_as_string>)* [ "CASCADE" | "RESTRICT" ] ";" ;
+
+<truncate> 							::= "TRUNCATE"  ["TABLE"] <table_name_as_string>  ";" ;
+											
+<dropUser>							::= "DROP" "USER" [ "IF" "EXISTS" ] <column_name_as_string> ("," <column_name_as_string>)* ";" ;
+											
+<Insert>							::= "INSERT" "INTO" [<external_schema>"."]<table_name_as_string> [ "(" <column_name_as_string> ("," <column_name_as_string>)* ")" ]
+											[(["DEFAULT"] "VALUES" [<Insert_Value> ("," <Insert_Value>)*])]
+											[<SelectQuery>]	[";"] ;
+
+<Insert_Value> 						::= "(" <insert_column>	 ( "," <insert_column>)* ")" ;												
+											
+
+<insert_column>						::= <StringValue> | <NUMBER> | "DEFAULT" | <IDENTIFIER> ["." <IDENTIFIER>] ["[" <NUMBER>"]"] ;
+											
+<fetch>								::= "FETCH" [ "NEXT" | "ALL" | ( "FORWARD" [ <NUMBER> | "ALL" ] ) ] "FROM" <table_name_as_string> ";" ;
+										  
+										  
+<droptable>							::= "DROP" "TABLE" ["IF" "EXISTS"][(<IDENTIFIER>".")*] (<table_name_as_string> ("," <table_name_as_string>)*) ["CASCADE" | "RESTRICT"] ";" ; 
+	
+<data_type>							::= <NumericDataType> |
+										<StringBinaryDataType> |
+										<LogicalDataType> | 
+										<DateTimeDataType> |
+										<SemiStructuredDataType> |
+										<GeospatialDataType> ;									
+											
+
+<NumericDataType>					::= <NumericType> ["(" <NUMBER> ["," <NUMBER>]  ")"] ; 
+<NumericType>						::= "NUMBER" | "DECIMAL" | "NUMERIC" | "INT" | "INTEGER" | "BIGINT" | "SMALLINT" | "TINYINT" | 
+										"BYTEINT" | "FLOAT" | "FLOAT4" | "FLOAT8" | "DOUBLE" ["PRECISION"]|"PRECISION" | "REAL"|"INT2"|"INT8"|"INT4" ; 
+
+<StringBinaryDataType>				::= <StringBinaryType> ["("[ <NUMBER>]  [<IDENTIFIER>] ")"]; 
+
+<StringBinaryType>					::= "VARCHAR" | "CHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | "BINARY" | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ; 
+
+<LogicalDataType>					::= "BOOLEAN" ; 
+
+<DateTimeDataType>					::= "DATE" | "DATETIME" 
+										| ("TIME"["WITHOUT" "TIME" "ZONE"])
+										| ("TIMETZ"["WITH" "TIME" "ZONE"])
+										|("TIMESTAMP" ["WITHOUT" "TIME" "ZONE"])
+										| "TIMESTAMP_LTZ" | "TIMESTAMP_NTZ" 
+										| ("TIMESTAMPTZ"["WITH" "TIME" "ZONE"]) ;  
+
+<SemiStructuredDataType>			::= "VARIANT" | "OBJECT" | "ARRAY"|"HLLSKETCH" ;  
+
+<GeospatialDataType>				::= "GEOGRAPHY" | "GEOMETRY" ;  
+
+<CreateTable>						::= node("ELEMENT", 
+										attributeEx("EATYPE", "Class")
+										attributeEx("EASTEREOTYPE", "Redshift::table")		
+										"CREATE" 
+										[("LOCAL"  node("isLocal", attributeEx("VALUE" , "True") ) )] 							
+										[(("TEMPORARY" | "TEMP") node("isTemporary", attributeEx("VALUE" , "True") ))]						
+										"TABLE" 					
+										["IF"  "NOT" "EXISTS" node("NOT EXISTS", attributeEx("VALUE" , "True")) ]										
+										[node("Schema and Database" , ((attribute("VALUE" ,<IDENTIFIER>))|<StringAsValue>) ".")]
+										((attribute("NAME", <table_name>))|<StringAsName>)
+										["(" 
+											<ColumnDefition> ("," <ColumnDefition>)*
+										")"]		
+										["BACKUP"  (("YES" node("BACKUP", attributeEx("VALUE",  "Yes" )))
+											| ("NO" node("BACKUP", attributeEx("VALUE", "No"))))
+										]	
+										[<table_attributes>]
+										["AS" (node("Select Query" , attribute("VALUE" , <SelectQuery> )))]
+										";" 
+										);	
+										
+<table_name>						::= <IDENTIFIER> ; 
+<column_name>						::= <IDENTIFIER>;
+<col_type>							::= <data_type>;
+
+
+<ColumnDefition>			        ::= node("ATTRIBUTE", attributeEx("EASTEREOTYPE", "Redshift::column")
+											 ((attribute("NAME", <column_name> ))|<StringAsName>) 											 
+											<column_Vlaue> [<column_constraints>][<column_attributes>]  
+																	 
+										)  | <LikeValue> |
+											 (node("OPERATION", <table_constraints>))|
+												(node ("FOREIGNKEY" , <foreign_key>));
+										
+										
+<LikeValue>							::= node("CONNECTOR", 
+										attributeEx("EATYPE", "Generalization")
+										attributeEx("EASTEREOTYPE", "Redshift::like")		
+										<LikeTable>
+										);
+										
+<LikeTable>							::=  "LIKE" node("TARGET", ((attribute("NAME", <parent_table>))|<StringAsName>)) [ ( "INCLUDING" | "EXCLUDING" ) "DEFAULTS" ] ;
+
+									
+<parent_table> 						::= <table_name>;	
+
+<column_Vlaue>						::= node("TYPE", attribute("NAME", <col_data_type>) 
+											["("( (attribute("PRECISION",<NUMBER>)","attribute("SCALE",<NUMBER>))
+													|(attribute("LENGTH",<NUMBER>))
+												)
+											")"]) 
+											[<column_attributes>][<column_constraints>]  ;	
+
+<reftable> 							::= <table_name>;
+<refcolumn>							::= node("PARAMETER", ((attribute("NAME", <column_name>))|<StringAsName>));
+<default_expr> 						::=   (<IDENTIFIER>["(" ")"]) |<DECIMAL> | <StringValue>	;
+<seed> 								::= <NUMBER>;
+<step> 								::= <NUMBER>;
+<encoding>							::= [<IDENTIFIER>] [<NUMBER>];
+
+<table_constraints>  				::= [ "CONSTRAINT" ((attribute("NAME", <constraint_name>))|<StringAsName>)  ]
+										(	
+											"UNIQUE" attributeEx("EASTEREOTYPE", "Redshift::unique")   |
+											"PRIMARY" "KEY" attributeEx("EASTEREOTYPE", "Redshift::PK")
+										)
+										<constraint_columns>	
+										;	
+										
+<foreign_key>						::=  [ "CONSTRAINT" ((attribute("NAME", <constraint_name>))|<StringAsName>) ] 
+											"FOREIGN" "KEY" attributeEx("EASTEREOTYPE", "Redshift::FK") 
+											<constraint_columns>
+												[ "REFERENCES"
+									 node("TARGET", ((attribute("NAME", <reftable>))|<StringAsName>) ["(" <refcolumn> ("," <refcolumn>)* ")"]) ]
+											;
+										
+<constraint_columns>				::= "(" <constraint_column> ("," <constraint_column>)* ")";
+<constraint_column>					::= node("PARAMETER",((attribute("NAME", <type>))|<StringAsName>) ) ;	
+									
+<column_names>						::= <column_name_as_string> ("," <column_name_as_string>)* ;
+
+<constraint_name>					::=  <IDENTIFIER> ;
+						  
+<column_attributes> 				::= ["DEFAULT"   attribute("DEFAULT" ,<default_expr> )]
+										  ["IDENTITY" node("IDENTITY" ,  [attribute("VALUE" , ("(" <seed> "," <step> ")") )] )]
+										  ["GENERATED" "BY" "DEFAULT" "AS" "IDENTITY" node("Default identity" , [attribute("VALUE" , ("(" <seed> "," <step> ")") )] )]
+										  ["ENCODE" node("ENCODE" ,  attribute("VALUE" ,<encoding> ))]
+										  [ "DISTKEY" node("DISTKEY" , attributeEx("VALUE", "True")) ]
+										  [ "SORTKEY" node("SORTKEY" , attributeEx("VALUE", "True"))]										  
+										  ["COLLATE" node("COLLATE" , attribute("VALUE" ,("Case_Sensitive" | "Case_InSensitive")  ))];
+							
+<column_constraints> 				::= [ (  "NOT" "NULL" (attributeEx("NOTNULL" , "true")) | "NULL" ) ]
+										[  ("UNIQUE" node("CONSTRAINT", attributeEx("EASTEREOTYPE", "Redshift::unique"))  
+										
+										|  ("PRIMARY" "KEY" node("CONSTRAINT", attributeEx("EASTEREOTYPE" , "Redshift::PK"))))  ]
+										["REFERENCES" node("CONSTRAINT" ,  attributeEx("EASTEREOTYPE" , "Redshift::FK") node("TARGET",((attribute("NAME", <reftable>))|<StringAsName>) [ "(" <refcolumn> ")" ])) ];	
+											
+
+<table_attributes> 					::=  
+										[ "DISTSTYLE" 
+										( ("AUTO" node("DISTSTYLE", attributeEx("VALUE", "Auto"))) 
+										  | ("EVEN" node("DISTSTYLE", attributeEx("VALUE", "Even")))
+										  | ("KEY" node("DISTSTYLE", attributeEx("VALUE", "Key")))
+										  | ("ALL" node("DISTSTYLE", attributeEx("VALUE", "All")))
+										)
+										]
+										
+										[ <distkey_definition> ][<sortkey_definition>]										
+										[ <distkey_definition> ][<sortkey_definition>]
+										
+										
+																			
+										["ENCODE" "AUTO" node("ENCODE AUTO" , attributeEx("VALUE" ,"True" ) )]
+									;
+
+
+<distkey_definition>	::= node("OPERATION" , attributeEx("EASTEREOTYPE", "Redshift::index") 
+									[ "CONSTRAINT" ((attribute("NAME", <constraint_name>))|<StringAsName>)  ] 
+										"Distkey" node("Index Type", attributeEx("VALUE" ,"Distkey"))  "("   <constraint_column> ("," <constraint_column>)* ")" );
+										
+<sortkey_definition>		::= node("OPERATION" , attributeEx("EASTEREOTYPE", "Redshift::index") 
+										[ "CONSTRAINT" ((attribute("NAME", <constraint_name>))|<StringAsName>)  ] 
+											[ ("Compound" node("Sortkey Type", attributeEx("VALUE" , "Compound")))
+												| ("Interleaved" node("Sortkey Type", attributeEx("VALUE" , "Interleaved"))) ]
+											"Sortkey" node("Index Type", attributeEx("VALUE" ,"Sortkey"))  "("   <constraint_column> ("," <constraint_column>)* ")" ) |  
+											[ "SORTKEY" "AUTO" node("Sortkey Auto" , attributeEx("VALUE", "True"))  ] ;
+
+<type>				::= 	<NUMBER> |<column_name> ;						
+						  
+<vacuum>			::= "VACUUM" [ "FULL" | "SORT" "ONLY" | "DELETE" "ONLY" | "REINDEX" | "RECLUSTER" ]
+						[ [ <table_name_as_string> ] [ "TO" <threshold> "PERCENT" ] [ "BOOST" ] ] ";" ;
+
+<threshold>			::= <NUMBER> ;
+
+<update>			::= [ "WITH" ["RECURSIVE"] <column_with_expression> ("," <column_with_expression>)*]
+						"UPDATE" <table_name_as_string> [ [ "AS" ] "alias" ] "SET" <set_value> ("," <set_value>)*
+						[<from> ]
+						[ <where_condition>	 ] ";"  ;
+						
+
+						
+<set_value>			::=  <column_name_as_string> "=" ( <column_with_expression> | "DEFAULT" ) ;
+						
+<unload>			::=		"UNLOAD" "(" <StringValue> ")"
+							"TO" <StringValue>
+							<authorization>
+							[ <unload_option> ([","] <unload_option>)*] ";" 
+							; 
+							
+<authorization>		::= <IDENTIFIER> ( "default" | <StringValue> )  ;
+
+<unload_option>		::=  [ "FORMAT" [ "AS" ] ] "CSV"
+						| "PARQUET" 
+						| "JSON"
+						| "PARTITION" "BY" "(" <column_name_as_string> ("," <column_name_as_string>)* ")" [ "INCLUDE" ]
+						| "MANIFEST" [ "VERBOSE" ]
+						| "HEADER"
+						| "DELIMITER" [ "AS" ] <StringValue>
+						| "FIXEDWIDTH" [ "AS" ] <StringValue>
+						| "ENCRYPTED" [ "AUTO" ]
+						| "BZIP2"
+						| "GZIP"
+						| "ZSTD"
+						| "ADDQUOTES" <StringValue>
+						| "ESCAPE"
+						| "ALLOWOVERWRITE"
+						| "CLEANPATH"
+						| "PARALLEL" [ ( "ON" | "TRUE" ) | ( "OFF" | "FALSE" ) ]
+						| "MAXFILESIZE" ["AS"] <size> [ "MB" | "GB" ]
+						| "ROWGROUPSIZE" ["AS"] <size> [ "MB" | "GB" ]
+						| "REGION" ["AS"] <StringValue> 
+						| "EXTENSION" <StringValue> ;
+						
+<revoke_or_grant>			::= ("REVOKE" | "GRANT") [ "GRANT" "OPTION" "FOR" ]
+							( <revoke_ddl_commands> ("," <revoke_ddl_commands>)*							 
+							| <revoke_other_commands> ("," <revoke_other_commands>)*
+							)
+							
+							["ON" ( 
+									 ["ALL" ("TABLES" |"FUNCTION")  "IN"] "SCHEMA" <schema_name> ("," <schema_name>)* 
+									|"DATABASE" <db_name> ("," <db_name>)* 
+									| "FUNCTION" <f_function_name> ( [ <arg_value> ("," <arg_value>)*] )
+									| "LANGUAGE" <language_name> (","<language_name>)*
+									| (<StringValue> ("," <StringValue>)*  
+									| "default" 
+									| "ALL")
+									| "EXTERNAL" "TABLE" <schema_name>"."<table_name_as_string>									
+									| "DATASHARE" <datashare_name>									
+									|[ "TABLE" ] [<schema_name>"."]<table_name_as_string>  ("," [<schema_name>"."]<table_name_as_string>)* 
+								)]
+							
+							
+							[("FROM" | "TO") ( 
+									<revoke_from_value> ("," <revoke_from_value>)* 							
+							) ]
+							
+							["FOR" ( "ALL" | "COPY" | "UNLOAD" | "EXTERNAL" "FUNCTION" | "CREATE" "MODEL" )]
+							[ "RESTRICT" ] 	
+							[ "WITH" "GRANT" "OPTION" ]
+							[";"]
+							;
+							
+<revoke_ddl_commands>	::= ( "SELECT" | "INSERT" | "UPDATE" 
+								| ("ALTER" (["USER" | "DEFAULT" "PRIVILEGES"| "TABLE" | "DATASHARE" ])) 
+								| "DELETE" 
+								| ("DROP" (["USER" | "SCHEMA" |"TABLE" |"FUNCTION" |"PROCEDURE"|"VIEW" |"MODEL"|"LIBRARY" |"ROLE" |"DATASHARE"  ]) )
+								| "REFERENCES" 
+								| ("CREATE" (["MODEL" |"USER"| "SCHEMA"| "TABLE "| "OR" "REPLACE" (["EXTERNAL"] "FUNCTION" |"PROCEDURE" |"VIEW" ) | "DATASHARE" | "LIBRARY" |"ROLE"]))
+								| "TEMPORARY" | "TEMP" 								
+								| "USAGE" | "EXECUTE" |"SHARE" | "ASSUMEROLE"  | "TRUNCATE" "TABLE" | "VACUUM" | "ANALYZE" | "CANCEL") 
+								["(" <column_name_as_string> ("," <column_name_as_string>)* ")"] ;	
+
+<revoke_other_commands>	::= (("ROLE" <role_name> [":" <database_name>])
+							|("ADMIN" "OPTION" "FOR" )
+							| "EXECUTE" 
+							| (("EXPLAIN" | "IGNORE") "RLS") 
+							| ("ALL" [ "PRIVILEGES" ])) 
+							["(" <column_name_as_string> ("," <column_name_as_string>)* ")"] ;								
+							
+<account_value> 			::= <StringValue> [ "VIA" "DATA" "CATALOG" ] ;
+<arg_value>					::= [ <argname> ] <data_type>;
+<db_name> 					::= <IDENTIFIER> |<StringValue>;
+<language_name> 			::= <IDENTIFIER>;
+
+<revoke_from_value>			::= "ROLE" <role_name> 
+									 | "GROUP" <group_name> 
+									 | "PUBLIC" 
+									| "IAM_ROLE" <StringValue> 
+									| "NAMESPACE" <StringValue> ("," <StringValue>)*
+									| "ACCOUNT" <account_value> 
+									| "RLS" "POLICY" <policy_name>
+									|<username> [ "WITH" ("GRANT" | "ADMIN") "OPTION"] 		;
+									
+<prepare>					::= "PREPARE" <plan_name> [ "(" <data_type> ("," <data_type>)* ")" ] "AS" <statements>  [";"] ;
+
+<merge>						::= "MERGE" "INTO" <target_table_name>
+								"USING" <table_name_as_string> [ [ "AS" ] "alias" ] "ON" <condition>
+								[(("WHEN" "MATCHED" "THEN" ( "UPDATE"  "SET" <set_value> ("," <set_value>)* | "DELETE" )
+								"WHEN" "NOT" "MATCHED" "THEN" "INSERT" [ "(" <column_name_as_string> ("," <column_name_as_string>)* ")" ] "VALUES"
+								<Insert_Value>)|("REMOVE" "DUPLICATES")) ]	 ";" 
+								;								
+
+<target_table_name>			::= (<view_name>|<StringValue>) ;
+
+<explain>					::= "EXPLAIN" [ "VERBOSE" ] (<SelectQuery> | <Insert>| <create_table_as> | <update> | <delete> ) [";"];
+                  
+
+<delete>					::= 	[ <with_table_expression>	]
+									"DELETE" [ "FROM" ] [<schema_name>"."]<table_name_as_string>
+									[ ("USING") <table_name_as_string> ("," <table_name_as_string>)* ]
+									[ "WHERE" <condition> ]
+									";" 
+									;
+									
+<declare>					::=  "DECLARE" <cursor_name> "CURSOR" "FOR" <SelectQuery> ";"  ;
+<cursor_name>				::= <IDENTIFIER> |<StringValue> ;
+
+<copy>						::= "COPY" 
+								[<copy_command>]
+								["JOB" ("CREATE" | "ALTER" | "RUN" | "LIST" | "SHOW" | "DROP"  )  [<job_name>]]
+								["AUTO" ("ON" | "OFF")]
+								[";"]
+								;
+								
+<job_name>					::= <IDENTIFIER>;
+								
+<copy_command>				::= [<schema_name>"."]<table_name_as_string> 
+								//[ <column_name> ("," <column_name>)* ]
+								skip("FROM")
+								"FROM" <data_source>
+								[ "FORMAT"  ["AS"] <data_format> ] 
+								[ <copy_value>*  ] 
+								[<authorization>]
+								[ "FORMAT"  ["AS"] <data_format> ] 
+								[ <copy_value>*  ] ;
+								
+<data_source>				::= <StringValue> ;
+<data_format>				::= <IDENTIFIER>;
+<copy_value>				::=( ("REGION" ["AS"] 
+								| "MANIFEST" 
+								|  "ENCRYPTED" 
+								| "SSH" 
+								| "READRATIO" 
+								| "delimiter" 
+								| "JSON" 
+								| "csv" ["quote" "as" ]
+								| "fixedwidth" 
+								| "explicit_ids" 
+								| "timeformat" ["AS"]
+								| "ACCEPTANYDATE" 
+								| "ACCEPTINVCHARS" ["AS"]
+								| "BLANKSASNULL"
+								| "DATEFORMAT" ["AS"]
+								| "EMPTYASNULL"
+								| "ENCODING" ["AS"]
+								| "NULL" "AS"
+								| "ESCAPE"
+								| "FILLRECORD"
+								| "IGNOREBLANKLINES"
+								| "REMOVEQUOTES"
+								| "ROUNDEC"							
+								| "TRIMBLANKS"
+								| "TRUNCATECOLUMNS"
+								| "IGNOREALLERRORS"
+								| "COMPROWS"
+								| "MAXERROR" ["AS"]
+								| "NOLOAD"
+								| "SIMPLIFY" "AUTO" 
+								| <IDENTIFIER>
+								) [ <argument> ] )
+								| ("COMPUPDATE" [ "PRESET" | ("ON" | "TRUE" ) | ( "OFF" | "FALSE" ) ])
+								| ("STATUPDATE" [( "ON" | "TRUE" ) | ( "OFF" | "FALSE" ) ])
+								;
+
+<create_user>				::= "CREATE" "USER" <name> [ "WITH" ]
+								"PASSWORD" ( <StringValue> | "DISABLE" )
+								[ <user_option>*] 
+								";" ;
+
+<user_option> 				::= ("CREATEDB" | "NOCREATEDB"
+								| "CREATEUSER" | "NOCREATEUSER"
+								| ("SYSLOG" "ACCESS" ( "RESTRICTED" | "UNRESTRICTED" ))
+								| ("PASSWORD" ( <StringValue> | "DISABLE" ))
+								| ( "VALID" "UNTIL" <StringValue>)
+								| ("IN" "GROUP" <group_name> ("," <group_name>)*)
+								| ("CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ))
+								| ("SESSION" "TIMEOUT" [<NUMBER>])
+								| ("EXTERNALID" <external_id>)	
+								| ("RENAME" "TO" <new_name> )
+								| ("SET" <parameter> ( "TO" | "=" ) ( <user_value> | "DEFAULT" ))
+								| ("RESET" [<user_option> | <parameter>]))
+								;
+
+<user_value>				::= <StringValue> ;
+								
+<create_rls_policy>			::= "CREATE" "RLS" "POLICY" <policy_name>
+								[ "WITH" "(" <column_name_as_string> <data_type> ("," <column_name_as_string> <data_type>) ")" [ ["AS"] <relation_alias> ] ]
+								"USING" "(" <using_predicate_exp> ")";
+								
+<relation_alias>			::= <StringValue> ;
+<using_predicate_exp>		::= skipBalanced("(",")");
+
+<create_model>				::= "CREATE"   [ "OR" "REPLACE" ]  "MODEL" <model_name>
+								"FROM" ( <table_name_as_string> | ( <SelectQuery> )  | <StringValue> )
+								[ "TARGET" (<column_name_as_string> | <StringValue>) ]
+								"FUNCTION" <f_function_name> ["(" <data_type> ("," <data_type>)* ")"] 
+								["RETURNS" <data_type>]
+								["SAGEMAKER" <StringValue>[":" <StringValue>] ]
+								["IAM_ROLE" ( "default" | <StringValue> )]
+								[ "AUTO" ("ON" | "OFF" )]
+								[ "MODEL_TYPE" ( "XGBOOST" | "MLP" | "LINEAR_LEARNER" | "KMEANS" | "FORECAST" ) ]
+								[ "PROBLEM_TYPE" ( "REGRESSION" | "BINARY_CLASSIFICATION" | "MULTICLASS_CLASSIFICATION" ) ]
+								[ "OBJECTIVE" ( <StringValue> ("," <StringValue>)* ) ]
+								[ "PREPROCESSORS" <StringValue> ]
+								[ "HYPERPARAMETERS" ( "DEFAULT"  ["EXCEPT"  "(" ["Key"] (<StringValue> |<setting_value> ("," <setting_value>)*) ")" ]) ]
+								[ "SETTINGS" "("
+								<setting_value> ("," <setting_value>)*
+								")"]
+								["PERCENTILES" <StringValue> ("," <StringValue>)*]
+								";"
+								;
+									
+<setting_value> 			::=  <IDENTIFIER> (<IDENTIFIER> | <StringValue> | <NUMBER>) ;
+
+<create_masking_policy>		::= "CREATE" "MASKING" "POLICY" 
+							   <policy_name> ["IF" "NOT" "EXISTS"]
+							   "WITH" "(" <input_columns> ("," <input_columns>)* ")"
+							  "USING" "(" <masking_expression> ")" ";"
+							;
+							
+<input_columns>				::= <column_name_as_string> <col_type> ;
+
+<create_library>			::= "CREATE" [ "OR" "REPLACE" ] "LIBRARY" <library_name> "LANGUAGE" "plpythonu"
+								"FROM"
+								(  <StringValue>
+									[<authorization>]
+									  [ "REGION" ["AS"] <StringValue>]
+									[ <authorization>]
+								)  ";" 
+								;	
+								
+<create_id_provider>		::= "CREATE" "IDENTITY" "PROVIDER" <identity_provider_name> "TYPE" <type_name>
+								"NAMESPACE" <namespace_name>
+								 "PARAMETERS" <parameter_string> ";" ;
+								 
+<type_name>					::= <IDENTIFIER> |<StringValue> ;
+<namespace_name>			::= <IDENTIFIER>|<StringValue> ;
+<parameter_string>			::=  <IDENTIFIER>| <StringValue> ;
+
+<create_datashare>			::= "CREATE" "DATASHARE" <datashare_name>
+								[["SET"] "PUBLICACCESSIBLE" ["="] "TRUE" | "FALSE" ]
+								 ["," <IDENTIFIER> <IDENTIFIER>]";" 
+								;
+								
+<alter_user>				::= "ALTER" "USER" <username> [ "WITH" ] [ <user_option>*]  ";" ;
+								
+<alter_table_append>		::= "ALTER" "TABLE" <target_table_name> "APPEND" "FROM" [<schema_name>"."] [(<view_name>|<StringValue>) ]
+								[ "IGNOREEXTRA" | "FILLTARGET" ] ";" 
+								;
+								
+<alter_role>				::= "ALTER" "ROLE" <role_name> [ "WITH" ]
+								[<alter_role_value> ("," <alter_role_value>)*]
+							  [ "EXTERNALID" "TO" <external_id> ] ";" ;
+							  
+<alter_role_value>			::=   ( "RENAME" "TO" <role_name> ) | ( "OWNER" "TO" <user_name> ) ;
+
+<alter_rls_policy>			::= "ALTER" "RLS" "POLICY" <policy_name>
+								"USING" "(" <using_predicate_exp> ")" ";" ;
+								
+<alter_masking_policy>		::= "ALTER" "MASKING" "POLICY" <policy_name> 
+									"USING" "(" <masking_expression> ")" ";" ;
+									
+<masking_expression>		::= skipBalanced("(" ,")") ;
+
+<alter_id_provider>			::= "ALTER" "IDENTITY" "PROVIDER" <identity_provider_name>
+								(
+									 ("PARAMETERS" <StringValue>)
+									|("NAMESPACE" <namespace_name>)
+									|("IAM_ROLE" <iam_role>)
+									|("DISABLE" | "ENABLE")
+								) [";"] ;
+								
+<iam_role>					::=<StringValue>|<IDENTIFIER>;								
+								
+<alter_group>				::= "ALTER" "GROUP" <group_name>
+								(
+									("ADD" "USER" <username> ("," <username> )*) |
+									("DROP" "USER"  <username> ("," <username>)*) |
+									("RENAME" "TO" <new_name>)
+								) ";" ;
+								
+<alter_default_privileges>	::=	 "ALTER" "DEFAULT" "PRIVILEGES"
+								[ "FOR" "USER" <target_user>  ("," <target_user>)*]
+								[ "IN" "SCHEMA" <schema_name> ("," <schema_name>)* ]
+								<revoke_or_grant> [";"] ;
+								
+<target_user>				::= <IDENTIFIER> |<StringValue> ;		
+
+<alter_datashare>			::= "ALTER" "DATASHARE" <datashare_name> [( "ADD" | "REMOVE" )] 
+								(
+									[(("TABLE" ([<schema_name>"."]<table_name_as_string>) ("," ([<schema_name>"."]<table_name_as_string>) )*)
+									| ("SCHEMA" <schema_name> ("," <schema_name>)*)
+									| ("FUNCTION"  <function_value> ("," <function_value>)*)
+									| ("ALL" "TABLES" "IN" "SCHEMA" <schema_name> ("," <schema_name>)*)
+									| ("ALL" "FUNCTIONS" "IN" "SCHEMA" <schema_name> ("," <schema_name>)* ))]
+									[ "SET" "PUBLICACCESSIBLE" ["="] ("TRUE" | "FALSE") ]
+									[ "SET" "INCLUDENEW" ["="] ("TRUE" | ("FALSE" "FOR" "SCHEMA" <schema_name>)) ] 
+								) 
+								[";"] ; 
+								
+<function_value>			::= <schema_name>"."<sql_udf> "(" <data_type> ("," <data_type>)* ")" ; 
+
+<sql_udf> 					::= <IDENTIFIER> ;
+
+                  
+<alter_function>			::= "ALTER" "FUNCTION" <name> "(" skipBalanced("(",")") ")"
+										(("RENAME" "TO" <name>)
+										|("OWNER" "TO" (  "CURRENT_USER" | "SESSION_USER" |<new_owner>)))[";"] ;
+
+
+<alter_system>				::= "ALTER" "SYSTEM" "SET" <name> "=" ("true"| "t" | "on" | "false" | "f" | "off"|<StringValue>) [";"] ;
+
+
+<show_columns>				::= "SHOW" "COLUMNS" "FROM" "TABLE" <database_name>"." [<schema_name>"."]<table_name_as_string> ["LIKE" <StringValue>] ["LIMIT" <NUMBER> ][";"] ;
+
+<show_schemas>				::= "SHOW" "SCHEMAS" "FROM" "DATABASE" <database_name> ["LIKE" <StringValue>] ["LIMIT" <NUMBER> ] [";"];
+
+
+<col_data_type>							::= <NumericDataTypes> |
+										<StringBinaryDataTypes> |
+										<LogicalDataType> | 
+										<DateTimeDataType> |
+										<SemiStructuredDataType> |
+										<GeospatialDataType> ;									
+											
+
+<NumericDataTypes>					::= <NumericType>  ; 
+<NumericType>						::= "NUMBER" | "DECIMAL" | "NUMERIC" | "INT" | "INTEGER" | "BIGINT" | "SMALLINT" | "TINYINT" | 
+										"BYTEINT" | "FLOAT" | "FLOAT4" | "FLOAT8" | "DOUBLE" ["PRECISION"]|"PRECISION" | "REAL"|"INT2"|"INT8"|"INT4" ; 
+
+<StringBinaryDataTypes>				::= <StringBinaryType>["(" <IDENTIFIER> ")"]; 
+
+<StringBinaryType>					::= "VARCHAR" | "CHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | "BINARY" | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ; 

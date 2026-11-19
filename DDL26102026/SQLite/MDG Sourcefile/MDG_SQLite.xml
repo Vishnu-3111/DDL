@@ -1,0 +1,287 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<MDG.Technology version="1.0">
+	<Documentation id="DW_SL" name="SQLite" version="1.0" notes="SQLite synatx as EA Artifacts"/>
+	<UMLProfiles>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="108EB28CA4" name="SQLite" version="1.0" notes="SQLite"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="TEXT">
+						<AppliesTo>
+							<Apply type="Attribute"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Automatic Generation" type="" description="" unit="" values="" default=""/>
+							<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+							<Tag name="Column Expression" type="" description="" unit="" values="" default=""/>
+							<Tag name="Computed Columns" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+						<AppliesTo>
+							<Apply type="Association"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+							<Tag name="Update" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="property" type="" description="" unit="" values="" default=""/>
+							<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+							<Tag name="Where Condition" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+						<metarelationships>
+							<metarelationship metaclass="Association" constraint="SQLite::table"/>
+						</metarelationships>
+						<stereotypedrelationships>
+							<stereotypedrelationship stereotype="SQLite::FK" constraint="SQLite::table"/>
+						</stereotypedrelationships>
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="SQLite"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+							<Tag name="Module Arguments" type="" description="" unit="" values="" default=""/>
+							<Tag name="Module Name" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Options" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+							<Tag name="Each Row" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+							<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+							<Tag name="Trigger Expression" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="SQLite"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+							<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes>
+					<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Temporary,Virtual;&#xA;Default=&lt;none&gt;;"/>
+				</TaggedValueTypes>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UMLProfiles>
+	<TaggedValueTypes>
+		<RefData version="1.0" exporter="EA.25">
+			<DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'">
+				<DataRow>
+					<Column name="Property" value="Not Exists"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Database and Schema"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Table Options"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Select Query"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Module Name"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Module Arguments"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is Temporary"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="View Columns"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="viewdef"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Collate"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Automatic Generation"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Column Expression"/>
+					<Column name="Notes" value="Type=Memo"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Computed Columns"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Stored,Virtual;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Unique"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="property"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Where Condition"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="TRG_TIME"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="TRG_EVENT"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Each Row"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Trigger Expression"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Update"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Delete"/>
+				</DataRow>
+			</DataSet>
+		</RefData>
+	</TaggedValueTypes>
+	<DiagramProfile>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="E10ED6E78A" name="SQLite" version="1.0" notes="SQLite"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="SQLite" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Diagram_Logical">
+								<Property name="alias" value="SQLite"/>
+								<Property name="toolbox" value="SQLite"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</DiagramProfile>
+	<UIToolboxes>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="615E04BCA3" name="SQLite" version="1.0" notes="SQLite"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="SQLite" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="SQLite::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+							<Tag name="SQLite::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+							<Tag name="SQLite::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+							<Tag name="SQLite::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+							<Tag name="SQLite::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+							<Tag name="SQLite::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+							<Tag name="SQLite::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+							<Tag name="SQLite::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="SQLite::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UIToolboxes>
+</MDG.Technology>

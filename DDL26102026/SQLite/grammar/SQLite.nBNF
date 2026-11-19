@@ -1,0 +1,614 @@
+//
+// This file is conversion of the syntax form following web site:
+// https://www.sqlite.org/lang.html
+//
+
+
+CaseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>							::= <WHITESPACE> |
+										<COMMENT> |
+										token(<NUMBER>) |
+										(<STRING>) |
+										token(<IDENTIFIER>) |
+										token(keywords());
+
+<DELIMITER>							::= "\n" | "\r" | "\t" | " "  | "~"  |
+										"`"  | "!"  | "@"  | "#"  | "$"  |
+										"%"  | "^"  | "&"  | "*"  | "("  |
+										")"  | "-"  | "+"  | "="  | "("  | 
+										"["  | ")"  | "]"  | ";"  | ":"  | 
+										"\\" | "\'" | "\"" | ","  | "<"  | 
+										">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>						::= " "  | "\r" | "\n" | "\t";
+
+// Not sure about comment like /*...*/?
+<COMMENT>							::= ("--"  skip(<eol>) <eol> )| 	
+										("//" skip(<eol>) <eol> )|
+										("/*" skip("*/") "*/") ;
+
+<EOL>								::= "\r" "\n" |
+										"\n";
+
+<NUMBER>							::= ["-"]"0".."9"+;
+
+<DECIMAL>							::= <NUMBER> ("." <NUMBER>)* ;
+
+
+// Not sure about string wrapped by double quota (i.e. ")
+<STRING>			::= token("\"") token(<STRINGDBODY>) token("\"") | 
+						token("\'") token(<STRINGSBODY>) token("\'");
+<STRINGSBODY>		::= skip("\'", "\\\'");
+<STRINGDBODY>		::= skip("\"", "\\\"");
+
+<StringValue>		::=( "\""  <STRINGDBODY> "\"" )| 
+						("\'"  <STRINGSBODY> "\'");	
+
+<StringAsName>		::= ( "\"" attribute("NAME", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("NAME", <STRINGSBODY>) "\'");
+						
+<StringAsValue>		::= ( "\"" attribute("VALUE", <STRINGDBODY>) "\"" )| 
+						("\'" attribute("VALUE", <STRINGSBODY>) "\'");
+
+<IDENTIFIER>				::= ("a".."z" | "_"|"-") ("a".."z" | "0".."9" | "_"|"-")*;
+
+// Parser rules
+<language>					::= attributeEx("EAGENTYPE", "SQLite") attributeEx("EAMAPPING", "DDL") <statement>*;
+
+<statement> 		::= <create_commands> 
+						|<alter_commands>
+						|<drop_commands>
+						|<other_commands>
+						;
+
+<create_commands>	::= <create_table> 
+						| <create_view>
+						| <create_index>
+						| <create_trigger>;
+				
+<alter_commands>	::= <alter_table> ;
+
+<drop_commands>		::=<drop_index>
+						|<drop_table>
+						|<drop_trigger>
+						|<drop_view>
+						;
+
+<other_commands>	::=<analyze>
+						|<attach_database>
+						|<transcation_statement>
+						|<detach_database>
+						|<delete_command>
+						|<insert_command>
+						|<pragma_command>
+						|<update_command>
+						|<vacuum_command>
+						|<reindex>
+						;
+
+<create_table>		::= node("ELEMENT" , 
+							attributeEx("EATYPE" , "Class")
+							attributeEx("EASTEREOTYPE" , "SQLite::table")
+							"CREATE" 
+							[
+								(("TEMP" | "TEMPORARY") node("Table Type" , attributeEx("VALUE" , "Temporary")) )
+								| ("VIRTUAL" node("Table Type" , attributeEx("VALUE" , "Virtual")))
+							] 
+							"TABLE" 
+							["IF" "NOT" "EXISTS" node("Not Exists" , attributeEx("VALUE" , "True"))]
+							[node("Database and Schema" , ((attribute("VALUE" , (<schema_name> )))|<StringAsValue>)".")] 
+							(attribute("NAME" , <table_name>)|<StringAsName>)
+							( ( "(" <table_member> ("," <table_member>)* ")"  
+								[node("Table Options" , attribute("VALUE" , <table_options>) ) ] ) 
+								| ("AS"  node("Select Query" , attribute("VALUE" , <SelectQuery>)))
+								| ("USING" node("Module Name" , attribute("VALUE" , <module_name>))  
+									[ "(" node("Module Arguments" , attribute("VALUE" , <module_args>)) ")"] )
+							)						
+						)[";"];
+						
+<tbl_name_or_string>	::=<IDENTIFIER>|<StringValue>;	
+
+<colu_name_or_string>	::=<IDENTIFIER>|<StringValue>;
+						
+<module_args>		::=  <colu_name_or_string> ("," <colu_name_or_string>)* ;
+						
+<module_name>		::= <IDENTIFIER>;	
+						
+<table_options>		::= <option_value> ("," <option_value>)* ;
+
+<option_value>		::=  ("WITHOUT" "ROWID") | "STRICT";
+						
+						
+<schema_name>		::= <IDENTIFIER> ;
+<table_name>		::= <IDENTIFIER> ;
+						
+<table_member>		::= (<foreign_key>)
+						| (node("OPERATION" , <table_constraint>))
+						|(<column_def>)
+						;
+					
+<foreign_key>		::=  node("FOREIGNKEY", 
+									[ "CONSTRAINT" ((attribute("NAME", <name>))|<StringAsName>)  ]
+									"FOREIGN" "KEY" attributeEx("EASTEREOTYPE", "SQLite::FK")
+									[<constraint_columns>]
+									<references>
+									[<ol_fk_options>*]
+								);
+								
+								
+<ol_fk_options>				::= ("ON" "UPDATE" 
+									( 
+										("CASCADE" 
+											node("Update" , attributeEx("VALUE" , "Cascade"))
+										)
+										|("SET" "NULL" 
+											node("Update" , attributeEx("VALUE" , "Set Null"))
+										)
+										|("SET" "DEFAULT" 
+											node("Update" , attributeEx("VALUE" , "Set Default"))
+										)
+										|("RESTRICT" 
+											node("Update" , attributeEx("VALUE" , "Restrict"))
+										)
+										|("NO" "ACTION" 
+											node("Update" , attributeEx("VALUE" , "No Action"))
+										)
+									)
+								) 
+							    | ("ON" "DELETE" 
+									( 
+										("CASCADE" 
+											node("Delete" , attributeEx("VALUE" , "Cascade"))
+										)
+										|("SET" "NULL" 
+											node("Delete" , attributeEx("VALUE" , "Set Null"))
+										)
+										|("SET" "DEFAULT" 
+											node("Delete" , attributeEx("VALUE" , "Set Default"))
+										)
+										|("RESTRICT" 
+											node("Delete" , attributeEx("VALUE" , "Restrict"))
+										)
+										|("NO" "ACTION" 
+											node("Delete" , attributeEx("VALUE" , "No Action"))
+										)										
+									)
+								)								
+								;
+								
+<references>				::=   "REFERENCES" 
+								node("TARGET" ,(( attribute("NAME", <foreigntable>))|<StringAsName>) 
+								[<constraint_columns>]
+								);
+								
+<foreigntable>			::= <IDENTIFIER> ;
+						
+					
+<table_constraint>	::=  ["CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>) ]
+						( ("PRIMARY" "KEY" attributeEx("EASTEREOTYPE" , "SQLite::PK"))
+							|("UNIQUE" attributeEx("EASTEREOTYPE" , "SQLite::unique"))
+							| ("CHECK" attributeEx("EASTEREOTYPE" , "SQLite::check") "(" attribute("CODE" , <expr>) ")")							
+						)						
+						[<constraint_columns>]
+						[<conflict_clause>]
+
+					;
+					
+					
+<constraint_columns>		::= "(" <constraint_column> ("," <constraint_column>)* ")";
+<constraint_column>			::= node("PARAMETER",((attribute("NAME", <column_name>))|<StringAsName>) ) ["COLLATE" <collation_name>] ["ASC"|"DESC"] ;					
+
+					
+<column_def>		::= node("ATTRIBUTE" , 
+						attributeEx("EASTEREOTYPE" , "SQLite::column")
+						((attribute("NAME" , <column_name>) )|<StringAsName>)
+						[( ( <column_constraint>)
+								|("NOT" "NULL" attributeEx("NOTNULL" , "true") [<conflict_clause>])  
+								| ("COLLATE"  node("Collate" , attribute("VALUE" , <collation_name>))  ) 
+								| ("GENERATED" "ALWAYS"  node("Automatic Generation" , attributeEx("VALUE" , "True")))
+								| ("AS" "(" node("Column Expression" , attribute("VALUE" , <expr>))  ")" )
+								| (("STORED" node("Computed Columns" , attributeEx("VALUE" , "Stored"))) 
+									| ("VIRTUAL" node("Computed Columns" , attributeEx("VALUE" , "Virtual") ) ))
+								| ("DEFAULT"   attribute("DEFAULT" , <column_default_expr>) )
+								| (<col_type>)
+							)*
+						]
+						);
+						
+<column_default_expr>	::= ( ("(" <expr> ")")| (<literal_value>) | (<signed_number>) );
+
+<col_type>			::= node("TYPE" , attribute("NAME" ,<type_name>)) ;
+
+<column_name> 		::= <IDENTIFIER> ;
+
+<type_name>			::= <name> ["(" <signed_number> ("," <signed_number>)* ")"];	
+
+<name>				::= <IDENTIFIER> ;		
+<signed_number>		::= ["+" | "-"] <NUMBER> ;		
+
+<column_constraint>	::=	(( node("CONSTRAINT" , ["CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)] 
+						"PRIMARY" "KEY" attributeEx("EASTEREOTYPE", "SQLite::PK") 	["ASC" | "DESC"] [<conflict_clause>] ["AUTOINCREMENT"]))
+							| ( node("CONSTRAINT", ["CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)]
+							"UNIQUE" attributeEx("EASTEREOTYPE", "SQLite::unique") [<conflict_clause>]))
+							| ( node("OPERATION", ["CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)]
+							"CHECK" attributeEx("EASTEREOTYPE" , "SQLite::check") "(" attribute("CODE" ,<expr>) ")") )				
+							| ( node("CONSTRAINT", ["CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)] <foreign_key_clause>))											
+						);	
+						
+<column_constraint_altertable>	::=	( "CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)
+						"PRIMARY" "KEY" attributeEx("EASTEREOTYPE", "SQLite::PK") 	["ASC" | "DESC"] [<conflict_clause>] ["AUTOINCREMENT"]
+							| ("CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)
+							"UNIQUE" attributeEx("EASTEREOTYPE", "SQLite::unique") [<conflict_clause>])
+							| ( "CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)
+							"CHECK" attributeEx("EASTEREOTYPE" , "SQLite::check") "(" attribute("CODE" ,<expr>) ")") 		
+							| ( "CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>) <foreign_key_clause>)											
+						);
+						
+<column_constraint_alter>	::=	 node("OPERATION", "CONSTRAINT" ((attribute("NAME" ,<name>))|<StringAsName>)
+							"CHECK" attributeEx("EASTEREOTYPE" , "SQLite::check") "(" attribute("CODE" ,<expr>) ")"[<conflict_clause>]);	//Added by Raji for alter table
+						
+						//Raji_07102026_071001002_Updated the grammar file to support schema names in the inline foreign key REFERENCES clause.
+<foreign_key_clause>	::= attributeEx("EASTEREOTYPE", "SQLite::FK") "REFERENCES" 
+							[node("Database and Schema" , ((attribute("VALUE" , (<schema_name> )))|<StringAsValue>)".")]
+							node("TARGET", ((attribute("NAME", <table_name>))|<StringAsName>)
+									["(" <constraint_column> ("," <constraint_column>)* ")"])
+							[ <ol_fk_options>* ];
+
+
+<il_fk_option>			::= ("ON" ("DELETE" | "UPDATE")  
+								(("SET" "NULL")
+									| ("SET" "DEFAULT")
+									| ("CASCADE")
+									| ("RESTRICT")
+									| ("NO" "ACTION")
+								)
+							)
+							| ("MATCH" <name_or_string>)
+							| (["NOT"] "DEFERRABLE" ["INITIALLY" ("DEFERRED" | "IMMEDIATE")])
+							;
+<name_or_string>		::=<name>|<StringValue> ;
+
+<collation_name>		::= <IDENTIFIER>;
+
+<conflict_clause>	::= "ON" "CONFLICT" ("ROLLBACK" | "ABORT" | "FAIL" | "IGNORE" | "REPLACE") ;	
+
+<expr>						::= <logical_Expression>;
+
+<literal_value>			::= <NUMBER> |<StringValue>| <IDENTIFIER>;	
+
+<SelectQuery> 						::= ["("]  [<with_table_expression>	 ("," <with_table_expression>)*]
+										"SELECT"  
+										skip("FROM")										
+										[<from>] 
+										[<Join_value>*] 
+										[<groupBy>]
+										[<where_condition>] 
+										[<having>]
+										[<union_condition>] 
+										["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
+										[ "NULLS" "FIRST" | "NULLS" "LAST" ]
+										[ "OFFSET" <start> ]
+										["START" "WITH" <condition>]										
+										["CONNECT" "BY" <condition>]
+										["START" "WITH" <condition>]
+										[ "LIMIT" ( <NUMBER> | "ALL" ) ]  
+										[<groupBy>] [")"]
+										[ "OPTION" "(" <option_clause> ")" ]   										
+										  ;	
+										  
+<with_table_expression>			::=  "WITH" ["RECURSIVE"] <col_names> "AS"  <SelectQuery> ;
+
+<col_names>						::= <colu_name_or_string> ("," <colu_name_or_string>)* ;
+
+<from>								::= "FROM" (<rowset_function_limited>|<fromClause> | <from_sub>);		
+
+<rowset_function_limited>	::=  <open_value> [("AS" |".")<IDENTIFIER>]*;
+
+<open_value>			::= <IDENTIFIER> "(" skipBalanced("(" , ")")")";
+
+<from_sub>							::= <from_tables> [ "NATURAL" ] ;
+
+<fromClause>                        ::=  <from_tables>;	
+
+<from_tables>						::= <from_table> ("," <from_table>)*;
+
+<from_table> 						::= [ [ "[" | "(" ] <IDENTIFIER> [ "]" | ")" ] "."]*  ["[" | "("] <tbl_name_or_string> ["]" | ")"] [ (<Join_value>[<Join_value>*])|<groupBy>| <where_condition> | <union_condition> | ( "ORDER" "BY" (<order_expr> ("," <order_expr>)*))| ("LIMIT" ( <NUMBER> | "ALL" )) | <having>| ("OPTION" "(" <option_clause>  ")") |( ["AS"] [ "[" | "(" ] <IDENTIFIER> [ "]" | ")" ]) ]  ;
+
+<Join_value> 						::= <join_type> <tbl_name_or_string>[("." <IDENTIFIER>) | ("AS"  <IDENTIFIER>)| ("(" <IDENTIFIER> [("." <IDENTIFIER>)*]")" <IDENTIFIER>)]
+											[<join_on_value>] ;
+										
+<join_on_value>						::= ("ON" <join_con> ) | ("USING" "(" <colu_name_or_string>  ("," <colu_name_or_string>)* ")");
+										
+<join_type>							::= ("JOIN") |("INNER" "JOIN") | ("LEFT" "JOIN") | ("LEFT" "OUTER" "JOIN")	
+										| ("RIGHT" "JOIN") | ("RIGHT" "OUTER" "JOIN") | ("FULL" "JOIN") |
+										("FULL" "OUTER" "JOIN") | ("CROSS" "JOIN") ;
+										
+<join_con>							::= <logical_Expression> ;	
+
+<logical_Expression>				::= <join_condition> (("AND"|"OR") (<join_condition>) )* ;
+
+									//Raji_07102026_071001001_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements.
+<join_condition>					::= (<tbl_name_or_string> | <NUMBER>)[(("*" | "+"|".")<colu_name_or_string> )*] ["(" <colu_name_or_string> ")"] [<comparison_Operator> ] [<join_condition>] [ ("(" skipBalanced("(" , ")" ) ")") |("CONVERT" "("skipBalanced("(" , ")" )")" )  | ( [<tbl_name_or_string>  | <StringValue> | (<DECIMAL>)|(<NUMBER>) ] [("." ["("] <colu_name_or_string>| <NUMBER> [")"] )] ["AND" (<DECIMAL> | <NUMBER>)] )| (<default_expr> )  ];	
+
+<comparison_Operator> 				::= "=" | 
+										"+" |
+										"/" |
+										("<" [">"]["="]) | 										
+										("OF") | 										
+										(">" ["="])|										
+										 ("BETWEEN") | 
+										 ("IN") | 
+										 ("NOT" "IN") |
+										("IS" "NULL") | 
+										("IS" "NOT" "NULL") |
+										"LIKE";
+										
+<default_expr> 						::=  (<NUMBER> ["." <NUMBER>] )| [<StringValue>]  	;
+
+<groupBy>							::= "GROUP" "BY" <group_condition>;
+
+<group_condition>					::= ( ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_name_or_string> ["]"] | <NUMBER>)  ( "," ([ ["["] <IDENTIFIER> ["]"] "."]*  ["["] <tbl_name_or_string> ["]"] | <NUMBER>))*) ;
+
+<where_condition>					::= "WHERE" ["NOT" "EXISTS"] ["("] <condition> [")"]  ; 							
+<condition>							::= <join_con> ;
+
+
+<union_condition>					::= ( "UNION" [ "ALL" ] | "INTERSECT" | "EXCEPT" | "MINUS" )
+										<SelectQuery>* ;	
+										
+<order_expr> 						::= <column_with_expression> [ "ASC" | "DESC" ];
+
+<column_with_expression>			::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<tbl_name_or_string> "." | <SelectQuery>] ["("] (<colu_name_or_string> ["/" <colu_name_or_string>] | <NUMBER> | <StringValue> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
+
+<having>							::= "HAVING" <condition> ;
+
+<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+
+<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+
+<option_clause>					::=  (<query_hint> |<boundary_value>) ([","] (<query_hint> |<boundary_value>) )* ;		
+
+<query_hint> 					::=   "HASH" "JOIN"   
+										| "LOOP" "JOIN"   
+										| "MERGE" "JOIN"   
+										| "FORCE" "ORDER"   
+										| (( "FORCE" | "DISABLE" ) "EXTERNALPUSHDOWN" )
+										| ( "LABEL" "=" <IDENTIFIER> <StringValue> )
+										;
+										
+<boundary_value>				::= <NUMBER> [<StringValue>] | <IDENTIFIER> [<StringValue>] | <StringValue> | "="  ;	
+
+
+<convert_expression> 				::= <convert_value> ("," <convert_value> )* ;		
+
+<convert_value>				::= (("CONVERT"| (<IDENTIFIER> ["." <IDENTIFIER>])) "(" [<convert_expression>] ")");	
+
+
+<create_view>				::= node("ELEMENT" ,
+									attributeEx("EATYPE" , "Class")
+									attributeEx("EASTEREOTYPE" , "SQLite::view")
+									"CREATE"	
+									[("TEMP" | "TEMPORARY") node("Is Temporary" , attributeEx("VALUE" , "True"))]
+									"VIEW"
+									["IF" "NOT" "EXISTS" node("Not Exists" , attributeEx("VALUE" , "True"))] 
+									[node("Database and Schema" , ((attribute("VALUE" , (<schema_name> )))|<StringAsValue>)".")] 
+									((attribute("NAME", <view_name>))|<StringAsName>)
+									 [ "(" node("View Columns" , attribute("VALUE" , <view_columns>))  ")" ]
+									 ["AS" node("viewdef" , attribute("VALUE" , <SelectQuery>)) ]									
+								)[";"];		
+								
+<view_columns>					::= <colu_name_or_string> ("," <colu_name_or_string>)*;
+
+<view_name>					::= <IDENTIFIER> ;	
+
+							//Raji_07102026_071001003_Updated the grammar file to support schema qualified table names in the CREATE INDEX ON clause.
+
+<create_index>              ::= node("OPERATION",
+								attributeEx("EASTEREOTYPE" , "SQLite::index")
+                                "CREATE" [<unique_property>]	"Index"
+                               ["IF" "NOT" "EXISTS" node("Not Exists" , attributeEx("VALUE" , "True"))] 
+								[node("Database and Schema" , ((attribute("VALUE" , (<schema_name> )))|<StringAsValue>)".")] 
+								((attribute("NAME",<index_name>))|<StringAsName>)
+								["ON" node("OWNER" , ((attribute("NAME" , <table_name>))|<StringAsName>) ["." ((attribute("VALUE" , (<schema_name>)))|<StringAsValue>)])]
+								[ <constraint_columns>]
+								["WHERE" node("Where Condition" , attribute("VALUE" , <expr>)) ]
+								)[";"];	
+								
+<unique_property>	::= ("UNIQUE"
+								  node("Unique",  attributeEx("VALUE", "1"))
+								  node("property", attributeEx("VALUE", "Unique=1;Clustered=0;")));
+								
+<index_name>                ::= <IDENTIFIER>;
+
+<create_trigger>            ::=  node("OPERATION" ,
+								attributeEx("EASTEREOTYPE" , "SQLite::trigger")
+                                "CREATE"  
+								[("TEMP" | "TEMPORARY") node("Is Temporary" , attributeEx("VALUE" , "True"))]
+								"Trigger"
+								 ["IF" "NOT" "EXISTS" node("Not Exists" , attributeEx("VALUE" , "True"))] 
+								[node("Database and Schema" , ((attribute("VALUE" , (<schema_name> )))|<StringAsValue>)".")]
+                                ((attribute("NAME" , <trigger_name>))|<StringAsName>)
+								[<trigger_Time>]
+								<trigger_event>
+								"ON" [((<schema_name>|<StringValue>) ".")*] node("OWNER" , ((attribute("NAME" , <table_name>))|<StringAsName>))
+								["FOR" "EACH" "ROW" node("Each Row" , attributeEx("VALUE" , "True"))]
+								["WHEN" [node("Trigger Expression" , attribute("VALUE" , <expr>)) ]]
+								attribute("CODE" , <trigger_body>)								
+								)[";"];
+								
+<trigger_name>				::= <IDENTIFIER> ;
+								
+<trigger_body>				::= "BEGIN"  <trigger_statements>* "END";
+
+<trigger_statements>		::= ("UPDATE" skipBalanced("UPDATE" , ";")  ";") 
+								| ("INSERT"  skipBalanced("INSERT" , ";") ";") 
+								| ("DELETE"  skipBalanced("DELETE", ";") ";") 
+								| ("SELECT" skipBalanced("SELECT" , ";")  ";") 
+								| ("WITH"  skipBalanced("WITH" , ";") ";") 
+								;
+								
+<trigger_Time>				::= ("BEFORE" node("TRG_TIME" , attributeEx("VALUE" , "Before")))
+								| ("AFTER" node("TRG_TIME" , attributeEx("VALUE" , "After"))) 
+								| ("INSTEAD" "OF" node("TRG_TIME" , attributeEx("VALUE" , "Instead Of"))) ;
+
+<trigger_event>				::= ("DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Delete")))
+								| ("INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert")))
+								| ("UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Update")) ["OF" <trigger_constraints>])
+								;
+								
+<trigger_constraints>		::= <constraint_column> ("," <constraint_column>)* ;
+                                								
+
+					//Raji_07102026_071001004_Updated the grammar file to modified the ALTER TABLE syntax and added an owner node for ALTER TABLE statements.																		
+<alter_table>			::= mapRight("ALTER" "TABLE" node("OWNER" ,((attribute("NAME" , [(<schema_name>|<StringValue>)"."] <tbl_name_or_string> )))), 
+							(<altertable_operation> ("," <altertable_operation> )*) )[";"] ;
+
+<altertable_operation>  	::= (("RENAME" "TO" <tbl_name_or_string>)
+								|("RENAME" ["COLUMN"] <colu_name_or_string> "TO" <colu_name_or_string>)
+								|("ADD" "COLUMN" <alter_column_def> )
+								| ("ADD" <column_constraint_alter>)
+								|("DROP"["COLUMN"]<colu_name_or_string>) 
+								|("ALTER" ["COLUMN"] <colu_name_or_string> <altertable_column> ));
+
+<alter_column_def>		::=  (( <column_name>) |<StringAsName>)
+							[( ( <column_constraint_altertable>)
+								|("NOT" "NULL"  [<conflict_clause>])  
+								| ("COLLATE"  <collation_name>) 
+								| ("GENERATED" "ALWAYS"   "True")
+								| ("AS" "("  <expr>  ")" )
+								| ("STORED" ) 
+								| ("VIRTUAL" )
+								| ("DEFAULT"    <column_default_expr>) 
+								| (<col_type>)
+								)*
+							];
+							
+<altertable_column>		::= "SET" "NOT" "NULL" [<conflict_clause>]| "DROP" "NOT" "NULL" ;	
+
+<analyze>					::= "ANALYZE" [[(<schema_name>|<StringValue>)"."]<tbl_name_or_string>] [";"] ;				
+
+<attach_database>			::= "ATTACH"["DATABASE"] <StringValue> "AS" (<schema_name>|<StringValue>) [";"] ;	
+
+
+<transcation_statement>		::=	(<begin_transaction>|<commit_transaction>|<rollback>|<savepoint>|<release_command>)[";"] ;
+
+
+<begin_transaction>			::= "BEGIN" [("DEFERRED"|"IMMEDIATE"|"EXCLUSIVE")] "TRANSACTION" ;
+
+<commit_transaction>		::=("COMMIT"|"END") ["TRANSACTION"] ;
+
+<rollback>					::= "ROLLBACK" ["TRANSACTION"] ["TO" ["SAVEPOINT"]<name_or_string>] ;
+
+
+<delete_command>			::= ["WITH" ["RECURSIVE"] (<common_table_expression>(","<common_table_expression>)*)]
+									"DELETE" "FROM" <qualified_name> ["WHERE" <condition>] [<returning_clause>]
+									[<order_by_clause>] [<limit_clause>] [";"] ;
+									
+<qualified_name>			::= [(<schema_name>|<StringValue>)"."] <tbl_name_or_string> ["AS" <tbl_name_or_string>] [(("INDEXED" "BY" <index_name>)|("NOT" "INDEXED"))] ;
+
+<returning_clause>			::= "RETURNING" (((<expr> [["AS"]<colu_name_or_string>])|"*")(","((<expr> [["AS"]<colu_name_or_string>])|"*"))*) [";"] ;
+
+
+<order_by_clause>			::="ORDER" "BY" (<colu_name_or_string>(","<colu_name_or_string>)*) [("ASC"|"DESC")] ;
+
+<limit_clause>				::= "LIMIT" <expr> [["OFFSET"] (<expr>(","<expr>)*)] ; 
+
+
+<common_table_expression>	::= <tbl_name_or_string>[ "(" skipBalanced("(",")") ")"] "AS" ["NOT"] ["MATERIALIZED"] ("("skipBalanced("(",")") ")") ;
+
+<detach_database>			::= "DETACH" ["DATABASE"](<schema_name>|<StringValue>)[";"] ;
+
+<drop_index>				::= "DROP" "INDEX" ["IF" "EXISTS"] [(<schema_name>|<StringValue>)"."] (<index_name>|<StringValue>) [";"] ; 
+
+<drop_table>				::="DROP" "TABLE" ["IF" "EXISTS"] [(<schema_name>|<StringValue>)"."] <tbl_name_or_string> [";"] ;
+
+<drop_trigger>				::= "DROP" "TRIGGER" ["IF" "EXISTS"] [(<schema_name>|<StringValue>)"."] <tbl_name_or_string> [";"] ;
+						
+<drop_view>					::= "DROP" "VIEW" ["IF" "EXISTS"] [(<schema_name>|<StringValue>)"."] <tbl_name_or_string> [";"] ;
+
+
+<insert_command>			::= ["WITH" ["RECURSIVE"] (<common_table_expression>(","<common_table_expression>)*)]
+								(
+									"REPLACE"
+									|("INSERT" 
+									["OR"("ABORT"|"FAIL"|"IGNORE"|"REPLACE"|"ROLLBACK")])) "INTO"
+								[(<schema_name>|<StringValue>)"."] <tbl_name_or_string> ["AS" <tbl_name_or_string>]
+								 ["(" <colu_name_or_string>(","<colu_name_or_string>)*  ")"]
+								 [(
+									("DEFAULT" "VALUES")
+									|(
+										(("VALUES" (("(" skipBalanced( "(",")") ")")("," ("(" skipBalanced( "(",")") ")"))*))
+											| <SelectQuery>
+										)
+									[<upsert_clause>])
+									)]
+								[<returning_clause>] [";"] ;
+								  
+								  
+<column_name_list>			::= <colu_name_or_string>(","<colu_name_or_string>)* ;
+								  
+
+<upsert_clause>				::= ("ON" "CONFILCT"["(" skipBalanced( "(",")") ")" ["WHERE" <condition>]] "DO"
+									("NOTHING"|("UPDATE" "SET" (((<colu_name_or_string>|<column_name_list>)"="<expr>)
+									(","((<colu_name_or_string>|<column_name_list>)"="<expr>))*)
+									"WHERE" <expr> )))* ;
+
+<pragma_command>			::= "PRAGMA" <pragma_name> [(("=" <pragma_value>)|("("<pragma_value>")"))] [";"] ;
+
+<pragma_value>				::=(<signed_number> |<pragma_name>|<literal_value>) ;
+
+<pragma_name>				::=[(<schema_name>|<StringValue>)"."] <IDENTIFIER> ;
+
+<reindex>					::= "REINDEX" [[(<schema_name>|<StringValue>)"."] <IDENTIFIER>] [";"] ;
+
+<savepoint>					::= "SAVEPOINT" <name_or_string> ;
+
+<release_command>			::= "RELEASE" ["SAVEPOINT"] <name_or_string> ;
+
+
+<update_command>			::= ["WITH" ["RECURSIVE"] (<common_table_expression>(","<common_table_expression>)*)]
+								"UPDATE"["OR"("ABORT"|"FAIL"|"IGNORE"|"REPLACE"|"ROLLBACK")]<qualified_name>
+								"SET" ((<column_name_list_up> "=" (<tbl_name_or_string>"."<colu_name_or_string> |<expr>))
+								(","(<column_name_list_up> "=" (<tbl_name_or_string>"."<colu_name_or_string> |<expr>)))*)
+								["FROM" <table_or_subquery> (<Join_value>|(","<table_or_subquery>)*)]
+								["WHERE" <condition>] [<returning_clause>] [";"] ;
+
+
+
+<table_or_subquery>			::=[(<schema_name>|<StringValue>)"."] ((<tbl_name_or_string>(( "("skipBalanced("(",")") ")")|
+									( ["AS" <tbl_name_or_string>] [(("INDEXED" "BY" <index_name>)|("NOT" "INDEXED"))])))
+									|("(" skipBalanced("(",")") ")")) ;
+									
+<column_name_list_up>		::= (([<tbl_name_or_string>"."]<colu_name_or_string>)(","([<tbl_name_or_string>"."]<colu_name_or_string>))*) ;
+
+
+<vacuum_command>			::= "VACUUM" [(<schema_name>|<StringValue>)"."] ["INTO"] <filename> [";"] ;
+
+
+<filename>					::=(<StringValue>|<IDENTIFIER> );
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

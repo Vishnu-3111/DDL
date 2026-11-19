@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG_MySql --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\MySql\MDG_Sourcefile\MDG_MySql.qea;UID=;PWD=;">
+	<Technology id="DW_My" name="MySql" version="1.0" notes="Datawarehouse artifacts for MySql" filename="D:\Datawarehouse project\datawarehouse\datawarehouse\MySql\MDG_Sourcefile\MDG_MySql.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\MySql\MDG_Sourcefile" files="profile.xml"/>
+	<TagVals tags="Block Size,CharaterSet,Check Definition,Collate,Column Expression,Column Format,Comment,Computed Columns,Conflict Handling,Database and Schema,Definer,Delete,Determinism Specifier,Each Row,Engine Attribute,funcdef,Function Characteristics,Function Parameters,Generated Always,Index Specification,Is Aggregate,Is Replace,Is Temporary,ListValues,Lock Option,Not Exists,Parameter Expression,Parser Name,procdef,Procedure Characteristics,Procedure Parameters,Reference Definition,Returns,Secondary Engine,Select Query,Shared Library,Sql Language,SRID,Storage,Table Options,Target Table schema,TRG_EVENT,TRG_TIME,Trigger Order,Unsigned,Update,View Columns,viewdef,Visibility Specification,Zerofill"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\MySql\MDG_Sourcefile" files="diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\MySql\MDG_Sourcefile" files="toolbox.xml"/>
+</MDG.Selections>

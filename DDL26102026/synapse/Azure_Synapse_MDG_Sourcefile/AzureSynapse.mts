@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG-Azure --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\synapse\Azure_Synapse_MDG_Sourcefile\MDG-Azure.qea;UID=;PWD=;">
+	<Technology id="DW_AS" name="AzureSynapse" version="1.0" notes="Artifacts for AzureSynapse " filename="D:\Datawarehouse project\datawarehouse\datawarehouse\synapse\Azure_Synapse_MDG_Sourcefile\AzureSynapse_MDG.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\synapse\Azure_Synapse_MDG_Sourcefile" files="profile.xml"/>
+	<TagVals tags="Alter,Called Null,Check Option,Clustered,Clustered Index,Collate,Columns,Columnstore Index,Data Source,Default Parameter,Delete,Distribution,Encryption,Execute As,External,File Format,For Append,For Replication,funcdef,Heap,Identity,Include,Index Order,Inline Constraint,Is Columnstore,IsNull,Location,Materialized,Native Compilation,Option,Order By,Parameter,Parameter Option,Partition,procdef,property,Recompile,Reject Type,Reject Value,Rejected Row Location,Relational Index Option,Returns,Returns Null,Schema and Database,SchemaBinding,Select Query,Table Option,Unique,Update,Varying,View Metadata,viewdef,Where Condition"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\synapse\Azure_Synapse_MDG_Sourcefile" files="diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\synapse\Azure_Synapse_MDG_Sourcefile" files="toolbox.xml"/>
+</MDG.Selections>

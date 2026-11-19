@@ -1,0 +1,1128 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<MDG.Technology version="1.0">
+	<Documentation id="DW_Td" name="Teradata" version="1.0" notes="Artifacts for Teradata"/>
+	<UMLProfiles>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="035BE4E6A2" name="Teradata" version="1.0" notes="Teradata"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="error" metatype="error" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Generalization">
+								<Property name="isSubstitutable" value="true"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="All Columns" type="" description="" unit="" values="" default=""/>
+							<Tag name="Column By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
+							<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+							<Tag name="Order By" type="" description="" unit="" values="" default=""/>
+							<Tag name="property" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+							<Tag name="Table Option" type="Table Option" description="" unit="" values="" default=""/>
+							<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+							<Tag name="With Load" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="For Each" type="" description="" unit="" values="" default=""/>
+							<Tag name="Reference" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Search Condition" type="" description="" unit="" values="" default=""/>
+							<Tag name="Temporal Option" type="" description="" unit="" values="" default=""/>
+							<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+							<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+							<Tag name="Trigger Order" type="" description="" unit="" values="" default=""/>
+							<Tag name="Trigger Status" type="Trigger Status" description="" unit="" values="" default=""/>
+							<Tag name="Trigger Type" type="Table Type" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+						<AppliesTo>
+							<Apply type="Attribute">
+								<Property name="_tagGroupings" value="Format=Additional Datatype tagged values;Inline Length=Additional Datatype tagged values;Interval Field List=Additional Datatype tagged values;Period Field List=Additional Datatype tagged values;Snappy Compress=Additional Datatype tagged values;Storage Format=Additional Datatype tagged values;CharacterSet=Additional Datatype tagged values;"/>
+								<Property name="_tagGroups" value="Additional Datatype tagged values"/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Auto Increment" type="Auto Increment" description="" unit="" values="" default=""/>
+							<Tag name="Case Sensitivity" type="" description="" unit="" values="" default=""/>
+							<Tag name="CharacterSet" type="" description="" unit="" values="" default=""/>
+							<Tag name="Compression Attribute" type="" description="" unit="" values="" default=""/>
+							<Tag name="Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Identity Column" type="" description="" unit="" values="" default=""/>
+							<Tag name="Inline Length" type="" description="" unit="" values="" default=""/>
+							<Tag name="Interval Field List" type="" description="" unit="" values="" default=""/>
+							<Tag name="Named" type="" description="" unit="" values="" default=""/>
+							<Tag name="Period Field List" type="" description="" unit="" values="" default=""/>
+							<Tag name="Snappy Compress" type="" description="" unit="" values="" default=""/>
+							<Tag name="Storage Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Title" type="" description="" unit="" values="" default=""/>
+							<Tag name="Uppercase" type="" description="" unit="" values="" default=""/>
+							<Tag name="With Default" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+						<AppliesTo>
+							<Apply type="Association"/>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+						<metarelationships>
+							<metarelationship metaclass="Association" constraint="Teradata::table"/>
+						</metarelationships>
+						<stereotypedrelationships>
+							<stereotypedrelationship stereotype="Teradata::error" constraint="Teradata::table"/>
+							<stereotypedrelationship stereotype="Teradata::FK" constraint="Teradata::table"/>
+						</stereotypedrelationships>
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Teradata"/>
+								<Property name="_tagGroupings" value="Schema and Database=Common Properties;Table Option=Common Properties;Table Index=Common Properties;As Clause=Common Properties;Table Preservation=Common Properties;Foreign Table Expression=Foreign Table Property;No RLS=Error Table Property;Is Queue=Queue Table Property;Duplication Mode=Table Kind;Table Type=Table Kind;"/>
+								<Property name="_tagGroups" value="Common Properties,Foreign Table Property,Error Table Property,Queue Table Property,Table Kind"/>
+								<Property name="_tagGroupStates" value="Common Properties=open;Foreign Table Property=closed;Error Table Property=closed;Queue Table Property=closed;Table Kind=closed;"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="As Clause" type="" description="" unit="" values="" default=""/>
+							<Tag name="Duplication Mode" type="" description="" unit="" values="" default=""/>
+							<Tag name="Foreign Table Expression" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is Queue" type="" description="" unit="" values="" default=""/>
+							<Tag name="No RLS" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+							<Tag name="Table Option" type="Table Option" description="" unit="" values="" default=""/>
+							<Tag name="Table Preservation" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Teradata"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Is Recursive" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+							<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Teradata"/>
+								<Property name="_tagGroupings" value="Procedure Type=Common Properties;Schema and Database=Common Properties;Parameter Specification=Common Properties;Sql Security=Common Properties;Parameter Style=Common Properties;Is External=Common Properties;procdef=Procedure Definition;Glop Set=External Procedure Properties;External Name=External Procedure Properties;Language Clause=External Procedure Properties;Dynamic Result Sets=SQL form Procedure Properties;Sql Data Access=SQL form Procedure Properties;"/>
+								<Property name="_tagGroups" value="Common Properties,Procedure Definition,External Procedure Properties,SQL form Procedure Properties"/>
+								<Property name="_tagGroupStates" value="Procedure Definition=closed;Common Properties=open;External Procedure Properties=closed;SQL form Procedure Properties=closed;"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Dynamic Result Sets" type="" description="" unit="" values="" default=""/>
+							<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+							<Tag name="Glop Set" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+							<Tag name="Language Clause" type="" description="" unit="" values="" default=""/>
+							<Tag name="Parameter Specification" type="" description="" unit="" values="" default=""/>
+							<Tag name="Parameter Style" type="" description="" unit="" values="" default=""/>
+							<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+							<Tag name="Procedure Type" type="Procedure Type" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Sql Data Access" type="" description="" unit="" values="" default=""/>
+							<Tag name="Sql Security" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Teradata"/>
+								<Property name="_tagGroupings" value="Function Type=Common Properties;Is Mapping=Common Properties;Schema and Database=Common Properties;Parameter Specification=Common Properties;Return Table Statement=Common Properties;Return datatype=Common Properties;Parameter Style=Common Properties;Return Expression=Common Properties;For Table=Mapping Function Properties;Server Name=Mapping Function Properties;Map Json=Mapping Function Properties;Stored As=Mapping Function Properties;Table List=Mapping Function Properties;Glop Set=External Function Properties;External Name=External Function Properties;Type Specifier=External Function Properties;Is Definer=SQl Form Funtion Properties;Collation Invoker=SQl Form Funtion Properties;Language Clause=Language And Access Specification;Sql Data Access=Language And Access Specification;External Security=Teradata Function Properties;Is External=Teradata Function Properties;Function Option=Teradata Function Properties;Function Class=Teradata Function Properties;Deterministic=Teradata Function Properties;Null Handling=Teradata Function Properties;Null Semantics=Teradata Function Properties;Specific Table=Teradata Function Properties;"/>
+								<Property name="_tagGroups" value="Common Properties,Mapping Function Properties,External Function Properties,SQl Form Funtion Properties,Language And Access Specification,Teradata Function Properties"/>
+								<Property name="_tagGroupStates" value="Common Properties=open;Mapping Function Properties=closed;External Function Properties=closed;SQl Form Funtion Properties=closed;Language And Access Specification=closed;Teradata Function Properties=closed;"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Collation Invoker" type="" description="" unit="" values="" default=""/>
+							<Tag name="Deterministic" type="Deterministic" description="" unit="" values="" default=""/>
+							<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+							<Tag name="External Security" type="" description="" unit="" values="" default=""/>
+							<Tag name="For Table" type="" description="" unit="" values="" default=""/>
+							<Tag name="Function Class" type="" description="" unit="" values="" default=""/>
+							<Tag name="Function Option" type="" description="" unit="" values="" default=""/>
+							<Tag name="Function Type" type="Function Type" description="" unit="" values="" default=""/>
+							<Tag name="Glop Set" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is Definer" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+							<Tag name="Is Mapping" type="" description="" unit="" values="" default=""/>
+							<Tag name="Language Clause" type="" description="" unit="" values="" default=""/>
+							<Tag name="Map Json" type="" description="" unit="" values="" default=""/>
+							<Tag name="Null Handling" type="" description="" unit="" values="" default=""/>
+							<Tag name="Null Semantics" type="" description="" unit="" values="" default=""/>
+							<Tag name="Parameter Specification" type="" description="" unit="" values="" default=""/>
+							<Tag name="Parameter Style" type="" description="" unit="" values="" default=""/>
+							<Tag name="Return datatype" type="" description="" unit="" values="" default=""/>
+							<Tag name="Return Expression" type="" description="" unit="" values="" default=""/>
+							<Tag name="Return Table Statement" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Server Name" type="" description="" unit="" values="" default=""/>
+							<Tag name="Specific Table" type="" description="" unit="" values="" default=""/>
+							<Tag name="Sql Data Access" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored As" type="Stored As" description="" unit="" values="" default=""/>
+							<Tag name="Table List" type="" description="" unit="" values="" default=""/>
+							<Tag name="Type Specifier" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes>
+					<TaggedValueType property="Auto Increment" description="" notes="Type=Enum;&#xA;Value=Auto Column,Not Auto Column;"/>
+					<TaggedValueType property="Deterministic" description="" notes="Type=Enum;&#xA;Values=Yes,No;"/>
+					<TaggedValueType property="Function Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+					<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Join,Hash;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Procedure Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+					<TaggedValueType property="Stored As" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,TextFile,Parquet;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Table Index" description="" notes="Type=Memo;"/>
+					<TaggedValueType property="Table Option" description="" notes="Type=Memo;"/>
+					<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=Global Temporary, Global Temporary Trace, Volatile, Foreign, &lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Trigger Status" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Enabled,Disabled;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Trigger Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+					<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+				</TaggedValueTypes>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UMLProfiles>
+	<TaggedValueTypes>
+		<RefData version="1.0" exporter="EA.25">
+			<DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'">
+				<DataRow>
+					<Column name="Property" value="Is Queue"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Duplication Mode"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=Set,Multiset,&lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Schema and Database"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Foreign Table Expression"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="As Clause"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Table Preservation"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Delete,Preserve;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="No RLS"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Sql Security"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Dynamic Result Sets"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Parameter Style"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,SQL,Td_General,Java;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Glop Set"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is External"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="External Security"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="procdef"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Parameter Specification"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="External Name"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is Mapping"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="For Table"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Server Name"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Map Json"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Table List"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Return Table Statement"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Return datatype"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is Definer"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Collation Invoker"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Return Expression"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Type Specifier"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=&lt;none&gt;,Compress,Decompress;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Function Option"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Order By"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="With Load"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Select Query"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Column By"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is Recursive"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="View Columns"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="viewdef"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="All Columns"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Unique"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="property"/>
+					<Column name="Notes" value="Default=Unique=0;Clustered=0;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Temporal Option"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="TRG_EVENT"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="TRG_TIME"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Trigger Order"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Reference"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="For Each"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Search Condition"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Uppercase"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Case Sensitivity"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=Casespecific,Not Casespecific;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Format"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Title"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Named"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="With Default"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="CharacterSet"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Compression Attribute"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Identity Column"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Is Temporary"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Language Clause"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Sql Data Access"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Function Class"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Null Handling"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Null Semantics"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=Flase;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Specific Table"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Interval Field List"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Period Field List"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Storage Format"/>
+					<Column name="Notes" value="Type=Enum;&#xA;Values=Bson,Ubjson,Avro,Csv,&lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Inline Length"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Snappy Compress"/>
+				</DataRow>
+			</DataSet>
+		</RefData>
+	</TaggedValueTypes>
+	<DDLModules>
+		<DDLModule language="Teradata" notes="">
+			<CodeTypes>
+				<RefData version="1.0" exporter="EA.25">
+					<DataSet name="Model Data Types - Code and DDL" table="t_datatypes" filter="Type='#Type#' and ProductName='#ProductName#' and DataType='#DataType#'" stoplist=";DatatypeID;">
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="CHAR"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="6000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="64"/>
+							<Column name="DefaultLen" value="1"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="char"/>
+							<Column name="DatatypeID" value="844"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTEGER"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="integer"/>
+							<Column name="DatatypeID" value="846"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="SMALLINT"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="smallint"/>
+							<Column name="DatatypeID" value="847"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="BIGINT"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="bigint"/>
+							<Column name="DatatypeID" value="848"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="BYTEINT"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="849"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="DATE"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="date"/>
+							<Column name="DatatypeID" value="850"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="TIME"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="time"/>
+							<Column name="DatatypeID" value="851"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="TIMESTAMP"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="timestamp"/>
+							<Column name="DatatypeID" value="852"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL YEAR"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="853"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL MONTH"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="854"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL DAY"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="855"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL HOUR"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="856"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL MINUTE"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="857"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="INTERVAL SECOND"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="858"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="PERIOD"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="date"/>
+							<Column name="DatatypeID" value="859"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="REAL"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="real"/>
+							<Column name="DatatypeID" value="860"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="DOUBLE PRECISION"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="double"/>
+							<Column name="DatatypeID" value="861"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="FLOAT"/>
+							<Column name="Size" value="2"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="15"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="15"/>
+							<Column name="DefaultScale" value="1"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="float"/>
+							<Column name="DatatypeID" value="862"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="BYTE"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="6000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="1"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="number"/>
+							<Column name="DatatypeID" value="863"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="GRAPHIC"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="6000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="1"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="char"/>
+							<Column name="DatatypeID" value="864"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="VARCHAR"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="varchar"/>
+							<Column name="DatatypeID" value="865"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="CHAR VARYING"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="varchar"/>
+							<Column name="DatatypeID" value="866"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="VARBYTE"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="varchar"/>
+							<Column name="DatatypeID" value="867"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="VARGRAPHIC"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="varchar"/>
+							<Column name="DatatypeID" value="868"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="LONG VARCHAR"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="varchar"/>
+							<Column name="DatatypeID" value="869"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="LONG VARGRAPHIC"/>
+							<Column name="Size" value="1"/>
+							<Column name="MaxLen" value="64000"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="30"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="870"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="BINARY LARGE OBJECT"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="blob"/>
+							<Column name="DatatypeID" value="871"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="BLOB"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="blob"/>
+							<Column name="DatatypeID" value="872"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="CHARACTER LARGE OBJECT"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="873"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="CLOB"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="874"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="XML"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="875"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="XMLTYPE"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="876"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="JSON"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="877"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="ST_GEOMETRY"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="text"/>
+							<Column name="DatatypeID" value="878"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="DATASET"/>
+							<Column name="Size" value="0"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="0"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="0"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="DatatypeID" value="879"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="NUMBER"/>
+							<Column name="Size" value="2"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="38"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="38"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="number"/>
+							<Column name="DatatypeID" value="880"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="DECIMAL"/>
+							<Column name="Size" value="2"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="38"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="38"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="decimal"/>
+							<Column name="DatatypeID" value="881"/>
+						</DataRow>
+						<DataRow>
+							<Column name="Type" value="DDL"/>
+							<Column name="ProductName" value="Teradata"/>
+							<Column name="DataType" value="NUMERIC"/>
+							<Column name="Size" value="2"/>
+							<Column name="MaxLen" value="0"/>
+							<Column name="MaxPrec" value="38"/>
+							<Column name="MaxScale" value="0"/>
+							<Column name="DefaultLen" value="0"/>
+							<Column name="DefaultPrec" value="38"/>
+							<Column name="DefaultScale" value="0"/>
+							<Column name="User" value="1"/>
+							<Column name="GenericType" value="numeric"/>
+							<Column name="DatatypeID" value="882"/>
+						</DataRow>
+					</DataSet>
+				</RefData>
+			</CodeTypes>
+			<DDLTemplates>
+				<RefData version="1.0" exporter="EA.25">
+</RefData>
+			</DDLTemplates>
+		</DDLModule>
+	</DDLModules>
+	<DiagramProfile>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="36CEDF8497" name="Teradata" version="1.0" notes="Teradata"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Teradata" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Diagram_Logical">
+								<Property name="alias" value="Teradata"/>
+								<Property name="toolbox" value="Teradata"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</DiagramProfile>
+	<UIToolboxes>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="E74D061CF4" name="Teradata" version="1.0" notes="Teradata"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Teradata" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Teradata::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+							<Tag name="Teradata::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+							<Tag name="Teradata::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+							<Tag name="Teradata::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+							<Tag name="Teradata::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+							<Tag name="Teradata::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+							<Tag name="Teradata::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+							<Tag name="Teradata::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+							<Tag name="Teradata::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+							<Tag name="Teradata::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Teradata::error(UML::Generalization)" type="" description="" unit="" values="" default="Error"/>
+							<Tag name="Teradata::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UIToolboxes>
+</MDG.Technology>

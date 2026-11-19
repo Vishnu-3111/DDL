@@ -1,0 +1,128 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="50F302446F" name="MongoDB" version="1.0" notes="MongoDB"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="collection" metatype="collection" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="_tagGroupings" value="timeField=TimeSeries;metaField=TimeSeries;granularity=TimeSeries;bucketMaxSpanSeconds=TimeSeries;bucketRoundingSeconds=TimeSeries;expireAfterSeconds=TimeSeries;ClusteredIndexKey=Clustered;ClusteredIndexUnique=Clustered;ClusteredIndexName=Clustered;validator=Validation;validationLevel=Validation;validationAction=Validation;capped=Behavior;changeStreamPreAndPostImages=Behavior;size=Behavior;max=Behavior;storageEngine=Behavior;indexOptionDefaults=Behavior;viewOn=Behavior;writeConcern=Behavior;Collation=Behavior;Pipeline=Behavior;"/>
+						<Property name="_tagGroups" value="TimeSeries,Clustered,Validation,Behavior"/>
+						<Property name="_tagGroupStates" value="TimeSeries=closed;Clustered=closed;Validation=closed;Behavior=open;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="bucketMaxSpanSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="bucketRoundingSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="capped" type="" description="" unit="" values="" default=""/>
+					<Tag name="changeStreamPreAndPostImages" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexKey" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexName" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexUnique" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="granularity" type="" description="" unit="" values="" default=""/>
+					<Tag name="indexOptionDefaults" type="" description="" unit="" values="" default=""/>
+					<Tag name="max" type="" description="" unit="" values="" default=""/>
+					<Tag name="metaField" type="" description="" unit="" values="" default=""/>
+					<Tag name="Pipeline" type="" description="" unit="" values="" default=""/>
+					<Tag name="size" type="" description="" unit="" values="" default=""/>
+					<Tag name="storageEngine" type="" description="" unit="" values="" default=""/>
+					<Tag name="timeField" type="" description="" unit="" values="" default=""/>
+					<Tag name="validationAction" type="" description="" unit="" values="" default=""/>
+					<Tag name="validationLevel" type="" description="" unit="" values="" default=""/>
+					<Tag name="validator" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewOn" type="" description="" unit="" values="" default=""/>
+					<Tag name="writeConcern" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="field" metatype="field" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="string">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="FieldValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="SubField" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Parameter" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="_tagGroupings" value="Unique=MongoDB Index Properties;StorageEngine=MongoDB Index Properties;PartialFilterExpression=MongoDB Index Properties;Collation=MongoDB Index Properties;IndexValue=MongoDB Index Properties;expireAfterSeconds=MongoDB Index Properties;isSearchIndex=MongoDB Index Properties;weights=Text tags;textIndexVersion=Text tags;defaultLanguage=Text tags;language Override=Text tags;2dsphereIndexVersion=2d Sphere tags;min=2d Indexes;bits=2d Indexes;max=2d Indexes;wildcardProjection=Wildcard Tags;Index Definition=Search Index;Keys=Index keys;commitQuorum=Replica Sets;"/>
+						<Property name="_tagGroups" value="Index keys,MongoDB Index Properties,Text tags,2d Sphere tags,2d Indexes,Wildcard Tags,Search Index,Replica Sets"/>
+						<Property name="_tagGroupStates" value="MongoDB Index Properties=closed;Text tags=closed;2d Sphere tags=closed;2d Indexes=closed;Wildcard Tags=closed;Index keys=open;Replica Sets=closed;Search Index=closed;"/>
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="2dsphereIndexVersion" type="" description="" unit="" values="" default=""/>
+					<Tag name="bits" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="commitQuorum" type="" description="" unit="" values="" default=""/>
+					<Tag name="defaultLanguage" type="" description="" unit="" values="" default=""/>
+					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Definition" type="" description="" unit="" values="" default=""/>
+					<Tag name="IndexValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="isSearchIndex" type="" description="" unit="" values="" default=""/>
+					<Tag name="Keys" type="" description="" unit="" values="" default=""/>
+					<Tag name="language Override" type="" description="" unit="" values="" default=""/>
+					<Tag name="max" type="" description="" unit="" values="" default=""/>
+					<Tag name="min" type="" description="" unit="" values="" default=""/>
+					<Tag name="PartialFilterExpression" type="" description="" unit="" values="" default=""/>
+					<Tag name="StorageEngine" type="" description="" unit="" values="" default=""/>
+					<Tag name="textIndexVersion" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="weights" type="" description="" unit="" values="" default=""/>
+					<Tag name="wildcardProjection" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="SourceName" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Collation" description="" notes="Type=Memo;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

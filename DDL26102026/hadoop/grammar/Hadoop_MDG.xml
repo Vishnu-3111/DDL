@@ -1,0 +1,385 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<MDG.Technology version="1.0">
+	<Documentation id="DW_H" name="Hadoop" version="1.0" notes="datawarehouse artifacts for hadoop"/>
+	<UMLProfiles>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="2922E6415F" name="Hadoop" version="1.0" notes="Hadoop"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Deferred Rebuild" type="" description="" unit="" values="" default=""/>
+							<Tag name="Index Comment" type="" description="" unit="" values="" default=""/>
+							<Tag name="Index Properties" type="" description="" unit="" values="" default=""/>
+							<Tag name="Index Table" type="" description="" unit="" values="" default=""/>
+							<Tag name="Index Type" type="" description="" unit="" values="" default=""/>
+							<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Location" type="" description="" unit="" values="" default=""/>
+							<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Row Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored As" type="Stored As" description="" unit="" values="" default=""/>
+							<Tag name="Stored By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+							<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+							<Tag name="With SerdeProperties" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+						<AppliesTo>
+							<Apply type="Operation">
+								<Property name="isOrdered" value=""/>
+								<Property name="isQuery" value="false"/>
+								<Property name="isUnique" value=""/>
+								<Property name="lower" value=""/>
+								<Property name="upper" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+						<AppliesTo>
+							<Apply type="Association"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+						<AppliesTo>
+							<Apply type="Attribute"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Column Comment" type="" description="" unit="" values="" default=""/>
+							<Tag name="Field Value Types" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Generalization">
+								<Property name="isSubstitutable" value="true"/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>					
+					<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Hadoop"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Class Name" type="" description="" unit="" values="" default=""/>
+							<Tag name="Function Type" type="Function Type" description="" unit="" values="" default=""/>
+							<Tag name="Function values" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Hadoop"/>
+								<Property name="_tagGroupings" value="Not Exists=Common Properties;Schema and Database=Common Properties;View Columns=Common Properties;View Comment=Common Properties;Table Properties=Common Properties;View Type=Common Properties;viewdef=View Definition;Partitioned On=Optional Clauses;Clustered On=Optional Clauses;Disable Rewrite=Materialized view Properties;Distributed on=Materialized view Properties;Stored on=Materialized view Properties;Row Format=Materialized view Properties;Stored As=Materialized view Properties;Stored By=Materialized view Properties;With SerdeProperties=Materialized view Properties;Location=Materialized view Properties;Input Format=Materialized view Properties;Output Format=Materialized view Properties;"/>
+								<Property name="_tagGroups" value="Common Properties,View Definition,Optional Clauses,Materialized view Properties"/>
+								<Property name="_tagGroupStates" value="Common Properties=open;View Definition=closed;Optional Clauses=closed;Materialized view Properties=closed;"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Clustered On" type="" description="" unit="" values="" default=""/>
+							<Tag name="Disable Rewrite" type="" description="" unit="" values="" default=""/>
+							<Tag name="Distributed on" type="" description="" unit="" values="" default=""/>
+							<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Location" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Partitioned On" type="" description="" unit="" values="" default=""/>
+							<Tag name="Row Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored As" type="Stored As" description="" unit="" values="" default=""/>
+							<Tag name="Stored By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored on" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Comment" type="" description="" unit="" values="" default=""/>
+							<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+							<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+							<Tag name="With SerdeProperties" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+						<metarelationships>
+							<metarelationship metaclass="Association" constraint="Hadoop::table"/>
+						</metarelationships>
+						<stereotypedrelationships>
+							<stereotypedrelationship stereotype="Hadoop::FK" constraint="Hadoop::table"/>
+							<stereotypedrelationship stereotype="Hadoop::like" constraint="Hadoop::table"/>
+						</stereotypedrelationships>
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="_dbtype" value="Hadoop"/>
+								<Property name="_tagGroupings" value="Table Type=Common Properties;Not Exists=Common Properties;Schema and Database=Common Properties;Table Comment=Common Properties;Select Query=Table As;Partitioned By=Optional Clauses;Clustered By=Optional Clauses;Number of Buckets=Optional Clauses;Sorted By=Hadoop Table Properties;Skewed By=Hadoop Table Properties;Skewed data definition=Hadoop Table Properties;Stored As Directories=Hadoop Table Properties;With SerdeProperties=Hadoop Table Properties;Table Properties=Hadoop Table Properties;Row Format=External Table;Stored As=External Table;Stored By=External Table;Location=External Table;Input Format=External Table;Output Format=External Table;"/>
+								<Property name="_tagGroups" value="Common Properties,Table As,Optional Clauses,Hadoop Table Properties,External Table"/>
+								<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Optional Clauses=closed;Hadoop Table Properties=closed;External Table=closed;"/>
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Clustered By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Location" type="" description="" unit="" values="" default=""/>
+							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+							<Tag name="Number of Buckets" type="" description="" unit="" values="" default=""/>
+							<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Partitioned By" type="Partitioned By" description="" unit="" values="" default=""/>
+							<Tag name="Row Format" type="" description="" unit="" values="" default=""/>
+							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+							<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+							<Tag name="Skewed By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Skewed data definition" type="" description="" unit="" values="" default=""/>
+							<Tag name="Sorted By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored As" type="Stored As" description="" unit="" values="" default=""/>
+							<Tag name="Stored As Directories" type="" description="" unit="" values="" default=""/>
+							<Tag name="Stored By" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Comment" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+							<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+							<Tag name="With SerdeProperties" type="" description="" unit="" values="" default=""/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes>
+					<TaggedValueType property="Function Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Temporary;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Partitioned By" description="" notes="Type=Memo;"/>
+					<TaggedValueType property="Stored As" description="" notes="Type=Enum;&#xA;Values=AVRO, SEQUENCEFILE,JSONFILE,ORC,PARQUET,TEXTFILE,RCFILE,Format Options,&lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Temporary,External,Transactional;&#xA;Default=&lt;none&gt;;"/>
+					<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Materialized;&#xA;Default=&lt;none&gt;;"/>
+				</TaggedValueTypes>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UMLProfiles>
+	<TaggedValueTypes>
+		<RefData version="1.0" exporter="EA.25">
+			<DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'">
+				<DataRow>
+					<Column name="Property" value="Not Exists"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Schema and Database"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Table Comment"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Clustered By"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Sorted By"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Number of Buckets"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Skewed By"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Skewed data definition"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Stored As Directories"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Row Format"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Stored As"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Stored By"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Location"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Table Properties"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Select Query"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Disable Rewrite"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="View Columns"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="View Comment"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Partitioned On"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Clustered On"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Distributed on"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Stored on"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="viewdef"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Class Name"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Function values"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Column Comment"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="With SerdeProperties"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Index Type"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Deferred Rebuild"/>
+					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Index Properties"/>
+					<Column name="Notes" value="Type=Memo;&#xA;"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Index Table"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Index Comment"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Input Format"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Output Format"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Target Table schema"/>
+				</DataRow>
+				<DataRow>
+					<Column name="Property" value="Field Value Types"/>
+					<Column name="Notes" value="Type=Memo;"/>
+				</DataRow>
+			</DataSet>
+		</RefData>
+	</TaggedValueTypes>
+	<DiagramProfile>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="64EF1C3B58" name="Hadoop" version="1.0" notes="Hadoop"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Hadoop" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Diagram_Logical">
+								<Property name="alias" value="Hadoop"/>
+								<Property name="toolbox" value="Hadoop"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</DiagramProfile>
+	<UIToolboxes>
+		<UMLProfile profiletype="uml2">
+			<Documentation id="50F1108C1C" name="Hadoop" version="1.0" notes="Hadoop"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Hadoop" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Hadoop::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+							<Tag name="Hadoop::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+							<Tag name="Hadoop::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+							<Tag name="Hadoop::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+							<Tag name="Hadoop::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+							<Tag name="Hadoop::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+							<Tag name="Hadoop::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+							<Tag name="Hadoop::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Hadoop::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+							<Tag name="Hadoop::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+				<ViewDefinitions/>
+				<Metamodel/>
+			</Content>
+		</UMLProfile>
+	</UIToolboxes>
+</MDG.Technology>

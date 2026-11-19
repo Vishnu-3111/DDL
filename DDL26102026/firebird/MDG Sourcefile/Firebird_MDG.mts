@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG_Firebird --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\firebird\MDG Sourcefile\MDG_Firebird.qea;UID=;PWD=;">
+	<Technology id="DW_FB" name="Firebird" version="1.0" notes="Datawarehouse artifacts for Firebird" filename="D:\Datawarehouse project\datawarehouse\datawarehouse\firebird\MDG Sourcefile\Firebird_MDG.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\firebird\MDG Sourcefile" files="profile.xml"/>
+	<TagVals tags="Array Field List,CharacterSet,Check Option,Collation,Column Range,Commit Action,Computed By,Computed Column Definition,Declarations,Delete,External File,External Module,Forward Declarations,funcdef,Function Action,Identity Options,Increment By,Index Sorting,Is Alter,Parameters,Position,procdef,Procedure Action,property,Publication,Restart,Sequence Action,Start With,Table Action,Temporary Table,TRG_EVENT,TRG_TIME,Trigger Action,Unique,Update,View Action,View Columns,viewdef,Where Condition"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\firebird\MDG Sourcefile" files="diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\firebird\MDG Sourcefile" files="toolbox.xml"/>
+</MDG.Selections>

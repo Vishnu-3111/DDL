@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no" ?>
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3" timestamp="2024-10-25 11:35:58">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>Enterprise Architect</XMI.exporter>
+			<XMI.exporterVersion>2.5</XMI.exporterVersion>
+			<XMI.exporterID>1704</XMI.exporterID>
+		</XMI.documentation>
+	</XMI.header>
+	<XMI.content>
+		<UML:Model name="EA Model" xmi.id="MX_EAID_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0">
+			<UML:Namespace.ownedElement>
+				<UML:Class name="EARootClass" xmi.id="EAID_11111111_5487_4080_A7F4_41526CB0AA00" isRoot="true" isLeaf="false" isAbstract="false"/>
+				<UML:Package name="Clone Table (Snowflake)" xmi.id="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0" isRoot="false" isLeaf="false" isAbstract="false" visibility="public">
+					<UML:ModelElement.taggedValue>
+						<UML:TaggedValue tag="parent" value="EAPK_E389AABF_F468_4324_A322_9BBE42E81BBD"/>
+						<UML:TaggedValue tag="ea_package_id" value="6"/>
+						<UML:TaggedValue tag="created" value="2024-10-25 10:50:34"/>
+						<UML:TaggedValue tag="modified" value="2024-10-25 10:54:19"/>
+						<UML:TaggedValue tag="iscontrolled" value="0"/>
+						<UML:TaggedValue tag="lastloaddate" value="2024-10-25 10:50:34"/>
+						<UML:TaggedValue tag="lastsavedate" value="2024-10-25 10:50:34"/>
+						<UML:TaggedValue tag="version" value="1.0"/>
+						<UML:TaggedValue tag="isprotected" value="0"/>
+						<UML:TaggedValue tag="usedtd" value="0"/>
+						<UML:TaggedValue tag="logxml" value="0"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="packageFlags" value="isModel=1;VICON=3;"/>
+						<UML:TaggedValue tag="batchsave" value="0"/>
+						<UML:TaggedValue tag="batchload" value="0"/>
+						<UML:TaggedValue tag="phase" value="1.0"/>
+						<UML:TaggedValue tag="status" value="Proposed"/>
+						<UML:TaggedValue tag="author" value="SYSTEM"/>
+						<UML:TaggedValue tag="complexity" value="1"/>
+						<UML:TaggedValue tag="ea_stype" value="Public"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="gentype" value="Java"/>
+					</UML:ModelElement.taggedValue>
+					<UML:Namespace.ownedElement>
+						<UML:Class name="EmployeeBackup" xmi.id="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151" visibility="public" namespace="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0" isRoot="false" isLeaf="false" isAbstract="false" isActive="false">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="table"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="isSpecification" value="false"/>
+								<UML:TaggedValue tag="ea_stype" value="Class"/>
+								<UML:TaggedValue tag="ea_ntype" value="0"/>
+								<UML:TaggedValue tag="package" value="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0"/>
+								<UML:TaggedValue tag="date_created" value="2024-10-25 10:50:34"/>
+								<UML:TaggedValue tag="date_modified" value="2024-10-25 10:53:53"/>
+								<UML:TaggedValue tag="gentype" value="Snowflake"/>
+								<UML:TaggedValue tag="tagged" value="0"/>
+								<UML:TaggedValue tag="package_name" value="Clone Table (Snowflake)"/>
+								<UML:TaggedValue tag="author" value="SYSTEM"/>
+								<UML:TaggedValue tag="complexity" value="2"/>
+								<UML:TaggedValue tag="product_name" value="Snowflake"/>
+								<UML:TaggedValue tag="stereotype" value="table"/>
+								<UML:TaggedValue tag="tpos" value="0"/>
+								<UML:TaggedValue tag="ea_localid" value="11"/>
+								<UML:TaggedValue tag="ea_eleType" value="element"/>
+								<UML:TaggedValue tag="style" value="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={1EFC936E-CEE0-4e3d-A9D1-FCC1AE5CC241}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=table;FQName=Snowflake::table;@ENDSTEREO;$DES;$CLT={9E9C4826-B8E0-8C10-AB4D-8708F1353151}$CLT;$ENDXREF;"/>
+							</UML:ModelElement.taggedValue>
+						</UML:Class>
+						<UML:Generalization subtype="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151" supertype="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F" xmi.id="EAID_ABC1F5BF_0573_2EFE_A0CF_1E0AF3341691" visibility="public">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="clone"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="style" value="3"/>
+								<UML:TaggedValue tag="ea_type" value="Generalization"/>
+								<UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+								<UML:TaggedValue tag="linemode" value="3"/>
+								<UML:TaggedValue tag="linecolor" value="-1"/>
+								<UML:TaggedValue tag="linewidth" value="0"/>
+								<UML:TaggedValue tag="seqno" value="0"/>
+								<UML:TaggedValue tag="stereotype" value="clone"/>
+								<UML:TaggedValue tag="headStyle" value="0"/>
+								<UML:TaggedValue tag="lineStyle" value="0"/>
+								<UML:TaggedValue tag="conditional" value="«clone»"/>
+								<UML:TaggedValue tag="ea_localid" value="2"/>
+								<UML:TaggedValue tag="ea_sourceName" value="EmployeeBackup"/>
+								<UML:TaggedValue tag="ea_targetName" value="Employee"/>
+								<UML:TaggedValue tag="ea_sourceType" value="Class"/>
+								<UML:TaggedValue tag="ea_targetType" value="Class"/>
+								<UML:TaggedValue tag="ea_sourceID" value="11"/>
+								<UML:TaggedValue tag="ea_targetID" value="12"/>
+								<UML:TaggedValue tag="src_visibility" value="Public"/>
+								<UML:TaggedValue tag="src_aggregation" value="0"/>
+								<UML:TaggedValue tag="src_isOrdered" value="false"/>
+								<UML:TaggedValue tag="src_targetScope" value="instance"/>
+								<UML:TaggedValue tag="src_changeable" value="none"/>
+								<UML:TaggedValue tag="src_isNavigable" value="false"/>
+								<UML:TaggedValue tag="src_containment" value="Unspecified"/>
+								<UML:TaggedValue tag="src_style" value="Union=0;Derived=0;AllowDuplicates=0;"/>
+								<UML:TaggedValue tag="dst_visibility" value="Public"/>
+								<UML:TaggedValue tag="dst_aggregation" value="0"/>
+								<UML:TaggedValue tag="dst_isOrdered" value="false"/>
+								<UML:TaggedValue tag="dst_targetScope" value="instance"/>
+								<UML:TaggedValue tag="dst_changeable" value="none"/>
+								<UML:TaggedValue tag="dst_isNavigable" value="true"/>
+								<UML:TaggedValue tag="dst_containment" value="Unspecified"/>
+								<UML:TaggedValue tag="dst_style" value="Union=0;Derived=0;AllowDuplicates=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={0086E480-A9FD-4670-8DF2-EF8AA4C8D0C9}$XID;$NAM=Stereotypes$NAM;$TYP=connector property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=clone;FQName=Snowflake::clone;@ENDSTEREO;$DES;$CLT={ABC1F5BF-0573-2EFE-A0CF-1E0AF3341691}$CLT;$ENDXREF;"/>
+								<UML:TaggedValue tag="virtualInheritance" value="0"/>
+								<UML:TaggedValue tag="mb" value="«clone»"/>
+								<UML:TaggedValue tag="Clone Options" xmi.id="EAID_D3ACE9DD_CE20_ddce_95A1_1FF11A3DDF1B"/>
+								<UML:TaggedValue tag="Clone Timing" xmi.id="EAID_EAC7ACF9_94DC_7b94_B085_60ABAE662078"/>
+							</UML:ModelElement.taggedValue>
+						</UML:Generalization>
+						<UML:Class name="Employee" xmi.id="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F" visibility="public" namespace="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0" isRoot="false" isLeaf="false" isAbstract="false" isActive="false">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="table"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="isSpecification" value="false"/>
+								<UML:TaggedValue tag="ea_stype" value="Class"/>
+								<UML:TaggedValue tag="ea_ntype" value="0"/>
+								<UML:TaggedValue tag="package" value="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0"/>
+								<UML:TaggedValue tag="date_created" value="2024-10-25 10:50:34"/>
+								<UML:TaggedValue tag="date_modified" value="2024-10-25 10:53:43"/>
+								<UML:TaggedValue tag="gentype" value="Snowflake"/>
+								<UML:TaggedValue tag="tagged" value="0"/>
+								<UML:TaggedValue tag="package_name" value="Clone Table (Snowflake)"/>
+								<UML:TaggedValue tag="author" value="SYSTEM"/>
+								<UML:TaggedValue tag="complexity" value="2"/>
+								<UML:TaggedValue tag="product_name" value="Snowflake"/>
+								<UML:TaggedValue tag="stereotype" value="table"/>
+								<UML:TaggedValue tag="tpos" value="0"/>
+								<UML:TaggedValue tag="ea_localid" value="12"/>
+								<UML:TaggedValue tag="ea_eleType" value="element"/>
+								<UML:TaggedValue tag="style" value="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={795730BC-5A72-483c-8BBA-F786F1F3C6A7}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=table;FQName=Snowflake::table;@ENDSTEREO;$DES;$CLT={9F30F223-29CC-96D6-A63E-70E819542A4F}$CLT;$ENDXREF;"/>
+							</UML:ModelElement.taggedValue>
+							<UML:Classifier.feature>
+								<UML:Attribute name="EmployeeID" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid0"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="INT"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="0"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="0"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{87733A86-0CDE-7A7B-899B-CA7EF23B694D}"/>
+										<UML:TaggedValue tag="ea_localid" value="16"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={EC2C37E0-61A0-4501-BAFB-AD2FC5CE2818}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Snowflake::column;@ENDSTEREO;$DES;$CLT={87733A86-0CDE-7A7B-899B-CA7EF23B694D}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_4C04_724c_8761_91D7C0949FBC"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_BC1E_9ebc_A252_A04F57613752"/>
+										<UML:TaggedValue tag="Column Modifier" xmi.id="EAID_AECD693D_015D_4401_8B74_6E9A3C318CD7"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_0133_8501_A07C_056646B1B284"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_7795_4577_98F2_F589D3F381D9"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_D184_35d1_B9D0_C45806470C82"/>
+										<UML:TaggedValue tag="Masking Policy" xmi.id="EAID_795796FA_2F1A_ee2f_A117_67496F7CD711"/>
+										<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_CE9C_12ce_A713_3E10F4DBDCA9"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="Name" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="50"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="1"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{AE7AAC9F-D5FB-9C97-83C3-BBDCAB0CE9A0}"/>
+										<UML:TaggedValue tag="ea_localid" value="17"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={CFC9FC41-EE5B-45aa-8915-B555074E0683}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Snowflake::column;@ENDSTEREO;$DES;$CLT={AE7AAC9F-D5FB-9C97-83C3-BBDCAB0CE9A0}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_4C04_724c_9E07_DEDB1EEAEB46"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_BC1E_9ebc_B1E3_7B897AEF539E"/>
+										<UML:TaggedValue tag="Column Modifier" xmi.id="EAID_AECD693D_015D_4401_B9B8_4E03B4196590"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_0133_8501_BC8C_D0DB4E3F2F19"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_7795_4577_92E7_C6E1AC37AFAC"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_D184_35d1_A5AE_96166F28D114"/>
+										<UML:TaggedValue tag="Masking Policy" xmi.id="EAID_795796FA_2F1A_ee2f_AAA0_A38F623AF9EB"/>
+										<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_CE9C_12ce_B118_F1E14A63BA5D"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="Salary" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid2"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="DECIMAL"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="0"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="10"/>
+										<UML:TaggedValue tag="scale" value="2"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="2"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{947DD4EA-798D-F9E8-8CAF-84DF495FB4A9}"/>
+										<UML:TaggedValue tag="ea_localid" value="18"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={81A26000-38FB-4a2d-91B6-ACF0091E49A6}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Snowflake::column;@ENDSTEREO;$DES;$CLT={947DD4EA-798D-F9E8-8CAF-84DF495FB4A9}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_4C04_724c_8CE2_D01780D72252"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_BC1E_9ebc_876F_73F5AE35E2F1"/>
+										<UML:TaggedValue tag="Column Modifier" xmi.id="EAID_AECD693D_015D_4401_A116_C92BE47EA69D"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_0133_8501_92D5_C5EB1515FE29"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_7795_4577_B296_DE33C4364EDF"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_D184_35d1_A756_B016FB187B60"/>
+										<UML:TaggedValue tag="Masking Policy" xmi.id="EAID_795796FA_2F1A_ee2f_AC10_5E720AECAD53"/>
+										<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_CE9C_12ce_B45D_229A52870A05"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="WorkDept" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="50"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="3"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{BFFED280-FDDD-0AAC-A122-950F4DC3BF0B}"/>
+										<UML:TaggedValue tag="ea_localid" value="19"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={A24C4BCD-093B-4627-BA7F-D106E856A4A2}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Snowflake::column;@ENDSTEREO;$DES;$CLT={BFFED280-FDDD-0AAC-A122-950F4DC3BF0B}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_4C04_724c_9325_BAD1B0298CC0"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_BC1E_9ebc_ADA3_7051EFBC523D"/>
+										<UML:TaggedValue tag="Column Modifier" xmi.id="EAID_AECD693D_015D_4401_9A3A_6A4EF92A2F81"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_0133_8501_AA3B_F204E5C4F974"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_7795_4577_89ED_59253110DC51"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_D184_35d1_B449_D8FE15A0F71C"/>
+										<UML:TaggedValue tag="Masking Policy" xmi.id="EAID_795796FA_2F1A_ee2f_A13A_66DCFEE7E8CD"/>
+										<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_CE9C_12ce_AE94_F166B157CD88"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+							</UML:Classifier.feature>
+						</UML:Class>
+					</UML:Namespace.ownedElement>
+				</UML:Package>
+				<UML:DataType xmi.id="eaxmiid2" name="DECIMAL" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid0" name="INT" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid1" name="VARCHAR" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+			</UML:Namespace.ownedElement>
+		</UML:Model>
+		<UML:TaggedValue tag="Auto Refresh" xmi.id="EAID_990CAFE8_A0E2_30a0_86D6_E0B897ABEFCA" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="AWS SNS" xmi.id="EAID_489B6DDF_AE19_83ae_BC5E_17CAD85E0FEE" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Catalog" xmi.id="EAID_AF7408FB_F9D5_44f9_B6B2_D03022A3BD1E" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Change Tracking" xmi.id="EAID_6115C079_4F33_944f_AFF8_A887C397E07B" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Cloud Parameter" xmi.id="EAID_33B3D818_E2D2_dee2_BD6D_15B397AFE7B4" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Clustering" xmi.id="EAID_590FC600_409A_f240_9A5D_B0EA09BAF974" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_FDCD_74fd_A790_881F35A878ED" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Copy Grants" xmi.id="EAID_8CCF02AA_BC64_5bbc_8061_A73CB44C7244" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Copy Options" xmi.id="EAID_8B2BEAE7_DBE1_4fdb_A3A8_598C4221DF17" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Data Retention" xmi.id="EAID_5A3A0D72_24EC_1e24_9D9B_CE2877BFFF00" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="DBVersion" xmi.id="EAID_6110716C_E090_bfe0_9E97_24D17DBCC583" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Default Collation" xmi.id="EAID_8595460A_6F44_b66f_A72B_96975201633E" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Delta" xmi.id="EAID_074ACF6A_C1C4_95c1_B235_CD491A82F246" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="External Catalog" xmi.id="EAID_8271073E_F538_07f5_B23E_29B8020817E6" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="External Volume" xmi.id="EAID_21BB551B_6BD5_cf6b_A022_9A47E9D7FB23" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="File Format" xmi.id="EAID_BB0D2FA9_E963_99e9_A929_7EC024E5CCB8" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Is Replace" xmi.id="EAID_BFA696B8_7932_4179_AC93_5FF754D22A30" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Location" xmi.id="EAID_FA518F19_9B33_409b_9BA3_43738894F683" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Not Exists" xmi.id="EAID_DFEB7A11_E08B_28e0_B714_215B875EEC6A" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Owner" xmi.id="EAID_081BC26B_53CF_db53_B1FE_80C20DC2BD85" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Partition By" xmi.id="EAID_4D1865D5_EACF_83ea_BC71_521AFB6F063E" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Pattern" xmi.id="EAID_98336C9E_5D78_045d_B053_CD658518EE26" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Refresh On Create" xmi.id="EAID_38983200_471A_1447_8D73_B702B243B411" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Row Access Policy" xmi.id="EAID_4C8AC23A_C754_b3c7_9E80_94301FCFE54F" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Scope Specification" xmi.id="EAID_0561749B_4C55_274c_8639_1BC414818391" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Select Query" xmi.id="EAID_D630E936_6230_5962_9662_32C421C4A0ED" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Table Type" xmi.id="EAID_D0D3790A_6784_a467_9D68_B4D615FE90A3" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Tablespace" xmi.id="EAID_D6AED194_E178_14e1_BC9A_634AC71B2B6F" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_8E36_588e_BE51_B80370FD9158" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Target Lag" xmi.id="EAID_19CF589B_4B15_b14b_BEA4_11F8C2D7612C" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Temporary Table Options" xmi.id="EAID_583EA3D7_4071_5140_8077_ADF8B55F5E29" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="User Specified" xmi.id="EAID_EEACA9CB_C145_90c1_AB09_2F061702EBDA" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Using Template" xmi.id="EAID_C079A6A2_421C_b142_88A8_8C98D93E8D81" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Warehouse" xmi.id="EAID_E56B1993_A8ED_3ba8_A20B_D64113F254B5" modelElement="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151"/>
+		<UML:TaggedValue tag="Auto Refresh" xmi.id="EAID_990CAFE8_A0E2_30a0_A76E_34FFFE597226" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="AWS SNS" xmi.id="EAID_489B6DDF_AE19_83ae_80CE_82D675B6766A" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Catalog" xmi.id="EAID_AF7408FB_F9D5_44f9_A8F3_0F561D87F69E" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Change Tracking" xmi.id="EAID_6115C079_4F33_944f_8497_9CEFB36364B0" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Cloud Parameter" xmi.id="EAID_33B3D818_E2D2_dee2_A710_8E4064940EEC" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Clustering" xmi.id="EAID_590FC600_409A_f240_A067_12792B51C47A" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_FDCD_74fd_8D24_1592F3F6A2BD" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Copy Grants" xmi.id="EAID_8CCF02AA_BC64_5bbc_B366_1CCD1B3BC73A" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Copy Options" xmi.id="EAID_8B2BEAE7_DBE1_4fdb_8648_85879905AF5B" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Data Retention" xmi.id="EAID_5A3A0D72_24EC_1e24_8F97_F470877B753F" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="DBVersion" xmi.id="EAID_6110716C_E090_bfe0_8A82_E7750ABEB245" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Default Collation" xmi.id="EAID_8595460A_6F44_b66f_8D2D_E3F2B55FFC00" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Delta" xmi.id="EAID_074ACF6A_C1C4_95c1_B041_4745781A6F9D" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="External Catalog" xmi.id="EAID_8271073E_F538_07f5_8C8E_5824B11C027F" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="External Volume" xmi.id="EAID_21BB551B_6BD5_cf6b_9FDF_7F59A87F86C8" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="File Format" xmi.id="EAID_BB0D2FA9_E963_99e9_B6DA_DD2A279AE178" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Is Replace" xmi.id="EAID_BFA696B8_7932_4179_983E_01055CCBB216" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Location" xmi.id="EAID_FA518F19_9B33_409b_9A24_7ED81A373357" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Not Exists" xmi.id="EAID_DFEB7A11_E08B_28e0_800B_3AB4DDCFD79C" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Owner" xmi.id="EAID_081BC26B_53CF_db53_B846_037F8A966765" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Partition By" xmi.id="EAID_4D1865D5_EACF_83ea_99B0_6A313358F5BE" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Pattern" xmi.id="EAID_98336C9E_5D78_045d_89F7_7B0DEA004B97" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Refresh On Create" xmi.id="EAID_38983200_471A_1447_9D91_E5EA13D31975" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Row Access Policy" xmi.id="EAID_4C8AC23A_C754_b3c7_A735_25D555AACB24" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Scope Specification" xmi.id="EAID_0561749B_4C55_274c_81A3_FDA95F8DBD85" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Select Query" xmi.id="EAID_D630E936_6230_5962_B2F0_960EC86D118E" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Table Type" xmi.id="EAID_D0D3790A_6784_a467_931A_58BF58293CD7" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Tablespace" xmi.id="EAID_D6AED194_E178_14e1_8B00_18618F915A87" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Tag" xmi.id="EAID_0001FA5C_8E36_588e_9142_B39112D6ABBC" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Target Lag" xmi.id="EAID_19CF589B_4B15_b14b_8448_E82DB2AC0FAA" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Temporary Table Options" xmi.id="EAID_583EA3D7_4071_5140_866F_B0215467391C" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="User Specified" xmi.id="EAID_EEACA9CB_C145_90c1_BC80_0D8AB90D13A2" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Using Template" xmi.id="EAID_C079A6A2_421C_b142_9414_587516C3AF59" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:TaggedValue tag="Warehouse" xmi.id="EAID_E56B1993_A8ED_3ba8_A285_432ABFFCC842" modelElement="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F"/>
+		<UML:Diagram name="Clone (Snowflake)" xmi.id="EAID_9E1F9E6F_BA4A_B818_910C_0506BFD38A79" diagramType="ClassDiagram" owner="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0" toolName="Enterprise Architect 2.5">
+			<UML:ModelElement.taggedValue>
+				<UML:TaggedValue tag="version" value="1.0"/>
+				<UML:TaggedValue tag="author" value="SYSTEM"/>
+				<UML:TaggedValue tag="created_date" value="2024-10-25 10:50:34"/>
+				<UML:TaggedValue tag="modified_date" value="2024-10-25 10:54:06"/>
+				<UML:TaggedValue tag="package" value="EAPK_9557A912_8EBC_9F82_A8EF_8BE4814AF1A0"/>
+				<UML:TaggedValue tag="type" value="Logical"/>
+				<UML:TaggedValue tag="swimlanes" value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=16777215;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=1;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<UML:TaggedValue tag="matrixitems" value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<UML:TaggedValue tag="ea_localid" value="5"/>
+				<UML:TaggedValue tag="EAStyle" value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AllDockable=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<UML:TaggedValue tag="styleex" value="SaveTag=66DE4202;ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;MDGDgm=Snowflake::Snowflake;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;"/>
+				<UML:TaggedValue tag="persistentstyle" value="DGS=On=0:CNT=8:W=120:H=40:SG=0:SGH=0:AEB=0:;AR=0;DCL=0;Swimlanes=locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;;"/>
+			</UML:ModelElement.taggedValue>
+			<UML:Diagram.element>
+				<UML:DiagramElement geometry="Left=541;Top=98;Right=664;Bottom=203;" subject="EAID_9F30F223_29CC_96D6_A63E_70E819542A4F" seqno="1" style="NSL=0;BCol=-1;BFol=-1;LCol=-1;LWth=-1;fontsz=0;bold=0;black=0;italic=0;ul=0;charset=0;pitch=0;HideIcon=0;DUID=51291D6C;"/>
+				<UML:DiagramElement geometry="Left=239;Top=98;Right=362;Bottom=193;" subject="EAID_9E9C4826_B8E0_8C10_AB4D_8708F1353151" seqno="2" style="NSL=0;BCol=-1;BFol=-1;LCol=-1;LWth=-1;fontsz=0;bold=0;black=0;italic=0;ul=0;charset=0;pitch=0;HideIcon=0;DUID=4028DE10;"/>
+				<UML:DiagramElement geometry="EDGE=2;$LLB=;LLT=;LMT=;LMB=CX=32:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_ABC1F5BF_0573_2EFE_A0CF_1E0AF3341691" style="Mode=3;EOID=CBA88FE6;SOID=ABCBAF93;Color=-1;LWidth=0;Hidden=0;"/>
+			</UML:Diagram.element>
+		</UML:Diagram>
+	</XMI.content>
+	<XMI.difference/>
+	<XMI.extensions xmi.extender="Enterprise Architect 2.5">
+		<EAModel.paramSub/>
+	</XMI.extensions>
+</XMI>

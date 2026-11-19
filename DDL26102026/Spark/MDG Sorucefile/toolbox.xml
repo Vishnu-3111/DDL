@@ -1,0 +1,30 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="97F7C940A4" name="Spark" version="1.2" notes="Spark"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Spark" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Spark::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Spark::function(UML::Class)" type="" description="" unit="" values="" default="funtion"/>
+					<Tag name="Spark::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Spark::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Spark::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

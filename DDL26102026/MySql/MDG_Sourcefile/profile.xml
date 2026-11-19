@@ -1,0 +1,243 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="ADFBE6E3D3" name="MySql" version="1.0" notes="MySql"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute">
+						<Property name="_tagGroupings" value="Comment=Common Properties;Column Format=Common Properties;Auto Increment=Common Properties;Visibility Specification=MySQL Column Properties;Collate=MySQL Column Properties;Engine Attribute=MySQL Column Properties;Secondary Engine=MySQL Column Properties;Storage=MySQL Column Properties;Generated Always=Generated Column Propertires;Column Expression=Generated Column Propertires;Computed Columns=Generated Column Propertires;CharaterSet=Datatype Properties;SRID=Datatype Properties;Unsigned=Datatype Properties;Zerofill=Datatype Properties;ListValues=Datatype Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,MySQL Column Properties,Generated Column Propertires,Datatype Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;MySQL Column Properties=closed;Generated Column Propertires=closed;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Auto Increment" type="Auto Increment" description="" unit="" values="" default=""/>
+					<Tag name="CharaterSet" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Computed Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Engine Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="Generated Always" type="" description="" unit="" values="" default=""/>
+					<Tag name="ListValues" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secondary Engine" type="" description="" unit="" values="" default=""/>
+					<Tag name="SRID" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storage" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unsigned" type="" description="" unit="" values="" default=""/>
+					<Tag name="Visibility Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Zerofill" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MySql"/>
+						<Property name="_tagGroupings" value="Not Exists=Common Properties;Comment=Common Properties;Database and Schema=Common Properties;Function Parameters=Function Definition;Returns=Function Definition;Sql Language=Function Definition;Function Characteristics=Function Definition;funcdef=Function Definition;Sql Security=MySQL Function Properties;Definer=MySQL Function Properties;Determinism Specifier=MySQL Function Properties;Is Aggregate=Loadable Function;Shared Library=Loadable Function;"/>
+						<Property name="_tagGroups" value="Common Properties,Function Definition,MySQL Function Properties,Loadable Function"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Function Definition=closed;MySQL Function Properties=closed;Loadable Function=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Definer" type="" description="" unit="" values="" default=""/>
+					<Tag name="Determinism Specifier" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Characteristics" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Aggregate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Shared Library" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Security" type="Sql Security" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Algorithm Option" type="Index Algorithm" description="" unit="" values="" default=""/>
+					<Tag name="Block Size" type="" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Engine Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
+					<Tag name="Lock Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parser Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secondary Engine" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+					<Tag name="Visibility Specification" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MySql"/>
+						<Property name="_tagGroupings" value="Not Exists=Common Properties;Comment=Common Properties;Database and Schema=Common Properties;Procedure Parameters=Procedure Definition;Sql Language=Procedure Definition;Procedure Characteristics=Procedure Definition;procdef=Procedure Definition;Sql Security=MySQL Procedure Properties;Definer=MySQL Procedure Properties;Determinism Specifier=MySQL Procedure Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition,MySQL Procedure Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed;MySQL Procedure Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Definer" type="" description="" unit="" values="" default=""/>
+					<Tag name="Determinism Specifier" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Characteristics" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Security" type="Sql Security" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="MySql::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="MySql::FK" constraint="MySql::table"/>
+					<stereotypedrelationship stereotype="MySql::Like" constraint="MySql::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MySql"/>
+						<Property name="_tagGroupings" value="Is Temporary=Common Properties;Table Options=Common Properties;Partition By=Common Properties;Not Exists=Common Properties;Database and Schema=Common Properties;Conflict Handling=Table As;Select Query=Table As;"/>
+						<Property name="_tagGroups" value="Common Properties,Table As"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Conflict Handling" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="Partition By" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Options" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Definer" type="" description="" unit="" values="" default=""/>
+					<Tag name="Each Row" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+					<Tag name="Trigger Order" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MySql"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;View Columns=Common Properties;viewdef=View Definition;Algorithm Option=MySQL View Properties;Sql Security=MySQL View Properties;Definer=MySQL View Properties;Check Option=MySQL View Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,View Definition,MySQL View Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View Definition=closed;MySQL View Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Algorithm Option" type="View Algorithm" description="" unit="" values="" default=""/>
+					<Tag name="Check Option" type="Check Option" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Definer" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Security" type="Sql Security" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Auto Increment" description="" notes="Type=Boolean;&#xA;Default=False;"/>
+			<TaggedValueType property="Check Option" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Cascaded,Local,Default;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Index Algorithm" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Default,Inplace,Copy;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Btree,Hash;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Partition By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Sql Security" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Definer,Invoker;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Index" description="" notes="Type=Boolean;&#xA;Default=False;"/>
+			<TaggedValueType property="View Algorithm" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Undefined,Merge,TempTable;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>
