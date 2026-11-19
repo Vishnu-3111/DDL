@@ -1,0 +1,102 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="9AD0D5E818" name="Spark" version="1.2" notes="Spark"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Field Value Types" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Spark"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Class Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Resource Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="Spark::like" constraint="Spark::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Spark"/>
+						<Property name="_tagGroupings" value="Comment=Common Properties;Not Exist=Common Properties;Table Properties=Common Properties;Location=Common Properties;Select Query=Common Properties;Schema and Database=Common Properties;Number of Buckets=Table Structure Specification;Clustered By=Table Structure Specification;Partition By=Table Structure Specification;Sorted By=Table Structure Specification;Is External=Hive Table Properties;Row Format=Hive Table Properties;Stored As=Hive Table Properties;Output Format=Hive Table Properties;Input Format=Hive Table Properties;Table Options=DataSource Table Properties;Data Source=DataSource Table Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Table Structure Specification,Hive Table Properties,DataSource Table Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table Structure Specification=closed;Hive Table Properties=closed;DataSource Table Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Clustered By" type="Clustered By" description="" unit="" values="" default=""/>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Source" type="" description="" unit="" values="" default=""/>
+					<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+					<Tag name="Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Number of Buckets" type="" description="" unit="" values="" default=""/>
+					<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="Partition By" description="" unit="" values="" default=""/>
+					<Tag name="Row Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sorted By" type="Sorted By" description="" unit="" values="" default=""/>
+					<Tag name="Stored As" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Spark"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Comment" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Global" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Clustered By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Partition By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Sorted By" description="" notes="Type=Memo;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

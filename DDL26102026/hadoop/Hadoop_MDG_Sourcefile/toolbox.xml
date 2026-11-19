@@ -1,0 +1,36 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="50F1108C1C" name="Hadoop" version="1.0" notes="Hadoop"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Hadoop" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Hadoop::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="Hadoop::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Hadoop::FK(UML::Operation)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Hadoop::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Hadoop::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="Hadoop::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Hadoop::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Hadoop::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Hadoop::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Hadoop::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Hadoop::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

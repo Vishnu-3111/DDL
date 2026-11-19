@@ -1,0 +1,33 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="308D3DA494" name="MsAccess" version="1.0" notes="MsAccess"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="MsAccess" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="MsAccess::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="MsAccess::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="MsAccess::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="MsAccess::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="MsAccess::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="MsAccess::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="MsAccess::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="MsAccess::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

@@ -1,0 +1,36 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="CC9321A661" name="BigQuery" version="1.0" notes="BigQuery"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="BigQuery" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="BigQuery::column(UML::Attribute)" type="" description="" unit="" values="" default="column"/>
+					<Tag name="BigQuery::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="BigQuery::index(UML::Operation)" type="" description="" unit="" values="" default="index"/>
+					<Tag name="BigQuery::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="BigQuery::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="BigQuery::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="BigQuery::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="BigQuery::clone(UML::Generalization)" type="" description="" unit="" values="" default="Clone"/>
+					<Tag name="BigQuery::copy(UML::Generalization)" type="" description="" unit="" values="" default="Copy"/>
+					<Tag name="BigQuery::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="BigQuery::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

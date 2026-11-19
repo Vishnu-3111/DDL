@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG_Redshift --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\redshift\Redshift_MDG_Sourcefile\MDG_Redshift.qea;UID=;PWD=;">
+	<Technology id="DW_Rs" name="Redshift" version="1.0" notes="Artifacts for Redshift" filename="D:\Datawarehouse project\datawarehouse\datawarehouse\redshift\Redshift_MDG_Sourcefile\Redshift_MDG.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\redshift\Redshift_MDG_Sourcefile" files="Profile.xml"/>
+	<TagVals tags="Arguments,Backup,Columns,Default identity,Distkey,Diststyle,Encode Auto,External view Properties,funcdef,Function Language,Function Type,Iam Role,Identity,Immutable,Input Format,isLocal,isTemporary,Lambda,Location,Materialized,Max Batch Rows,Max Batch Size,NonAtomic,Not Exists,Output Format,procdef,Replace,Retry Timeout,Return,Row Format Delimited,Row Format Serde,Sagemaker,Schema and Database,Security,Select Query,Set Configuration,Sortkey,Sortkey Auto,Sortkey Type,Stable,viewdef,Volatile,Volatility Category,With SerdeProperties"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\redshift\Redshift_MDG_Sourcefile" files="Diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\redshift\Redshift_MDG_Sourcefile" files="Toolbox.xml"/>
+</MDG.Selections>

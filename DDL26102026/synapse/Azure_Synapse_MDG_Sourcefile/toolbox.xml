@@ -1,0 +1,35 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="04DF9BF21E" name="AzureSynapse" version="1.0" notes="AzureSynapse"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="AzureSynapse" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="AzureSynapse::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="AzureSynapse::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="AzureSynapse::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="AzureSynapse::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="AzureSynapse::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="AzureSynapse::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="AzureSynapse::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="AzureSynapse::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="AzureSynapse::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="AzureSynapse::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

@@ -1,0 +1,39 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="B768908E35" name="DB2" version="1.0" notes="DB2"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="DB2" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="DB2::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="DB2::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="DB2::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="DB2::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="DB2::period(UML::Operation)" type="" description="" unit="" values="" default="Period"/>
+					<Tag name="DB2::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="DB2::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="DB2::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
+					<Tag name="DB2::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="DB2::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+					<Tag name="DB2::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="DB2::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="DB2::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="DB2::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

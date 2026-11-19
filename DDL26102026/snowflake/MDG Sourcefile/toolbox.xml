@@ -1,0 +1,38 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="F86D1526DE" name="Snowflake" version="1.0" notes="Snowflake"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Snowflake" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Snowflake::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Snowflake::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+					<Tag name="Snowflake::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Snowflake::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
+					<Tag name="Snowflake::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Snowflake::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Snowflake::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Snowflake::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Snowflake::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>					
+					<Tag name="Snowflake::FK(UML::Operation)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Snowflake::clone(UML::Generalization)" type="" description="" unit="" values="" default="Clone"/>
+					<Tag name="Snowflake::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Snowflake::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

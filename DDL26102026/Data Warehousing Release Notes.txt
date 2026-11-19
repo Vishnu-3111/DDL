@@ -1,0 +1,725 @@
+Data Warehousing Version 1.46
+*****************************
+	SQL Server:
+
+ - 180901000_Updated the grammar file to support WHERE clauses with columns enclosed in round brackets in CREATE INDEX queries
+ - 180901001_Updated the grammar file to support constraint names enclosed in square brackets in ALTER TABLE statements
+ - 081001000_Updated the grammar file to support system versioning as a connector and Updated the MDG Technology to add support for the System Version relationship
+
+	SQLite:
+
+ - 071001001_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements
+ - 071001002_Updated the grammar file to support schema names in the inline foreign key REFERENCES clause
+ - 071001003_Updated the grammar file to support schema qualified table names in the CREATE INDEX ON clause
+ - 071001004_Updated the grammar file to modified the ALTER TABLE syntax and added an owner node for ALTER TABLE statements
+
+	DB2:
+
+ - 061001000_Updated the grammar file to support conditional expressions in CHECK constraints in CREATE and ALTER TABLE statement
+ - 061001001_Updated the grammar file to resolve the syntax error in ALTER TABLE statements
+ - 061001002_Updated the grammar file with the updated ALTER TABLE syntax
+
+	Snowflake:
+
+ - 071001000_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements and Updated the MDG Technology to add support for the check constraint
+
+	Teradata:
+
+ - 071001005_Updated the grammar file to add an operation node for CHECK constraint
+
+	Oracle:
+
+ - 071001006_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements
+
+	MySQL:
+
+ - 071001007_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements
+
+	Firebird:
+
+ - 071001008_Updated the grammar file to support the USING INDEX keyword in ALTER TABLE statements
+ - 071001009_Updated the grammar file to support the RESTRICT keyword in ALTER TABLE statements
+
+	Azure Synapse:
+
+ - 071001010_Updated the grammar file to support CHECK constraints in ALTER TABLE statements
+
+	Hadoop:
+
+ - 071001011_Updated the grammar file to add an owner node for parameters and corrected the CHECK constraint name and type not being reflected in EA
+ - 071001012_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements
+
+	PostgreSQL:
+
+ - 071001013_Updated the grammar file to support CHECK constraints in CREATE TABLE and ALTER TABLE statements
+ - 071001014_Updated the grammar file to update the ALTER TABLE syntax for constraints and other keywords
+
+Data Warehousing Version 1.45
+*****************************
+	Big query:
+
+ - 090401000 Updated the grammar file to support multiple CLUSTER columns in CREATE TABLE, CREATE VIEW queries.
+
+Data Warehousing Version 1.44
+*****************************
+	SQL Server:
+	
+ - 060101000 Updated the grammar file to support TEXTIMAGE_ON [PRIMARY] in CREATE TABLE queries
+ - 060101001 Updated the grammar file to support DEFAULT values in ALTER TABLE statements
+	
+	PostgreSQL:
+
+ - 060101001 Updated the grammar file to support SELECT statements when using SET CONFIGURATION.
+
+Data Warehousing Version 1.43
+*****************************
+	Hadoop:
+		* Updated the Hadoop MDG technology for recent updated changes.
+	General:
+		* Added updated Summary document for Datawarehouse.
+
+Data Warehousing Version 1.42
+*****************************
+	SQL Server:
+		* Updated the grammar file to support Name's' as a string.
+
+Data Warehousing Version 1.41
+*****************************
+	MongoDB:
+		* Added "keys" tagged values to change index parameter into tagged value in grammar file and export script.
+	General
+		* Corrected a foreign key definition to apply only 'Association' meta class for all foreign key supported databases.
+		* Corrected the export script by adding 'GenerateOutput' and 'FilePath' to support Generate individual file for each table option 
+
+Data Warehousing Version 1.40
+*****************************
+	Azure Synapse:
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+	General
+		* Added a foreign key definition for the 'Stereotype Relationship' to the table and set the connector type to 'Association' for all foreign key supported  databases.
+
+Data Warehousing Version 1.39
+*****************************
+	Hadoop:
+		* Corrected the grammar file and Export script to support "Field value Types", "Target table schema" tagged values.
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+	Spark:
+		* Corrected the grammar file and Export script to support "Schema and Database", "Field value Types", "Target table schema" tagged values.
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+	Teradata:
+		* Corrected the grammar file and Export script to support scale and precision tagged values.
+		* Corrected the grammar file and Export script to support object name as string.
+	Big query:
+		* Corrected the grammar file and Export script to support scale and precision tagged values.
+		* Corrected the grammar file and Export script to support object name as backticks.
+	Snowflake:
+		* Corrected the grammar file and Export script to support scale and precision tagged values.
+		* Corrected the grammar file and Export script to support object name as string.
+	Redshift:
+		* Corrected the grammar file and Export script to support scale and precision tagged values.
+		* Corrected the grammar file and Export script to support object name as string.
+
+Data Warehousing Version 1.38
+*****************************
+	DB2:
+		* Corrected the grammar file and Export script to support "Character Encoding", "Database and Schema", "Target table schema" tagged values.
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+
+	General:
+		* Added tagged values "Character Encoding" for column stereotype in DB2 profile within Datawarehouse.xml.
+		* Added "Database and Schema" tagged values for Function, Table, Procedure and Like connector in the DB2 profile within Datawarehouse.xml.
+		* Added "Target table schema" tagged values for Foreign key, Trigger, and Index in DB2 profile within Datawarehouse.xml
+
+Data Warehousing Version 1.37
+*****************************
+	PostgreSQL:
+		* Corrected the grammar file and Export script to support "ListValues", "Array Field Type", "Trigger type", "Database and Schema","Target table schema" tagged values.
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+
+	General:
+		* Added tagged values "ListValues","SRID", "Array Field Type" for column stereotype in PostgreSQL profile within Datawarehouse.xml.
+		* Added "Database and Schema" tagged values for Function, Table, Procedure and Like connector in the PostgreSQL profile within Datawarehouse.xml.
+		* Added "Target table schema" tagged values for Foreign key, Trigger, and Index in PostgreSQL profile within Datawarehouse.xml
+		* Corrected the tagged value "Is Event" Boolean type to the 'Trigger Type' enum type  for the Trigger.
+
+Data Warehousing Version 1.36
+*****************************
+	MySQL:
+		* Corrected the grammar file and export script to support "CharacterSet", "SRID, "Unsigned", "Zerofill", "Database and Schema".
+		* Corrected the grammar file and Export script to fix minor issues during developer testing.
+
+	General:
+		* Added tagged values "CharaterSet","SRID", "Unsigned","Zerofill" for column stereotype in Mysql profile within Datawarehouse.xml.
+		* Added "Database and Schema" tagged values for Function, Table, Procedure, Trigger, and Index in the MySQL profile within Datawarehouse.xml.
+
+Data Warehousing Version 1.35
+*****************************
+	MS Access:
+		* Corrected the grammar file to fix minor issues during developer testing.
+		* Corrected the Export Script to fix minor issues during developer testing.
+	SQLite:
+		* Corrected the grammar file to fix minor issues during developer testing.
+		* Corrected the Export Script to fix minor issues during developer testing.
+
+Data Warehousing Version 1.34
+*****************************
+	Firebird:
+		* Added tagged value "CharacterSet", "Array Field List" for Column element.
+		* Added "Set Term command" for Function, Procedure, Trigger elements in Export Script.
+		* Added support for additional DDL and DML that is not reflected in EA for Firebird.
+	General:
+		* Updated "CharacterSet" tagged values for Firebird and Teradata database in Datawarehouse.xml.		
+
+Data Warehousing Version 1.33
+*****************************
+	Redshift:
+		* Added tagged value "Is External" for table element
+		* Corrected Export Script with "Is External" tagged values 
+	General:
+		* Updated ModelPatterns "genfile" path has been removed
+		* Updated to set all of the authors to "SYSTEM"
+
+Data Warehousing Version 1.32
+*****************************
+	Oracle:
+		* Added tagged value "Opaque type" for Table Element
+		* Corrected grammar file issue fix identified during developer testing.
+	General:
+		* Corrected "Default attribute type" for column stereotype for all database in Datawarehouse.xml file
+		* Corrected editing "length" and "scale" for respective datatypes for Azure Synapse, Snowflake, Teradata, Spark, MongoDB, Redshift  in Datawarehouse.xml.
+Data Warehousing Version 1.31
+*****************************
+	SQL Server:
+		* Added support for the following non-Reflecting commands: "use command," "Begin Dialog conversion," and "Select command"..
+		* Corrected the export script for "schema and Database" tagged values for Table, View, Function, Procedure, Sequence, Trigger, Index.
+		* Corrected the grammar file to resolve the issue in Developer testing.
+	
+
+Data Warehousing Version 1.30
+*****************************
+	Teradata:
+		* Added "interval Field list", "Period Field list" , "Storage Format" and "inline length" tagged values to column stereotype in Teradata.
+ 		* Corrected the export script and grammar file for the above-mentioned tagged values in column.
+	General:
+		* Added "interval Field list", "Period Field list" , "Storage Format" and "inline length" tagged values  in Datawarehoues.xml 
+		for Teradata database.
+
+Data Warehousing Version 1.29
+*****************************
+	Snowflake:
+		* Added Missed column's datatype in grammar file
+		* Added "Map Field Type", "Object Field Type" , "Array Filed type" tagged values to column stereotype in Snowflake.
+		* Added "Schema and Database", "Refresh mode", "Initialize" and  "Schema Evolution" tagged values to table stereotype in Snowflake.xml.
+		* Added "Service name" and  "End Point" tagged values to Function stereotype in Snowflake.xml.
+		* Added "Sequence Mode"  tagged values to Sequence stereotype in Snowflake.xml.
+ 		* Corrected the export script and grammar file for the above-mentioned tagged values in table, function, view, procedure, sequence, and foreign key.
+	General:
+		* Added "Map Field Type", "Object Field Type" , "Array Filed type", "Schema and Database", "Refresh mode", 
+		"Initialize", "Schema Evolution", "Service name", "End Point" and "Sequence Mode" tagged values  in Datawarehoues.xml for Snowflake database.
+
+		* Added "Map" datatype in  EA Databases product list in snowflake
+
+
+Data Warehousing Version 1.28
+*****************************
+	BigQuey:
+		* Added Missed column's datatype in grammar file
+		* Added Bigquery "Range Type" tagged values to column stereotype.
+		* Corrected Export Script and grammar file "Schema and Database" tagged values to separate "Datasource" and "Dataset" tagged values in table Function, View, Procedure, Index, and Foreign Key
+	General:
+		* Added "Range Type" tagged values to column stereotype in Datawarehoues.xml for Bigquery.
+		* Corrected "Schema and Database" tagged values into separate "Datasource" and "Dataset" tagged values in Datawarehoues.xml for Bigquery.
+
+
+Data Warehousing Version 1.27
+*****************************
+	Redshift :
+		* Corrected the grammar file to remove "table type" tagged value and added "islocal", "istemporary" tagged values to tables
+		* Added Schema and database tagged values in Function, View and Procedure in grammar file
+		* Added Missed column's datatype in grammar file
+		* Corrected Export Script with "islocal" ,"istemporary", "Schema and Database" tagged values 
+		* Added  "islocal" ,"istemporary", "Schema and Database" in Redshift MDG technology.
+	MongoDB:
+		* Corrected MongoDB export script.
+
+Data Warehousing Version 1.26
+*****************************
+	General :
+		* Corrected the MySQL Model Patterns to update the columns length
+
+Data Warehousing Version 1.25
+*****************************
+	MongoDB :
+		* Added to support import Create Search Index and Function in grammar file.		
+		* Added support for additional methods that is not reflected in EA for MongoDB.
+		* Added database type  in MongoDB MDG technology
+		* Corrected the Export DDL script for Create Search Index and Function.
+
+Data Warehousing Version 1.24
+*****************************
+	DB2 :
+		* Added support for additional DDL and DML that is not reflected in EA for DB2
+		* Added database type  in DB2 MDG 
+
+Data Warehousing Version 1.23
+*****************************
+	Spark :
+		* Added support for additional DDL and DML that is not reflected in EA for Spark
+		* Added database type  in Spark MDG 
+
+Data Warehousing Version 1.22
+*****************************
+	PostgreSQL:
+		* Added to support import event trigger in grammar file.
+		* Corrected the Export DDL script for Event trigger syntax.
+	Snowflake :
+		* Added to support import create sequence clone  in grammar file. 
+		* Corrected the Export DDL script for create sequence clone.
+		*update in MDG for clone relationship with sequence to cloned sequence .
+
+
+Data Warehousing Version 1.21
+*****************************
+	BigQuery:
+		* Corrected the Create Index syntax to include the Vector index definition.
+		* Corrected the Create function syntax to include the Aggregate Function definition.
+	
+	Redshift:
+		* Added support the External View syntax definition
+	
+	General:
+		* Added support for additional DDL and DML that is not reflected in EA for the following database grammar files: Redshift, Azure Synapse, Big Query, Hadoop, Teradata, SQL Server, Oracle, SQLite, MS Access, Firebird, and MySQL.
+	
+
+Data Warehousing Version 1.20
+*****************************
+	AzureSynapse:
+		* Added to support import Alter Table Add Constraint commands (PK,Unique,Unique) in grammar file
+		* Corrected the Export DDL script if the outline constraints as Alter table's Add Constraint commands
+
+	General
+		* Added support for importing inline constraints in EA using the "CONSTRAINT" node for all database grammar files except MongoDB and Spark.
+		* Corrected all grammar files to enable default values as column beginning values in EA.
+		* Corrected all database export DDL script to optimise with method separation and incorporate try-catch handling.
+
+Data Warehousing Version 1.19
+*****************************
+	General
+		* Corrected the tagged value "File Format" definition in Enum type for Snowflake Database.
+		* Corrected the tagged value "Stored As" definition in Enum type for Hadoop, Redshift, Teradata and Spark Databases.
+		* Corrected the Spark and MongoDB Export DDL script to declare the variable for Database Elements.
+
+Data Warehousing Version 1.18
+*****************************
+	Redshift:
+		* Remove the "Procedure Language" tag for Procedure Element, because it had default value like "plpgsql".
+		
+	Snowflake:
+		* Added the missing properties for DDL commands in grammar file and added the tagged values in MDG.
+		* Corrected the tagged values in proper format.
+		
+	BigQuery:
+		* Added the "External Security" property in Procedure Element and added the tagged values in MDG.
+		
+	Spark:
+		* Corrected the boolean tagged definition in proper way for Export DDL script
+		
+	Oracle:
+		* Corrected the tagged value definition for table and view in grammar file
+		
+	MongoDB:
+		* Corrected the boolean tagged definition in proper way for Export DDL script
+
+
+	General:
+		* Corrected the tags for database element which have numerous tag in Tag group		
+
+
+Data Warehousing Version 1.17
+*****************************
+MongoDB:
+	Import DDL:
+		* Build New MDG Technology for MongoDB.
+		* Added support to Convert MongoDB commands into EA Model Elements such as Create Collection, Insert One, Insert Many, View and Procedure using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Field commands into  table attributes in EA.	
+		* Added support to convert Create Index commands into MongoDB::index operation in EA.
+		* Added support to Additional commands for Collection, View, Procedure, Index and Column in the MongoDB MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into MongoDB Commands such as MongoDB stereotyped Collection, View , Procedure, Index and Columns using JavaScript.
+		* Added support to additional commands from MDG Tagged values for Collection, View , Procedure, Index and Columns.
+		
+	General:
+		* Updated the "Datawarehouse.xml" file to include the MongoDB MDG source.
+		* Update the MsAccess, SqlServer, AzureSynapse diagram profile is matched database product name.
+
+
+Data Warehousing Version 1.16
+*****************************
+General:
+	* Added support for Snowflake, Azure Synapse, Big Query, Hadoop, Teradata, Spark and Redshift in EA Databases product list using MDG Technology
+	* Corrected the Export DDL script logic to overwrite the content instead of appends with existing content.
+	* Corrected the tag names of "View Definition" into "viewdef", "Function Definition" into "funcdef", and "Procedure Definition" into "procdef" to use EA's existing feature for View, Procedure, and Function in MDG Technology and Export Script.
+
+Data Warehousing Version 1.15
+*****************************
+General:
+	* Added the Model patterns files for Snowflake, Hadoop, Redshift, AzureSynapse and MySql.
+	* Updated the "Datawarehouse.xml" file to support the model pattern definitions.
+	* Corrected the Big Query, Azure Synapse and Redshift grammar file to prevent the unreachable optional commands
+	
+Data Warehousing Version 1.14
+*****************************
+Spark:
+	Import DDL:
+		* Build New MDG Technology for Spark.
+		* Added support to Convert Spark DDL commands into EA Model Elements such as Create Table, View and Function using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Table Like Spark commands in EA using Spark::like Connector.
+		* Added support to Additional commands for Table, View, Function and Column in the Spark MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into Spark DDL Commands such as Spark stereotyped Table, View , Function and Columns using JavaScript.
+		* Added support to table like table definition using their respective Spark stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View, Function and Columns.
+		
+	General:
+		* Updated the "Datawarehouse.xml" file to include the Spark MDG source.
+
+Data Warehousing Version 1.13
+*****************************
+DB2:
+	Import DDL:
+		* Build New MDG Technology for DB2.
+		* Added support to Convert DB2 DDL commands into EA Model Elements such as Create Table, View, Sequence, Function and Procedure using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique,Period ,Index and Check.
+		* Added support to convert Create Index commands into DB2::index operation in EA.
+		* Added support to convert Create trigger commands into DB2::trigger operation in EA.
+		* Added support to Table Like DB2 commands in EA using DB2::like Connector.
+		* Added support to Additional commands for Table, View, Sequence, Procedure, Like Connector, Function ,Column,Period, Foreign key, trigger and Index in the DB2 MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into DB2 DDL Commands such as DB2 stereotyped Table, View , Sequence ,Function, Procedure, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(DB2::FK) Connector.
+		* Added support to table like table definition using their respective DB2 stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View, Sequence, Like Connector, Function, Procedure ,Columns,Period, Foreign key, Index and Trigger.
+		
+General:
+	* Updated the "Datawarehouse.xml" file to include the DB2 MDG source.
+
+
+
+Data Warehousing Version 1.12
+*****************************
+SQL Server:
+	* Corrected the gentype in Grammar file from "SQLServer" to "SQL Server 2012"	
+
+Data Warehousing Version 1.11
+*****************************
+PostgreSQL:
+	Import DDL:
+		* Build New MDG Technology for PostgreSQL.
+		* Added support to Convert PostgreSQL DDL commands into EA Model Elements such as Create Table, View, Sequence, Function and Procedure using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique ,Index and Check.
+		* Added support to convert Create Index commands into PostgreSQL::index operation in EA.
+		* Added support to convert Create trigger commands into PostgreSQL::trigger operation in EA.
+		* Added support to Table Like PostgreSQL commands in EA using PostgreSQL::like Connector.
+		* Added support to Additional commands for Table, View, Sequence, Procedure, Like Connector, Function ,Column, Foreign key, trigger and Index in the PostgreSQL MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into PostgreSQL DDL Commands such as PostgreSQL stereotyped Table, View , Sequence ,Function, Procedure, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(PostgreSQL::FK) Connector.
+		* Added support to table like table definition using their respective PostgreSQL stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View, Sequence, Like Connector, Function, Procedure ,Columns, Foreign key, Index and Trigger.
+		
+General:
+	* Updated the "Datawarehouse.xml" file to include the PostgreSQL MDG source.
+
+
+Data Warehousing Version 1.10
+*****************************
+My SQL:
+	Import DDL:
+		* Build New MDG Technology for MySql.
+		* Added support to Convert MySql DDL commands into EA Model Elements such as Create Table, View, Function and Procedure  using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique , Index and Check.
+		* Added support to convert Create Index commands into MySql::index operation in EA.
+		* Added support to convert Create trigger commands into MySql::trigger operation in EA.
+		* Added support to Table Like MySql commands in EA using MySql::like Connector.
+		* Added support to Additional commands for Table, View, Procedure, Function ,Column, Foreign key, trigger and Index in the MySql MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into MySql DDL Commands such as MySql stereotyped Table, View , Function, Procedure, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(MySql::FK) Connector.
+		* Added support to table liketable definition  using their respective MySql stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View, Function, Procedure ,Columns, Foreign key, Index and Trigger.
+		
+General:
+	* Updated the "Datawarehouse.xml" file to include the MySql MDG source.
+
+Data Warehousing Version 1.9
+****************************
+MS Access:
+	* Corrected the gentype in Grammar file  from "MS Access" to "MS Access 2007"
+SQL Server:
+	* Corrected the spelling for Tagged value name as "Tessellation Type" in Grammar file, Export Script and MDG Technology.
+Oracle:
+	* Corrected the spelling for Tagged value name as Unusable Edition in Grammar file , Export Script and MDG Technology.
+General:
+	* Corrected the "Datawarehouse.xml" file to prevent the same tag name conflict using "Data Type" element for the following Databases - Redshift, Azure Synapse, BigQuery, Hadoop, Teradata, Snowflake, SqlServer, Oracle, Firebird, MsAccess, SQLite.
+
+Data Warehousing Version 1.8
+****************************
+SQLite:
+	Import DDL:
+		* Build New MDG Technology for SQLite.
+		* Added support to Convert SQLite DDL commands into EA Model Elements such as Create Table and View using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique and Check.
+		* Added support to convert Create Index commands into SQLite::index operation in EA.
+		* Added support to convert Create trigger commands into SQLite::trigger operation in EA.
+		* Added support to Additional commands for Table, View  Column, Foreign key, trigger and Index in the SQLite MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into SQLite DDL Commands such as SQLite stereotyped Table, View ,Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Firebird::FK) Connector.
+		* Added support to additional commands from MDG Tagged values for Table, View ,Columns, Foreign key Index and Trigger.
+		
+SQL Server:
+		* Corrected the tagged value name "MaxValue" for SqlServer::sequence in grammar file and MDG technology.
+		* Corrected Export DDL script to get and update the MaxValue and MinValue for SqlServer::sequence element.
+
+Data Warehousing Version 1.7
+****************************
+Firebird:
+	Import DDL:
+		* Build New MDG Technology for Firebird.
+		* Added support to Convert Firebird DDL commands into EA Model Elements such as Create Table, View , Procedure , Function, Sequence using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique and Check.
+		* Added support to convert Create Index commands into Firebird::index operation in EA.
+		* Added support to convert Create trigger commands into Firebird::trigger operation in EA.
+		* Added support to Additional commands for Table, View , Procedure , Function , Sequence, Column, Foreign key, trigger and Index in the Firebird MDG Tagged Values.
+	
+	Export DDL:
+		* Added support to Convert EA Artifacts into Firebird DDL Commands such as Firebird stereotyped Table, View , Procedure , Function , Sequence, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Firebird::FK) Connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns, Sequence, Foreign key Index and Trigger.
+		
+MS Access:
+	Import DDL:
+		* Build New MDG Technology for MS Access.
+		* Added support to Convert MS Access DDL commands into EA Model Elements such as Create Table, View , Procedure using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique.
+		* Added support to convert Create Index commands into MsAccess::index operation in EA.	
+		* Added support to Additional commands for Table, View , Procedure ,Column, Foreign key and Index in the MS Access MDG Tagged Values.
+	
+	Export DDL:
+		* Added support to Convert EA Artifacts into MS Access DDL Commands such as MsAccess stereotyped Table, View , Procedure Columns, Index and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(MsAccess::FK) Connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure Columns, Foreign key and Index
+		
+General :
+   * Corrected the Export DDL script, Grammar (.nBNF) file, and MDG Technology to include support for Foreign Key properties like "On Delete" and "On Update" for Snowflake, SQL Server, and Oracle.
+   
+Data Warehousing Version 1.6
+****************************
+Oracle:
+	Import DDL:
+		* Build New MDG Technology for Oracle.
+		* Added support to Convert Oracle DDL commands into EA Model Elements such as Create Table, View , Procedure , Function, Sequence using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique and Check.
+		* Added support to convert Create Index commands into oracle::index operation in EA.
+		* Added support to convert Create trigger commands into oracle::trigger operation in EA.
+		* Added support to Additional commands for Table, View , Procedure , Function , Sequence, Column, trigger and Index in the Oracle MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into Oracle DDL Commands such as Oracle stereotyped Table, View , Procedure , Function , Sequence, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Oracle::FK) Connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns, Sequence, Index and Trigger.
+
+Data Warehousing Version 1.5
+****************************
+Snowflake:
+	Import DDL:
+		* Build New MDG Technology for Snowflake.
+		* Added support to Convert Snowflake DDL commands into EA Model Elements such as Create Table, View , Procedure , Function, Sequence using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique.
+		* Added support to Table Like, Clone Snowflake commands in EA using Snowflake::like, Snowflake::clone Connector.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column in the Snowflake MDG Tagged Values.
+		* Added support to remaining commands is just parsing without any error, but its not replicated in EA
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into Snowflake DDL Commands such as Snowflake stereotyped Table, View , Procedure , Function , Sequence, Columns and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Snowflake::FK) Connector.
+		* Added support to table like, Clone table definition  using their respective Snowflake stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns, Sequence, Clone.
+		
+SQL Server:
+	Import DDL:
+		* Build New MDG Technology for SQL Server.
+		* Added support to Convert SQL Server DDL commands into EA Model Elements such as Create Table, View , Procedure , Function, Sequence using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, Unique and Check.
+		* Added support to convert Create Index commands into SqlServer::index operation in EA.
+		* Added support to convert Create trigger commands into SqlServer::trigger operation in EA.
+		* Added support to Additional commands for Table, View , Procedure , Function , Sequence, Column, trigger and Index in the SQL Server MDG Tagged Values.
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into SQL Server DDL Commands such as SQL Server stereotyped Table, View , Procedure , Function , Sequence, Columns, Index , Trigger and Constraints using Javascript.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(SqlServer::FK) Connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns, Sequence, Index and Trigger.
+
+Data Warehousing Version 1.4
+****************************
+	Teradata:
+	
+		Export DDL:
+		* Added support to Convert EA Artifacts into Teradata DDL Commands such as Teradata stereotyped Table, View , Procedure , Function , Columns and Constraints using Javascript.
+		* Added support to convert Teradata::Index operations into Create  index Commands.
+		* Added support to convert Teradata::trigger operations into Create trigger Commands.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Teradata::FK) Connector.
+		* Added support to table error table definition using their respective Teradata stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns, Constraints.
+
+Data Warehousing Version 1.3
+****************************
+Hadoop:
+	Import DDL:
+		* Added the Tagged value in MDG Technology for "Hadoop::index" constraint to support Additional values.
+		* Added the check constraint syntax as "Hadoop::check" operation in EA with their property.
+		
+	Export DDL:
+		* Added to support Export Additional properties of "Hadoop::index" constraint from tagged values.
+		
+Teradata:
+	Import DDL:
+		* Build New MDG Technology for Teradata.
+		* Added support to Convert Teradata commands into EA Model Elements such as Create Table, View , Procedure , Function using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key, check and unique.
+		* Added support to convert Create Index commands into Teradata::index operation in EA.
+		* Added support to convert Create trigger commands into Teradata::trigger operation in EA.
+		* Added support to Table Error Teradata commands in EA using Teradata::error Connector.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column and Constraints in the Teradata MDG Tagged Values.
+
+Data Warehousing Version 1.2
+****************************
+Amazon Redshift:
+	Import DDL:
+		* Added the Tagged value in MDG Technology for "Redshift::index" constraint to support Additional values.
+		* Added the Tagged value definition in grammar file to support Additional values for Sortkey and Distkey.
+	
+	Export DDL;
+		* Added to support  Export Additional properties of "Redshift::index" constraint from tagged values.
+		
+Azure Synapse:
+	Import DDL:
+		* Added the Tagged value in MDG Technology for "AzureSynapse::index" constraint to support Additional values.
+		* Added the Tagged value definition in grammar file to support Additional values for Create index syntax.
+	
+	Export DDL;
+		* Added to support  Export Additional properties of "AzureSynapse::index" constraint from tagged values.
+		
+Big Query:
+	Import DDL:
+		* Added the Tagged value in MDG Technology for "BigQuery::index" constraint to support Additional values.
+		* Added the Tagged value definition in grammar file to support Additional values for Create search index syntax.
+	
+	Export DDL;
+		* Added to support Export Additional properties of "BigQuery::index" constraint from tagged values.
+
+Data Warehousing Version 1.1
+****************************
+Hadoop:
+	Import DDL:
+		* Build New MDG Technology for Hadoop.
+		* Added support to Convert Hive Sql commands into EA Model Elements such as Create Table, View ,Function using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Unique, Foreign Key.
+		* Added support to convert Create Index commands into Hadoop::index operation in EA.
+		* Added support to Foreign key Reference to the Foreign key Connector.
+		* Added support to Table Like Hive commands in EA using "Hadoop::like" Connector.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column in the Hadoop MDG Tagged Values.
+		* Added support to remaining commands is just parsing without any error, but its not replicated in EA
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into Hive DDL Commands such as Hadoop stereotyped Table, View , Function , Columns and Constraints using Javascript.
+		* Added support to convert Hadoop::Index operations into Create index Commands.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Hadoop::FK) Connector.
+		* Added support to table like definition  using Hadoop::like connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Function , Columns
+		
+Big Query:
+	Export DDL:
+		* Corrected the Foreign key with reference have multiple parameter's.
+		
+Amazon Redshift:
+	Export DDL:
+		* Corrected the Foreign key with reference have multiple parameter's.	
+
+Data Warehousing Version 1.0
+****************************
+Amazon Redshift:
+	Import DDL:
+		* Build New MDG Technology for Redshift.
+		* Added support to Convert Redshift DDL commands into EA Model Elements such as Create Table, View , Procedure , Function using grammar(.nBNF) file in Import library option. 
+		* Added support to Convert Column commands into  table attributes in EA
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign key, Unique .
+		* Added support to convert Sortkey and Distkey commands into Redshift::index operation in EA.
+		* Added support to Foreign key Reference to the Foreign key Connector.
+		* Added support to Table Like Redshift commands in EA using "Redshift::like" Connector.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column in the Redshift MDG Tagged Values.
+		* Added support to remaining commands is just parsing without any error, but its not replicated in EA
+	 
+	Export DDL:
+		* Added support to Convert EA Artifacts into Amazon Redshift DDL Commands such as Redshift stereotyped Table, View , Procedure , Function , Columns and Constraints using Javascript.
+		* Added support to convert Redshift::Index operations into Redshift Sortkey Commands.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(Redshift::FK) Connector.
+		* Added support to table like definition  using Redshift::like connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns
+
+Azure Synapse:
+	Import DDL:
+		* Build New MDG Technology for Azure Synapse.
+		* Added support to Convert Azure Synapse commands into EA Model Elements such as Create Table, View , Procedure , Function using grammar(.nBNF) file in Import library option. 
+		* Added support to Convert Column commands into  table attributes in EA
+		* Added support to Convert Constraint commands into table operations such as Primary key, Unique .
+		* Added support to convert Create Index commands into AzureSynapse::index operation in EA.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column in the AzureSynapse MDG Tagged Values.
+		* Added support to remaining commands is just parsing without any error, but its not replicated in EA
+
+	Export DDL:
+		* Added support to Convert EA Artifacts into Azure Synapse DDL Commands such as AzureSynapse stereotyped Table, View , Procedure , Function , Columns and Constraints using Javascript.
+		* Added support to convert AzureSynapse::Index operations into Create index Commands.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns
+		
+Big Query:
+	Import DDL:
+		* Build New MDG Technology for Big Query.
+		* Added support to Convert Big Query commands into EA Model Elements such as Create Table, View , Procedure , Function using grammar(.nBNF) file in Import library option.
+		* Added support to Convert Column commands into  table attributes in EA.
+		* Added support to Convert Constraint commands into table operations such as Primary key, Foreign Key.
+		* Added support to convert Create Search Index commands into BigQuery::index operation in EA.
+		* Added support to Table Like, Copy, Clone Bigquery commands in EA using BigQuery::like, BigQuery::copy, BigQuery::clone Connector.
+		* Added support to Additional commands for Table, View , Procedure , Function , Column in the BigQuery MDG Tagged Values.
+		* Added support to remaining commands is just parsing without any error, but its not replicated in EA
+		
+	Export DDL:
+		* Added support to Convert EA Artifacts into BigQuery DDL Commands such as BigQuery stereotyped Table, View , Procedure , Function , Columns and Constraints using Javascript.
+		* Added support to convert BigQuery::Index operations into Create search index Commands.
+		* Added support to foreign key reference table and columns definition  from the Foreign key(BigQuery::FK) Connector.
+		* Added support to table like, Copy table , Clone table definition  using their respective Bigquery stereotyped connector.
+		* Added support to additional commands from MDG Tagged values for Table, View , Procedure , Function , Columns	
+
+	
+		
+		
+		
+		

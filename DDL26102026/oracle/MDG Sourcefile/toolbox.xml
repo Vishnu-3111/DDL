@@ -1,0 +1,37 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="0B1B897EA6" name="Oracle" version="1.0" notes="Oracle"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Oracle" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Oracle::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="Oracle::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Oracle::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Oracle::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="Oracle::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Oracle::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Oracle::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
+					<Tag name="Oracle::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Oracle::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+					<Tag name="Oracle::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Oracle::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Oracle::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

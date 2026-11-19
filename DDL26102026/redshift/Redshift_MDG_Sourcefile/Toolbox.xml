@@ -1,0 +1,35 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="55B18E487F" name="Redshift" version="1.0" notes="Redshift"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Redshift " notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Redshift::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Redshift::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Redshift::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="Redshift::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Redshift::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Redshift::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Redshift::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Redshift::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Redshift::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Redshift::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

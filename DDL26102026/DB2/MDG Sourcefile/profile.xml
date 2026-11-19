@@ -1,0 +1,352 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="60D35B050C" name="DB2" version="1.0" notes="DB2"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Charater Encoding" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Scope" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compress System" type="" description="" unit="" values="" default=""/>
+					<Tag name="Generated Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Implicitly Hidden" type="" description="" unit="" values="" default=""/>
+					<Tag name="Inline Length" type="" description="" unit="" values="" default=""/>
+					<Tag name="LOB Compact" type="" description="" unit="" values="" default=""/>
+					<Tag name="LOB Log" type="" description="" unit="" values="" default=""/>
+					<Tag name="OID Column" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secured With" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Option" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="DB2"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;Specific Name=Common Properties;External Action=Common Properties;External Name=Common Properties;Deterministic=Common Properties;Null Processing=Common Properties;External=Common Properties;Parameter Declaration=Function Definition;Function Output=Function Definition;Language=Function Definition;Parameter Style=Function Definition;funcdef=Function Definition;Invoked Partition=External Table Properties;ThreadSafe=External Table Properties;Scratchpad=External Table Properties;Scratchpad Number=External Table Properties;Final Call=External Table Properties;DBInfo=External Table Properties;Transform Group=External Table Properties;No Resident=External Table Properties;Cardinality=External Table Properties;Cast From=External Table Properties;Parallelized=DB2 Function Properties;Secured=DB2 Function Properties;Parameter CCSID=DB2 Function Properties;Fenced=DB2 Function Properties;Static Dispatch=DB2 Function Properties;Predicates=DB2 Function Properties;Special Registers=DB2 Function Properties;Called On Null=DB2 Function Properties;Access Modes=SQL Scalar Function Properties;Lock Request=SQL Scalar Function Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Function Definition,External Table Properties,DB2 Function Properties,SQL Scalar Function Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Function Definition=closed;External Table Properties=closed;DB2 Function Properties=closed;SQL Scalar Function Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Access Modes" type="" description="" unit="" values="" default=""/>
+					<Tag name="Called On Null" type="" description="" unit="" values="" default=""/>
+					<Tag name="Cardinality" type="" description="" unit="" values="" default=""/>
+					<Tag name="Cast From" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="DBInfo" type="" description="" unit="" values="" default=""/>
+					<Tag name="Deterministic" type="Deterministic" description="" unit="" values="" default=""/>
+					<Tag name="External" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Action" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Fenced" type="" description="" unit="" values="" default=""/>
+					<Tag name="Final Call" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Output" type="" description="" unit="" values="" default=""/>
+					<Tag name="Invoked Partition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="Function Language" description="" unit="" values="" default=""/>
+					<Tag name="Lock Request" type="" description="" unit="" values="" default=""/>
+					<Tag name="No Resident" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Processing" type="Null Processing" description="" unit="" values="" default=""/>
+					<Tag name="Parallelized" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter CCSID" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Declaration" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Style" type="Function Parameter Style" description="" unit="" values="" default=""/>
+					<Tag name="Predicates" type="" description="" unit="" values="" default=""/>
+					<Tag name="Scratchpad" type="" description="" unit="" values="" default=""/>
+					<Tag name="Scratchpad Number" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secured" type="" description="" unit="" values="" default=""/>
+					<Tag name="Special Registers" type="" description="" unit="" values="" default=""/>
+					<Tag name="Specific Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Static Dispatch" type="" description="" unit="" values="" default=""/>
+					<Tag name="ThreadSafe" type="" description="" unit="" values="" default=""/>
+					<Tag name="Transform Group" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Additional Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Clustered" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compress" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Extension" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Statistics" type="" description="" unit="" values="" default=""/>
+					<Tag name="Minimum Percentage" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Keys" type="" description="" unit="" values="" default=""/>
+					<Tag name="Page Split" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partitioned Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Percentage Free" type="" description="" unit="" values="" default=""/>
+					<Tag name="Reverse Scans" type="" description="" unit="" values="" default=""/>
+					<Tag name="Specification Only" type="" description="" unit="" values="" default=""/>
+					<Tag name="Tablespace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="XML Specification" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Column Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Default Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity Option" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="period" metatype="period" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Period Type" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="DB2"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Procedure;Specific Name=Common Procedure;Result Sets=Common Procedure;External Name=Common Procedure;Return To=Common Procedure;External Action=Common Procedure;Deterministic=Common Procedure;Database and Schema=Common Procedure;Parameter Declaration=Procedure Definition;Access Modes=Procedure Definition;Language=Procedure Definition;Parameter Style=Procedure Definition;procdef=Procedure Definition;Null Input=DB2 Procedure Properties;Parameter CCSID=DB2 Procedure Properties;Commit On Return=DB2 Procedure Properties;Autonomous=DB2 Procedure Properties;Special Registers=DB2 Procedure Properties;Fenced=External Procedure Properties;ThreadSafe=External Procedure Properties;Program Type=External Procedure Properties;DBInfo=External Procedure Properties;No Resident=External Procedure Properties;SavePoint Level=SQL And Sourced Procedure Properties;Sourced Procedure=SQL And Sourced Procedure Properties;"/>
+						<Property name="_tagGroups" value="Common Procedure,Procedure Definition,DB2 Procedure Properties,External Procedure Properties,SQL And Sourced Procedure Properties"/>
+						<Property name="_tagGroupStates" value="Common Procedure=open;Procedure Definition=closed;DB2 Procedure Properties=closed;External Procedure Properties=closed;SQL And Sourced Procedure Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Access Modes" type="" description="" unit="" values="" default=""/>
+					<Tag name="Autonomous" type="" description="" unit="" values="" default=""/>
+					<Tag name="Commit On Return" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="DBInfo" type="" description="" unit="" values="" default=""/>
+					<Tag name="Deterministic" type="Deterministic" description="" unit="" values="" default=""/>
+					<Tag name="External Action" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Fenced" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="Procedure Language" description="" unit="" values="" default=""/>
+					<Tag name="No Resident" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Input" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter CCSID" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Declaration" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Style" type="Procedure Parameter Style" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Program Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Result Sets" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return To" type="" description="" unit="" values="" default=""/>
+					<Tag name="SavePoint Level" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sourced Procedure" type="" description="" unit="" values="" default=""/>
+					<Tag name="Special Registers" type="" description="" unit="" values="" default=""/>
+					<Tag name="Specific Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="ThreadSafe" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="sequence" metatype="sequence" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::dbsequence" baseStereotypes="EAUML::dbsequence">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="DB2"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Data Type=Common Properties;Circular Sequence=Common Properties;Database and Schema=Common Properties;MaxValue Specification=Range Specification;MaxValue=Range Specification;MinValue Specification=Range Specification;MinValue=Range Specification;Start With=DB2 Sequence Properties;Increment By=DB2 Sequence Properties;Cache=DB2 Sequence Properties;Cache Value=DB2 Sequence Properties;Order=DB2 Sequence Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Range Specification,DB2 Sequence Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Range Specification=closed;DB2 Sequence Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cache" type="" description="" unit="" values="" default=""/>
+					<Tag name="Cache Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Circular Sequence" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Increment By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Order" type="" description="" unit="" values="" default=""/>
+					<Tag name="Start With" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="DB2::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="DB2::FK" constraint="DB2::table"/>
+					<stereotypedrelationship stereotype="DB2::like" constraint="DB2::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="DB2"/>
+						<Property name="_tagGroupings" value="Not Exists=Common Properties;Type Name=Common Properties;Table Type=Common Properties;Database and Schema=Common Properties;Table Preservation=Global Table properties;Table Log=Global Table properties;Rollback Row=Global Table properties;Tablespace=Global Table properties;External File=External Table Properties;Table Options=External Table Properties;Organize By=Advanced Table Properties;Data Capture=Advanced Table Properties;Tablespace Clause=Advanced Table Properties;Distribute By=Advanced Table Properties;Compress=Advanced Table Properties;Compression Level=Advanced Table Properties;Value Compression=Advanced Table Properties;Not Dropped=Advanced Table Properties;Not Logged Initially=Advanced Table Properties;Security Policy=Advanced Table Properties;Partition By=Advanced Table Properties;Encoding Schema=Advanced Table Properties;Select Query=Table As;Query Populate=Table As;Hierarchy Name=Typed Table Option;Super Table Name=Typed Table Option;Default Option=Copy Options;Identity Option=Copy Options;Column Attribute=Copy Options;Refresh Option=Materialized Query Properties;Query Optimization=Materialized Query Properties;Maintained By=Materialized Query Properties;Staging For=Staging Definition;"/>
+						<Property name="_tagGroups" value="Common Properties,Global Table properties,External Table Properties,Advanced Table Properties,Table As,Typed Table Option,Copy Options,Materialized Query Properties,Staging Definition"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Global Table properties=closed;External Table Properties=closed;Advanced Table Properties=closed;Table As=closed;Typed Table Option=closed;Copy Options=closed;Materialized Query Properties=closed;Staging Definition=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Column Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compress" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compression Level" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Capture" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Default Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Distribute By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encoding Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="External File" type="" description="" unit="" values="" default=""/>
+					<Tag name="Hierarchy Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Maintained By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Dropped" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Logged Initially" type="" description="" unit="" values="" default=""/>
+					<Tag name="Organize By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="Partition By" description="" unit="" values="" default=""/>
+					<Tag name="Query Optimization" type="" description="" unit="" values="" default=""/>
+					<Tag name="Query Populate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Refresh Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Rollback Row" type="" description="" unit="" values="" default=""/>
+					<Tag name="Security Policy" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Staging For" type="" description="" unit="" values="" default=""/>
+					<Tag name="Super Table Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Log" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Options" type="Table Options" description="" unit="" values="" default=""/>
+					<Tag name="Table Preservation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+					<Tag name="Tablespace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Tablespace Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Type Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Value Compression" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Correlation Names" type="" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Each" type="For Each" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Secured" type="" description="" unit="" values="" default=""/>
+					<Tag name="Target Table schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+					<Tag name="When Condition" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="DB2"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;View Columns=Common Properties;Check Option=Common Properties;Type Name=Common Properties;Row Movement=Common Properties;Database and Schema=Common Properties;viewdef=View Definition;Root View Definition=View Type;Super View Name=View Type;Sub View Definition=View Type;Is Extend=View Type;View Type=View Type;"/>
+						<Property name="_tagGroups" value="Common Properties,View Definition,View Type"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View Definition=closed;View Type=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Check Option" type="Check Option" description="" unit="" values="" default=""/>
+					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Extend" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Root View Definition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Row Movement" type="Row Movement" description="" unit="" values="" default=""/>
+					<Tag name="Sub View Definition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Super View Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Type Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Check Option" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Cascaded,Local;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Deterministic" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Yes,No;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="For Each" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Row,Statement;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Function Language" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,C,Java,CLR,OLE,CPP,Python,OLEDB,SQL;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Function Parameter Style" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,DB2General,Java,SQL,NPSGeneric;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Null Processing" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Returns,Called;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Partition By" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Procedure Language" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,C,Java,Cobol,CLR,OLE,SQL;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Procedure Parameter Style" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,DB2General,DB2SQL,General With Nulls,General,Java,SQL;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Row Movement" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Yes,No;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Options" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,External,Global Temporary;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Root View,Sub View;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

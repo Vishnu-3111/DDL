@@ -1,0 +1,195 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="BF112A2586" name="BigQuery" version="1.0" notes="BigQuery"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="clone" metatype="clone" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="STRING">
+				<AppliesTo>
+					<Apply type="Attribute">
+						<Property name="_tagGroupings" value="Struct Field List=Datatypes;Array Field List=Datatypes;Range type=Datatypes;"/>
+						<Property name="_tagGroups" value="Datatypes"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Array Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Range type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Struct Field List" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="copy" metatype="copy" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="BigQuery"/>
+						<Property name="_tagGroupings" value="IsReplace=Common Properties;Not Exist=Common Properties;Function Type=Common Properties;Is Temporary=Common Properties;Dataset=Common Properties;Datasource=Common Properties;funcdef=Function Definition;Function Parameters=Additional Functional Properties;Determinism Specifier=Additional Functional Properties;Remote Connection=Additional Functional Properties;Language=Additional Functional Properties;Function Options=Additional Functional Properties;Return=Additional Functional Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Function Definition,Additional Functional Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Function Definition=closed;Additional Functional Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Dataset" type="" description="" unit="" values="" default=""/>
+					<Tag name="Datasource" type="" description="" unit="" values="" default=""/>
+					<Tag name="Determinism Specifier" type="" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Type" type="Function Type" description="" unit="" values="" default=""/>
+					<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="IsReplace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Remote Connection" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="Index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="_Tag" value="1"/>
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="All Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Type" type="Index type" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storing" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="BigQuery"/>
+						<Property name="_tagGroupings" value="IsReplace=Common Properties;Not Exist=Common Properties;Procedure Arguments=Common Properties;Procedure Options=Common Properties;Dataset=Common Properties;Datasource=Common Properties;Language=Procedure Definition;procdef=Procedure Definition;Connection With=External Security Properties;External Security=External Security Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition,External Security Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed;Additional Procedure Properties=closed;External Security Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Connection With" type="" description="" unit="" values="" default=""/>
+					<Tag name="Dataset" type="" description="" unit="" values="" default=""/>
+					<Tag name="Datasource" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Security" type="External Security" description="" unit="" values="" default=""/>
+					<Tag name="IsReplace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Options" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="BigQuery::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="BigQuery::clone" constraint="BigQuery::table"/>
+					<stereotypedrelationship stereotype="BigQuery::copy" constraint="BigQuery::table"/>
+					<stereotypedrelationship stereotype="BigQuery::FK" constraint="BigQuery::table"/>
+					<stereotypedrelationship stereotype="BigQuery::like" constraint="BigQuery::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="BigQuery"/>
+						<Property name="_tagGroupings" value="Table Options=Common Properties;IsReplace=Common Properties;Not Exist=Common Properties;Table Type=Common Properties;Datasource=Common Properties;Dataset=Common Properties;Collate=Optional Clauses;Partition By=Optional Clauses;Cluster By=Optional Clauses;Select Query=Table As;System Time=Snapshot Table;Partition Columns With=External Table Properties;Connection With=External Table Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Optional Clauses,Table As,Snapshot Table,External Table Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Optional Clauses=closed;External Table Properties=closed;Additional Table Properties=closed;Table As=closed;Snapshot Table=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cluster By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Connection With" type="" description="" unit="" values="" default=""/>
+					<Tag name="Dataset" type="" description="" unit="" values="" default=""/>
+					<Tag name="Datasource" type="" description="" unit="" values="" default=""/>
+					<Tag name="IsReplace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition Columns With" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="System Time" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="BigQuery"/>
+						<Property name="_tagGroupings" value="IsReplace=Common Properties;Not Exist=Common Properties;View Columns=Common Properties;View Options=Common Properties;View Type=Common Properties;Dataset=Common Properties;Datasource=Common Properties;viewdef=View Definition;Partition By=Optional Clauses;Cluster By=Optional Clauses;"/>
+						<Property name="_tagGroups" value="Common Properties,View Definition,Optional Clauses"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;View Definition=closed;Optional Clauses=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cluster By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Dataset" type="" description="" unit="" values="" default=""/>
+					<Tag name="Datasource" type="" description="" unit="" values="" default=""/>
+					<Tag name="IsReplace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exist" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition By" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Options" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="External Security" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Definer,Invoker;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Function Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Aggregate,Table;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Index type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Search,Vector;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,External,Temporary,Snapshot;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Materialized;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

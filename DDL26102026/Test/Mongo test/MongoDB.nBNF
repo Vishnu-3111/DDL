@@ -1,0 +1,303 @@
+//
+// This file is conversion of the syntax form following web site:
+// https://www.mongodb.com/docs/manual/reference/method/
+//
+
+
+caseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>			::= <WHITESPACE> |
+						<COMMENT> |
+						token(<NUMBER>) |
+						token("true"|"false") |
+						<STRING> |
+						token(<IDENTIFIER>) |
+						token(keywords());
+
+<DELIMITER>			::= "\n" | "\r" | "\t" | " "  | "~"  |
+						"`"  | "!"  | "@"  | "#"         |
+						"%"  | "^"  | "&"  | "*"  | "("  |
+						")"  | "-"  | "+"  | "="  | "{"  | 
+						"["  | "}"  | "]"  | ";"  | ":"  | 
+						"\\" | "\'" | "\"" | ","  | "<"  | 
+						">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>		::= " "  | "\r" | "\n" | "\t";
+
+<COMMENT>			::= "//" skip(<eol>) <eol> |
+						"/*" skip("*/") "*/";
+
+<EOL>				::= "\r" "\n" |
+						"\n";
+
+<NUMBER>			::= ["-"]"0".."9"+;
+
+<BOOLEAN>			::= ("true" attributeEx("VALUE" , "True"))| ("false" attributeEx("VALUE" , "False"));
+
+<STRING>			::= token("\"") token(<STRINGDBODY>) token("\"") | 
+						token("\'") token(<STRINGSBODY>) token("\'");
+<STRINGSBODY>		::= skip("\"", "\\\'");
+<STRINGDBODY>		::= skip("\"", "\\\"");
+
+<IDENTIFIER>		::= ("a".."z" | "_" | "$") ("a".."z" | "0".."9" | "_")*;
+
+
+<StringAsName>		::= "\"" attribute("NAME", <STRINGDBODY>) "\"" | 
+						"\'" attribute("NAME", <STRINGSBODY>) "\'";
+<StringAsValue>		::= "\"" attribute("VALUE", <STRINGDBODY>) "\"" | 
+						"\'" attribute("VALUE", <STRINGSBODY>) "\'";
+<StringValue>		::= "\"" <STRINGDBODY> "\"" | 
+						"\'" <STRINGSBODY> "\'";
+
+
+// Parser rules
+<language>			::= attributeEx("EAGENTYPE", "MongoDB") attributeEx("EAMAPPING", "DDL") <Statement>*;
+
+<Statement>			::= <createCollection> |
+						<createView> |
+						<insertOne> |
+						<insertMany>|
+						<createindex>|
+						<create_procedure>|
+						<CreateIndexes>;
+
+// Create Statements
+// Create collection Reference link: https://www.mongodb.com/docs/manual/reference/method/db.createCollection/
+
+<createCollection>	::= node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE", "MongoDB::collection")
+							<IDENTIFIER>
+							"."
+							"createCollection"
+							"("
+							<StringAsName>
+							["," <collectionOptions>]
+							")"
+							[";"]
+						);
+						
+<collectionOptions>		::= "{" [<collectionProperty> ("," <collectionProperty>)*] "}";
+<collectionProperty>	::= <collCapped> |
+							<collChangeStream> |
+							<collClusteredIndex> |
+							<collCollation> |
+							<collExpireAfter> |
+							<collIndexDefaults> |
+							<collMax> |
+							<collPipeline> |
+							<collSize> |
+							<collStorageEngine> |
+							<collTimeSeries> |
+							<collValidationLevel> |
+							<collValidationAction> |
+							<collValidator> |
+							<collViewOn> |
+							<collWriteConcern> |
+							<property>;
+							
+<collCapped>			::= node("capped", "capped" ":" <BOOLEAN>);
+<collChangeStream>		::= node("changeStreamPreAndPostImages", "changeStreamPreAndPostImages" ":" attribute("VALUE", <document_type>));
+<collClusteredIndex>	::= "clusteredIndex" ":" <clusteredIndexDocument>;
+<collCollation>			::= node("Collation", "COLLATION" ":" attribute("VALUE", <document_type>));
+<collExpireAfter>		::= node("expireAfterSeconds", "expireAfterSeconds" ":" attribute("VALUE", <NUMBER>));
+<collIndexDefaults>		::= node("indexOptionDefaults", "indexOptionDefaults" ":" attribute("VALUE", <document_type>));
+<collMax>				::= node("max", "max" ":" attribute("VALUE", <NUMBER>));
+<collPipeline>			::= node("Pipeline", "pipeline" ":" attribute("VALUE", <documentArray>));
+<collSize>				::= node("size", "size" ":" attribute("VALUE", <NUMBER>));
+<collStorageEngine>		::= node("storageEngine", "storageEngine" ":" attribute("VALUE", <document_type>));
+<collTimeSeries>		::= "timeseries" ":" <timeSeriesDocument>;
+<collValidationLevel>	::= node("validationLevel", "validationLevel" ":" <StringAsValue>);
+<collValidationAction>	::= node("validationAction", "validationAction" ":" <StringAsValue>);
+<collValidator>			::= node("validator", "validator" ":" attribute("VALUE", <document_type>));
+<collViewOn>			::= node("viewOn", "viewOn" ":" node("TARGET", <StringValue>));
+<collWriteConcern>		::= node("writeConcern", "writeConcern" ":" attribute("VALUE", <document_type>));
+
+<timeSeriesDocument>	::= "{" [<timeSeriesProperty> ("," <timeSeriesProperty>)*] "}";
+<timeSeriesProperty>	::= <tsTimeField> |
+							<tsMetaField> |
+							<tsGranularity> |
+							<tsbucketMaxSpanSeconds>|
+							<tsbucketRoundingSeconds>|
+							<property>;
+							
+<tsTimeField>			::= node("timeField", "timeField" ":" <StringAsValue>);
+<tsMetaField>			::= node("metaField", "metaField" ":" <StringAsValue>);
+<tsGranularity>			::= node("granularity", "granularity" ":" <StringAsValue>);
+<tsbucketMaxSpanSeconds>::= node("bucketMaxSpanSeconds","bucketMaxSpanSeconds" ":" attribute("VALUE",<NUMBER>));
+<tsbucketRoundingSeconds>::= node("bucketRoundingSeconds","bucketRoundingSeconds" ":" attribute("VALUE",<NUMBER>));
+
+<clusteredIndexDocument>::= "{" [<clusteredIndexProperty> ("," <clusteredIndexProperty>)*] "}";
+<clusteredIndexProperty>::= <clusteredIndexKey> |
+							<clusteredIndexUnique> |
+							<clusteredIndexName> |
+							<property>;
+							
+<clusteredIndexKey>		::= node("ClusteredIndexKey", ("key" | "\'" "key" "\'" | "\"" "key" "\"") ":" attribute("VALUE",<document_type>));
+<clusteredIndexUnique>	::= node("ClusteredIndexUnique", ("unique" | "\'" "unique" "\'" | "\"" "unique" "\"") ":" <BOOLEAN>);
+<clusteredIndexName>	::= node("ClusteredIndexName", ("name" | "\'" "name" "\'" | "\"" "name" "\"") ":" <StringAsValue>);
+
+
+//Create View Reference link:https://www.mongodb.com/docs/manual/reference/method/db.createView/
+
+<createView>		::= node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE", "MongoDB::view")
+							<IDENTIFIER>
+							"."
+							"createView"
+							"(" 
+							 <StringAsName> 						
+							[","]
+							[node("SourceName",
+								<StringAsValue>)]
+							[","]
+							[ node("viewdef",attribute("VALUE",<sub_arrayfield>))] [","]
+							["{" "collation" ":" node("Collation",attribute("VALUE",<document_type>))"}"]
+							")"
+							[";"]
+						);
+						
+// Insert Statements
+//Insert One reference link : https://www.mongodb.com/docs/manual/reference/method/db.collection.insertOne/
+
+<insertOne>			::= node("ELEMENT",
+						attributeEx("EATYPE", "Class")
+						attributeEx("EASTEREOTYPE" , "MongoDB::collection")
+						<IDENTIFIER>
+						"."
+						attribute("NAME",<collection_Name>)
+						"."
+						"insertOne"
+						"("
+							<document>
+						")"
+						[";"]);
+						
+<collection_Name>	::= <IDENTIFIER>;
+
+//Insert Many reference link : https://www.mongodb.com/docs/manual/reference/method/db.collection.insertMany/
+						
+<insertMany>		::= node("ELEMENT",
+						attributeEx("EATYPE", "Class")
+						attributeEx("EASTEREOTYPE" , "MongoDB::collection")
+						<IDENTIFIER>
+						"."
+						attribute("NAME",<collection_Name>)
+						"."
+						"insertMany"
+						"("
+						<documentArray>
+						")")
+						[";"];
+						
+<document_type>		::="{"[<fields>(","<fields>)*]"}";
+
+<fields>			::= (<fieldName>|<StringValue>) ":"<fieldValue>;
+
+<fieldName>			::=<IDENTIFIER>;
+
+<fieldValue>		::=<NUMBER> |
+						<StringValue> |
+						("true"|"false")|
+						<sub_field>|
+						<sub_arrayfield>;
+						
+<sub_field>			::="{"[<fields>(","<fields>)*]"}";
+<sub_arrayfield>	::="["[<sub_field>("," <sub_field>)*]"]";
+<documentArray>		::= "[" [<document> ("," <document>)*] "]";
+<document>			::= "{" [<property> ("," <property>)*] "}";
+
+<property>			::= node("ATTRIBUTE", attributeEx("EASTEREOTYPE","MongoDB::field")
+								(attribute("NAME",<Field_Name>)|<StringAsName>) ":" (<propertyValue>| <subfields>));
+								
+<Field_Name>		::=<IDENTIFIER>;
+
+<subfields> 		::= (node("SubField" ,  attribute("VALUE",<sub_field> ("," <sub_field>)* )))|
+						(node("SubField" ,  attribute("VALUE",<sub_arrayfield> ("," <sub_arrayfield>)* )));
+
+<propertyValue>		::= <decimal_type>|<number_type> |<StringValue_type> |<boolean_type>;
+
+<number_type>		::= node("FieldValue",attribute("VALUE",<NUMBER>))  node("TYPE" , attributeEx("NAME" , "integer")) ;
+
+<decimal_type>		::= node("FieldValue",attribute("VALUE", <NUMBER> "." <NUMBER>)) node("TYPE" , attributeEx("NAME" , "decimal")) ;
+
+<StringValue_type>		::= node("FieldValue",attribute("VALUE",<StringValue>)) node("TYPE" , attributeEx("NAME" , "string")) ;
+
+<boolean_type>		::= node("FieldValue",attribute("VALUE",("true"|"false"))) node("TYPE" , attributeEx("NAME" , "boolean")) ;
+
+//Create Index Reference Link :https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+
+<createindex>		::=node("OPERATION",
+							attributeEx("EASTEREOTYPE", "MongoDB::index")
+							<IDENTIFIER> 
+							"."
+							node("OWNER",attribute("NAME",<collection_Name>))
+							"."
+							"CREATEINDEX"
+							"("
+							"{"
+							(<indexparameter>(","<indexparameter>)*)
+							"}" [","]
+							["{"
+							<index_options>	(","<index_options>	)*
+							"}"]
+							")")[";"];
+							
+<indexparameter>	::=	node("PARAMETER",(attribute("NAME",<fieldName>)|<StringAsName>) ":"
+							node("EATAG",attributeEx("NAME","Value") attribute("VALUE",(<NUMBER>|"\"""TEXT""\""|"\"" "2dSphere" "\""|"\"" "2d" "\""|"\"" "hashed" "\"" )))); /* SSIN_DEV_23072024 currently we stored the FieldValue in the index's parameter tagged value using EATAG node. So need to create a Tagged value for index's parameter in MDG */
+							
+<index_options>		::=		("UNIQUE" ":" ("true" node("Unique",attributeEx("VALUE","1"))|"false" node("Unique",attributeEx("VALUE","0")))|
+						"SPARSE" ":" node("Sparse",attribute("VALUE",<STRING>))|
+						"NAME" ":" attribute("NAME",<IndexName>)|
+						"EXPIREAFTERSECONDS" ":" node("expireAfterSeconds",attribute("VALUE",<NUMBER>))|
+						"STORAGEENGINE" ":" node("storageEngine",attribute("VALUE",<document_type>)) |
+						"PARTIALFILTEREXPRESSION" ":" node("PartialFilterExpression",attribute("VALUE",<document_type>))|
+						["\""]"2dsphereIndexVersion"["\""] ":" node("2dsphereIndexVersion",attribute("VALUE",<NUMBER>))|
+						["\""]"bits"["\""] ":" node("bits",attribute("VALUE",<NUMBER>))|
+						["\""]"min"["\""] ":" node("min",attribute("VALUE",<NUMBER>))|
+						["\""]"max"["\""] ":" node("max",attribute("VALUE",<NUMBER>))|
+						["\""]"wildcardProjection"["\""] ":" node("wildcardProjection",attribute("VALUE",<document_type>))|
+						["\""]"weights"["\""] ":" node("weights",attribute("VALUE",<document_type>))|
+						["\""]"default_language"["\""] ":" node("defaultLanguage",attribute("VALUE",<StringValue>))|
+						["\""]"language_override"["\""] ":" node("language Override",attribute("VALUE",<StringValue>))|
+						["\""] "textIndexVersion" ["\""] ":" node("textIndexVersion",attribute("VALUE",<NUMBER>))|
+						"COLLATION" ":" node("Collation",attribute("VALUE",<document_type>))|
+						 ["\""]"wildcardProjection"["\""] ":" node("wildcardProjection",attribute("VALUE",<document_type>))
+						
+						);
+						
+						
+<IndexName> 		::= <IDENTIFIER>|<StringValue>;
+
+//Create Procedure reference link :https://www.mongodb.com/docs/manual/tutorial/store-javascript-function-on-server/
+
+<create_procedure>	::=node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE","MongoDB::procedure")
+							"db" "." "system" "." "js" "." "INSERTONE" "("
+							"{"
+							
+							"_id" ":" <StringAsName> ","
+							"VALUE" ":" node("procdef", attribute("VALUE",<procedurefunction>))
+							
+							"}"
+							")" [";"] );
+
+<procedurefunction>	::= "function" "(" [<IDENTIFIER>("," <IDENTIFIER>)*] ")"skipBalanced("{","}");
+
+<CreateIndexes>	::= mapRight("db" "."  node("OWNER",attribute("NAME",<collection_Name>)) "." "CREATEINDEXES" , <Indexbody> ) [";"];
+
+
+<Indexbody>		::= "(" mapLeft( "[" (<Index>(","<Index>)*) "]" , [","] ["{"	<index_options>	(","<index_options>	)*"}"]	) ")" ;
+							
+<Index>			::= node("OPERATION",
+							attributeEx("EASTEREOTYPE", "MongoDB::index")
+							"{"(<indexparameter>(","<indexparameter>)*)"}");
+						

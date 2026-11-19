@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no" ?>
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3" timestamp="2024-10-25 12:02:24">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>Enterprise Architect</XMI.exporter>
+			<XMI.exporterVersion>2.5</XMI.exporterVersion>
+			<XMI.exporterID>1704</XMI.exporterID>
+		</XMI.documentation>
+	</XMI.header>
+	<XMI.content>
+		<UML:Model name="EA Model" xmi.id="MX_EAID_8878B8E5_217A_C6B3_AF86_B5623512C531">
+			<UML:Namespace.ownedElement>
+				<UML:Class name="EARootClass" xmi.id="EAID_11111111_5487_4080_A7F4_41526CB0AA00" isRoot="true" isLeaf="false" isAbstract="false"/>
+				<UML:Package name="Like Table (MySQL) " xmi.id="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531" isRoot="false" isLeaf="false" isAbstract="false" visibility="public">
+					<UML:ModelElement.taggedValue>
+						<UML:TaggedValue tag="parent" value="EAPK_E389AABF_F468_4324_A322_9BBE42E81BBD"/>
+						<UML:TaggedValue tag="ea_package_id" value="14"/>
+						<UML:TaggedValue tag="created" value="2024-10-25 12:00:57"/>
+						<UML:TaggedValue tag="modified" value="2024-10-25 12:01:10"/>
+						<UML:TaggedValue tag="iscontrolled" value="0"/>
+						<UML:TaggedValue tag="lastloaddate" value="2024-09-20 15:40:07"/>
+						<UML:TaggedValue tag="lastsavedate" value="2024-09-20 15:40:07"/>
+						<UML:TaggedValue tag="version" value="1.0"/>
+						<UML:TaggedValue tag="isprotected" value="0"/>
+						<UML:TaggedValue tag="usedtd" value="0"/>
+						<UML:TaggedValue tag="logxml" value="0"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="packageFlags" value="isModel=1;VICON=3;"/>
+						<UML:TaggedValue tag="batchsave" value="0"/>
+						<UML:TaggedValue tag="batchload" value="0"/>
+						<UML:TaggedValue tag="phase" value="1.0"/>
+						<UML:TaggedValue tag="status" value="Proposed"/>
+						<UML:TaggedValue tag="author" value="SYSTEM"/>
+						<UML:TaggedValue tag="complexity" value="1"/>
+						<UML:TaggedValue tag="ea_stype" value="Public"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="gentype" value="Java"/>
+					</UML:ModelElement.taggedValue>
+					<UML:Namespace.ownedElement>
+						<UML:Class name="Customers" xmi.id="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5" visibility="public" namespace="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531" isRoot="false" isLeaf="false" isAbstract="false" isActive="false">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="table"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="isSpecification" value="false"/>
+								<UML:TaggedValue tag="ea_stype" value="Class"/>
+								<UML:TaggedValue tag="ea_ntype" value="0"/>
+								<UML:TaggedValue tag="package" value="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531"/>
+								<UML:TaggedValue tag="date_created" value="2024-10-25 12:00:57"/>
+								<UML:TaggedValue tag="date_modified" value="2024-10-25 12:01:26"/>
+								<UML:TaggedValue tag="gentype" value="MySql"/>
+								<UML:TaggedValue tag="tagged" value="0"/>
+								<UML:TaggedValue tag="package_name" value="Like Table (MySQL) "/>
+								<UML:TaggedValue tag="author" value="SYSTEM"/>
+								<UML:TaggedValue tag="complexity" value="2"/>
+								<UML:TaggedValue tag="product_name" value="MySql"/>
+								<UML:TaggedValue tag="stereotype" value="table"/>
+								<UML:TaggedValue tag="tpos" value="0"/>
+								<UML:TaggedValue tag="ea_localid" value="29"/>
+								<UML:TaggedValue tag="ea_eleType" value="element"/>
+								<UML:TaggedValue tag="style" value="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={DAB721BC-B968-481a-816B-7ED2B389FD89}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=table;FQName=MySql::table;@ENDSTEREO;$DES;$CLT={AB43A082-E034-7E47-AB4A-E66F76CE50D5}$CLT;$ENDXREF;"/>
+							</UML:ModelElement.taggedValue>
+							<UML:Classifier.feature>
+								<UML:Attribute name="CustomerID" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid0"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="INT"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="0"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="0"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{9B521F14-2D64-A3F3-A813-F783A4F43515}"/>
+										<UML:TaggedValue tag="ea_localid" value="47"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={BD6E4825-8238-41d1-99C1-5E8172FA2B4A}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=MySql::column;@ENDSTEREO;$DES;$CLT={9B521F14-2D64-A3F3-A813-F783A4F43515}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Auto Increment" xmi.id="EAID_5DF6CE1E_694A_4369_9768_054FEFE266E7"/>
+										<UML:TaggedValue tag="Check Definition" xmi.id="EAID_87544407_DE33_78de_A386_A04E90A80DA0"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_7090_0170_8859_755A8B8CCAC5"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_FFAA_1dff_ABDC_9510B7C52048"/>
+										<UML:TaggedValue tag="Column Format" xmi.id="EAID_B9CB5397_C143_b0c1_9C78_B5198AE54DF1"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_25BF_1425_9F7F_00A941B97D30"/>
+										<UML:TaggedValue tag="Computed Columns" xmi.id="EAID_B6473982_5FAE_765f_BAA2_DDA714E3F952"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_2CA1_ad2c_ADCD_166A953316AF"/>
+										<UML:TaggedValue tag="Engine Attribute" xmi.id="EAID_A9E1A86A_4696_ca46_AD6E_D489D8C34D90"/>
+										<UML:TaggedValue tag="Generated Always" xmi.id="EAID_0C331220_BC4C_04bc_89F7_6F5EE16A2FC8"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_1510_b515_A050_495281EA1BC3"/>
+										<UML:TaggedValue tag="Reference Definition" xmi.id="EAID_C08DCBB8_ABE4_40ab_B0C0_19B14E91BA93"/>
+										<UML:TaggedValue tag="Secondary Engine" xmi.id="EAID_014D041E_AE4A_1eae_875C_E785744A725D"/>
+										<UML:TaggedValue tag="Storage" xmi.id="EAID_AB188115_99E1_8899_B8F3_5CC63B3A914C"/>
+										<UML:TaggedValue tag="Visibility Specification" xmi.id="EAID_63417709_9135_a691_8163_798ADFF973DF"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="FirstName" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="255"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="1"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{98C783E7-8ADA-A8F4-903F-6A272F9E60BC}"/>
+										<UML:TaggedValue tag="ea_localid" value="48"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={26A7771F-A987-4731-90D7-210899127827}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=MySql::column;@ENDSTEREO;$DES;$CLT={98C783E7-8ADA-A8F4-903F-6A272F9E60BC}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Auto Increment" xmi.id="EAID_5DF6CE1E_694A_4369_875D_A29E3C67154B"/>
+										<UML:TaggedValue tag="Check Definition" xmi.id="EAID_87544407_DE33_78de_84BF_B243D66F26C7"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_7090_0170_867D_0353B53713B4"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_FFAA_1dff_B1A7_C6D98C4E3598"/>
+										<UML:TaggedValue tag="Column Format" xmi.id="EAID_B9CB5397_C143_b0c1_95B9_7F3A6CEAFC0C"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_25BF_1425_9088_CDD9475B90B8"/>
+										<UML:TaggedValue tag="Computed Columns" xmi.id="EAID_B6473982_5FAE_765f_BBCD_3AAAAB57FB8F"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_2CA1_ad2c_BCC1_6C3071EBE1CB"/>
+										<UML:TaggedValue tag="Engine Attribute" xmi.id="EAID_A9E1A86A_4696_ca46_A62B_E5DE5AB78A2A"/>
+										<UML:TaggedValue tag="Generated Always" xmi.id="EAID_0C331220_BC4C_04bc_AE96_2242BF6AE805"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_1510_b515_B1EC_10AB0DC9556E"/>
+										<UML:TaggedValue tag="Reference Definition" xmi.id="EAID_C08DCBB8_ABE4_40ab_BCB8_700BF3818C9E"/>
+										<UML:TaggedValue tag="Secondary Engine" xmi.id="EAID_014D041E_AE4A_1eae_BA02_F362DE939356"/>
+										<UML:TaggedValue tag="Storage" xmi.id="EAID_AB188115_99E1_8899_B6B9_93BB43229438"/>
+										<UML:TaggedValue tag="Visibility Specification" xmi.id="EAID_63417709_9135_a691_83E8_45DDD1A35F89"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="LastName" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="255"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="2"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{AB0B56A8-2AD5-1275-9C16-19FB9C89C6AC}"/>
+										<UML:TaggedValue tag="ea_localid" value="49"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={12AA420D-00F9-4cf5-8F50-85E83892BD90}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=MySql::column;@ENDSTEREO;$DES;$CLT={AB0B56A8-2AD5-1275-9C16-19FB9C89C6AC}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Auto Increment" xmi.id="EAID_5DF6CE1E_694A_4369_91C3_F79A2E667E66"/>
+										<UML:TaggedValue tag="Check Definition" xmi.id="EAID_87544407_DE33_78de_B6BE_E039B57B1DF7"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_7090_0170_A79A_C3B7AF011D5B"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_FFAA_1dff_B5B7_4A6F144A1D44"/>
+										<UML:TaggedValue tag="Column Format" xmi.id="EAID_B9CB5397_C143_b0c1_96C0_2893D58B43A6"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_25BF_1425_BC8E_44051F7F51DF"/>
+										<UML:TaggedValue tag="Computed Columns" xmi.id="EAID_B6473982_5FAE_765f_8C1C_F52077524E91"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_2CA1_ad2c_A8D6_3E3E1D14D609"/>
+										<UML:TaggedValue tag="Engine Attribute" xmi.id="EAID_A9E1A86A_4696_ca46_990C_12FF4D7AB946"/>
+										<UML:TaggedValue tag="Generated Always" xmi.id="EAID_0C331220_BC4C_04bc_902C_D5AB82C68213"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_1510_b515_8C0E_EA29B978FE16"/>
+										<UML:TaggedValue tag="Reference Definition" xmi.id="EAID_C08DCBB8_ABE4_40ab_9D63_68C6969438E1"/>
+										<UML:TaggedValue tag="Secondary Engine" xmi.id="EAID_014D041E_AE4A_1eae_A0CE_EEC41136C748"/>
+										<UML:TaggedValue tag="Storage" xmi.id="EAID_AB188115_99E1_8899_8701_56CEA202C593"/>
+										<UML:TaggedValue tag="Visibility Specification" xmi.id="EAID_63417709_9135_a691_947A_3CC7AB4C418D"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="Email" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="255"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="3"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{B6E651EE-D4B7-6FE2-9B16-599B1594FCBA}"/>
+										<UML:TaggedValue tag="ea_localid" value="50"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={0C4FB86E-6732-42a0-A695-C5034C672368}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=MySql::column;@ENDSTEREO;$DES;$CLT={B6E651EE-D4B7-6FE2-9B16-599B1594FCBA}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Auto Increment" xmi.id="EAID_5DF6CE1E_694A_4369_BC9C_22E4F5771485"/>
+										<UML:TaggedValue tag="Check Definition" xmi.id="EAID_87544407_DE33_78de_B7B8_C7E4EDDA8E6C"/>
+										<UML:TaggedValue tag="Collate" xmi.id="EAID_CF9157C4_7090_0170_B180_D934DDE8D91D"/>
+										<UML:TaggedValue tag="Column Expression" xmi.id="EAID_56219BFE_FFAA_1dff_BCBE_1018D26D3AD7"/>
+										<UML:TaggedValue tag="Column Format" xmi.id="EAID_B9CB5397_C143_b0c1_8957_C719C723C056"/>
+										<UML:TaggedValue tag="Comment" xmi.id="EAID_CFA40CF3_25BF_1425_9FFE_14A6705C3A6F"/>
+										<UML:TaggedValue tag="Computed Columns" xmi.id="EAID_B6473982_5FAE_765f_BEBB_02AABE22A9B8"/>
+										<UML:TaggedValue tag="Default Expression" xmi.id="EAID_E0DFCF75_2CA1_ad2c_A5D5_60E8A3EA154E"/>
+										<UML:TaggedValue tag="Engine Attribute" xmi.id="EAID_A9E1A86A_4696_ca46_8DCE_A13067E9596E"/>
+										<UML:TaggedValue tag="Generated Always" xmi.id="EAID_0C331220_BC4C_04bc_872C_2317D88F1FF0"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_1510_b515_93FA_F640D9A92A30"/>
+										<UML:TaggedValue tag="Reference Definition" xmi.id="EAID_C08DCBB8_ABE4_40ab_B43D_4FFFD14EB168"/>
+										<UML:TaggedValue tag="Secondary Engine" xmi.id="EAID_014D041E_AE4A_1eae_8276_2E474096A1FB"/>
+										<UML:TaggedValue tag="Storage" xmi.id="EAID_AB188115_99E1_8899_9FD0_808F1E168A00"/>
+										<UML:TaggedValue tag="Visibility Specification" xmi.id="EAID_63417709_9135_a691_A59C_F7351D0F706F"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+							</UML:Classifier.feature>
+						</UML:Class>
+						<UML:Generalization subtype="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3" supertype="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5" xmi.id="EAID_95E6A32D_584C_8DFB_AE19_A0A2A80C589B" visibility="public">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="like"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="style" value="3"/>
+								<UML:TaggedValue tag="ea_type" value="Generalization"/>
+								<UML:TaggedValue tag="direction" value="Source -&gt; Destination"/>
+								<UML:TaggedValue tag="linemode" value="3"/>
+								<UML:TaggedValue tag="linecolor" value="-1"/>
+								<UML:TaggedValue tag="linewidth" value="0"/>
+								<UML:TaggedValue tag="seqno" value="0"/>
+								<UML:TaggedValue tag="stereotype" value="like"/>
+								<UML:TaggedValue tag="headStyle" value="0"/>
+								<UML:TaggedValue tag="lineStyle" value="0"/>
+								<UML:TaggedValue tag="conditional" value="«like»"/>
+								<UML:TaggedValue tag="ea_localid" value="4"/>
+								<UML:TaggedValue tag="ea_sourceName" value="NewCustomers"/>
+								<UML:TaggedValue tag="ea_targetName" value="Customers"/>
+								<UML:TaggedValue tag="ea_sourceType" value="Class"/>
+								<UML:TaggedValue tag="ea_targetType" value="Class"/>
+								<UML:TaggedValue tag="ea_sourceID" value="30"/>
+								<UML:TaggedValue tag="ea_targetID" value="29"/>
+								<UML:TaggedValue tag="src_visibility" value="Public"/>
+								<UML:TaggedValue tag="src_aggregation" value="0"/>
+								<UML:TaggedValue tag="src_isOrdered" value="false"/>
+								<UML:TaggedValue tag="src_targetScope" value="instance"/>
+								<UML:TaggedValue tag="src_changeable" value="none"/>
+								<UML:TaggedValue tag="src_isNavigable" value="false"/>
+								<UML:TaggedValue tag="src_containment" value="Unspecified"/>
+								<UML:TaggedValue tag="src_style" value="Union=0;Derived=0;AllowDuplicates=0;"/>
+								<UML:TaggedValue tag="dst_visibility" value="Public"/>
+								<UML:TaggedValue tag="dst_aggregation" value="0"/>
+								<UML:TaggedValue tag="dst_isOrdered" value="false"/>
+								<UML:TaggedValue tag="dst_targetScope" value="instance"/>
+								<UML:TaggedValue tag="dst_changeable" value="none"/>
+								<UML:TaggedValue tag="dst_isNavigable" value="true"/>
+								<UML:TaggedValue tag="dst_containment" value="Unspecified"/>
+								<UML:TaggedValue tag="dst_style" value="Union=0;Derived=0;AllowDuplicates=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={D4E5FF5F-F6D9-4564-9D9B-C315655F916F}$XID;$NAM=Stereotypes$NAM;$TYP=connector property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=like;FQName=MySql::like;@ENDSTEREO;$DES;$CLT={95E6A32D-584C-8DFB-AE19-A0A2A80C589B}$CLT;$ENDXREF;"/>
+								<UML:TaggedValue tag="virtualInheritance" value="0"/>
+								<UML:TaggedValue tag="mb" value="«like»"/>
+							</UML:ModelElement.taggedValue>
+						</UML:Generalization>
+						<UML:Class name="NewCustomers" xmi.id="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3" visibility="public" namespace="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531" isRoot="false" isLeaf="false" isAbstract="false" isActive="false">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="table"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="isSpecification" value="false"/>
+								<UML:TaggedValue tag="ea_stype" value="Class"/>
+								<UML:TaggedValue tag="ea_ntype" value="0"/>
+								<UML:TaggedValue tag="package" value="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531"/>
+								<UML:TaggedValue tag="date_created" value="2024-10-25 12:00:57"/>
+								<UML:TaggedValue tag="date_modified" value="2024-10-25 12:01:35"/>
+								<UML:TaggedValue tag="gentype" value="MySql"/>
+								<UML:TaggedValue tag="tagged" value="0"/>
+								<UML:TaggedValue tag="package_name" value="Like Table (MySQL) "/>
+								<UML:TaggedValue tag="author" value="SYSTEM"/>
+								<UML:TaggedValue tag="complexity" value="2"/>
+								<UML:TaggedValue tag="product_name" value="MySql"/>
+								<UML:TaggedValue tag="stereotype" value="table"/>
+								<UML:TaggedValue tag="tpos" value="0"/>
+								<UML:TaggedValue tag="ea_localid" value="30"/>
+								<UML:TaggedValue tag="ea_eleType" value="element"/>
+								<UML:TaggedValue tag="style" value="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={4D50372F-1561-44f6-BEC8-E6B59DF146F8}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=table;FQName=MySql::table;@ENDSTEREO;$DES;$CLT={BBAE5BA9-80A3-A15A-98D6-2BD5C97B54F3}$CLT;$ENDXREF;"/>
+							</UML:ModelElement.taggedValue>
+						</UML:Class>
+					</UML:Namespace.ownedElement>
+				</UML:Package>
+				<UML:DataType xmi.id="eaxmiid0" name="INT" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid1" name="VARCHAR" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+			</UML:Namespace.ownedElement>
+		</UML:Model>
+		<UML:TaggedValue tag="Conflict Handling" xmi.id="EAID_8E26CAB7_79FD_3a79_B3C8_79F502410013" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="DBVersion" xmi.id="EAID_6110716C_E090_bfe0_B364_9E5859F86C79" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Is Temporary" xmi.id="EAID_500B81DF_7565_4f75_B3D4_900F3F193905" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Not Exists" xmi.id="EAID_DFEB7A11_5817_1358_ADE3_6882ECF38FDF" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Owner" xmi.id="EAID_081BC26B_53CF_db53_B843_94CCC98827A6" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Partition By" xmi.id="EAID_4D1865D5_755B_ea75_81BE_CEF65D0A6949" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Select Query" xmi.id="EAID_D630E936_ECBC_bfec_963A_D5F2EFA1A785" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Table Options" xmi.id="EAID_30BD31B4_21FA_8a21_BC33_2F8431223DA5" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Tablespace" xmi.id="EAID_D6AED194_E178_14e1_B5FE_314251D2874E" modelElement="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5"/>
+		<UML:TaggedValue tag="Conflict Handling" xmi.id="EAID_8E26CAB7_79FD_3a79_AE0E_1A19BB79F931" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="DBVersion" xmi.id="EAID_6110716C_E090_bfe0_B3A9_B709A0AF9525" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Is Temporary" xmi.id="EAID_500B81DF_7565_4f75_A54E_EAF77657E833" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Not Exists" xmi.id="EAID_DFEB7A11_5817_1358_A9C0_9161F40B5580" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Owner" xmi.id="EAID_081BC26B_53CF_db53_80C4_CFAB7975D41A" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Partition By" xmi.id="EAID_4D1865D5_755B_ea75_9CED_472BDB9E2BA0" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Select Query" xmi.id="EAID_D630E936_ECBC_bfec_8A56_E29350E5A3E2" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Table Options" xmi.id="EAID_30BD31B4_21FA_8a21_B429_35410B0617E1" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:TaggedValue tag="Tablespace" xmi.id="EAID_D6AED194_E178_14e1_AA9D_E75E67222F47" modelElement="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3"/>
+		<UML:Diagram name="Like Table (MySQL) " xmi.id="EAID_93744B3E_B5F6_435B_B225_E0B19F848ED2" diagramType="ClassDiagram" owner="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531" toolName="Enterprise Architect 2.5">
+			<UML:ModelElement.taggedValue>
+				<UML:TaggedValue tag="version" value="1.0"/>
+				<UML:TaggedValue tag="author" value="SYSTEM"/>
+				<UML:TaggedValue tag="created_date" value="2024-10-25 12:00:57"/>
+				<UML:TaggedValue tag="modified_date" value="2024-10-25 12:01:16"/>
+				<UML:TaggedValue tag="package" value="EAPK_8878B8E5_217A_C6B3_AF86_B5623512C531"/>
+				<UML:TaggedValue tag="type" value="Logical"/>
+				<UML:TaggedValue tag="swimlanes" value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=16777215;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=1;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<UML:TaggedValue tag="matrixitems" value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<UML:TaggedValue tag="ea_localid" value="13"/>
+				<UML:TaggedValue tag="EAStyle" value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AllDockable=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<UML:TaggedValue tag="styleex" value="SaveTag=BE2DEC1B;ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;MDGDgm=MySql::MySql;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;"/>
+				<UML:TaggedValue tag="persistentstyle" value="DGS=On=0:CNT=8:W=120:H=40:SG=0:SGH=0:AEB=0:;AR=0;DCL=0;Swimlanes=locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;;"/>
+			</UML:ModelElement.taggedValue>
+			<UML:Diagram.element>
+				<UML:DiagramElement geometry="Left=505;Top=215;Right=632;Bottom=320;" subject="EAID_AB43A082_E034_7E47_AB4A_E66F76CE50D5" seqno="1" style="NSL=0;BCol=-1;BFol=-1;LCol=-1;LWth=-1;fontsz=0;bold=0;black=0;italic=0;ul=0;charset=0;pitch=0;HideIcon=0;DUID=F5EE9386;"/>
+				<UML:DiagramElement geometry="Left=273;Top=233;Right=381;Bottom=301;" subject="EAID_BBAE5BA9_80A3_A15A_98D6_2BD5C97B54F3" seqno="2" style="NSL=0;BCol=-1;BFol=-1;LCol=-1;LWth=-1;fontsz=0;bold=0;black=0;italic=0;ul=0;charset=0;pitch=0;HideIcon=0;DUID=6CE41CF9;"/>
+				<UML:DiagramElement geometry="EDGE=2;$LLB=;LLT=;LMT=;LMB=CX=25:CY=14:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_95E6A32D_584C_8DFB_AE19_A0A2A80C589B" style="Mode=3;EOID=00C87754;SOID=A6DA1690;Color=-1;LWidth=0;Hidden=0;"/>
+			</UML:Diagram.element>
+		</UML:Diagram>
+	</XMI.content>
+	<XMI.difference/>
+	<XMI.extensions xmi.extender="Enterprise Architect 2.5">
+		<EAModel.paramSub/>
+	</XMI.extensions>
+</XMI>

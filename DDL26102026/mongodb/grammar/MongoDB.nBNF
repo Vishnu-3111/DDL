@@ -1,0 +1,893 @@
+//
+// This file is conversion of the syntax form following web site:
+// https://www.mongodb.com/docs/manual/reference/method/
+//
+
+
+caseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>			::= <WHITESPACE> |
+						<COMMENT> |
+						token(<NUMBER>) |
+						token("true"|"false") |
+						<STRING> |
+						token(<IDENTIFIER>) |
+						token(keywords());
+
+<DELIMITER>			::= "\n" | "\r" | "\t" | " "  | "~"  |
+						"`"  | "!"  | "@"  | "#"         |
+						"%"  | "^"  | "&"  | "*"  | "("  |
+						")"  | "-"  | "+"  | "="  | "{"  | 
+						"["  | "}"  | "]"  | ";"  | ":"  | 
+						"\\" | "\'" | "\"" | ","  | "<"  | 
+						">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>		::= " "  | "\r" | "\n" | "\t";
+
+<COMMENT>			::= "//" skip(<eol>) <eol> |
+						"/*" skip("*/") "*/";
+
+<EOL>				::= "\r" "\n" |
+						"\n";
+
+<NUMBER>			::= ["-"]"0".."9"+;
+
+<BOOLEAN>			::= ("true" attributeEx("VALUE" , "True"))| ("false" attributeEx("VALUE" , "False"));
+
+<STRING>			::= token("\"") token(<STRINGDBODY>) token("\"") | 
+						token("\'") token(<STRINGSBODY>) token("\'");
+<STRINGSBODY>		::= skip("\"", "\\\'");
+<STRINGDBODY>		::= skip("\"", "\\\"");
+
+<IDENTIFIER>		::= ("a".."z" | "_" | "$") ("a".."z" | "0".."9" | "_")*;
+
+
+<StringAsName>		::= "\"" attribute("NAME", <STRINGDBODY>) "\"" | 
+						"\'" attribute("NAME", <STRINGSBODY>) "\'";
+<StringAsValue>		::= "\"" attribute("VALUE", <STRINGDBODY>) "\"" | 
+						"\'" attribute("VALUE", <STRINGSBODY>) "\'";
+<StringValue>		::= "\"" <STRINGDBODY> "\"" | 
+						"\'" <STRINGSBODY> "\'";
+
+
+// Parser rules
+<language>			::= attributeEx("EAGENTYPE", "MongoDB") attributeEx("EAMAPPING", "DDL") <Statement>*;
+
+<database>			::=<IDENTIFIER> ;
+
+<Statement>			::= ("USE" <database>[";"])|
+						<createCommands>|
+						<insertOne> |
+						<insertMany>|
+						<database_method>|
+						<otherCollectionMethods>|
+						<bulk_operation>|
+						<user_management>|
+						<role_management>|
+						<replication_commands>|
+						<sharding_commands>|
+						<connection>|
+						<atlas_methods>
+						;
+						
+<createCommands>	::=	<createCollection> |
+						<createView> |
+						<createindex>|
+						<create_procedure>|
+						<CreateIndexes> |
+						<create_Search_index>|
+						<create_function>
+						;
+						
+<database_method>		::= <admin_command>
+							|<db_aggregate>
+							|<command_help> 
+							|<currentOp>
+							|<drop_database>
+							|<fsync_lock_and_Unlock>
+							|<get_collection>
+							|<get_collection_infos>
+							|<get_collextion_name>
+							|<get_log_components>
+							|<get_mongo_connection>
+							|<get_name>
+							|<getProfilingStatus>
+							|<getReplicationInfo>
+							|<getSiblingDB>
+							|<db_hello>
+							|<db_help>
+							|<hostInfo>
+							|<killOp>
+							|<listCommands>
+							|<logout>
+							|<printCollectionStats>
+							|<printReplicationInfo>
+							|<printSecondaryReplicationInfo>
+							|<printShardingStatus>
+							|<resetError>
+							|<rotateCertificates>
+							|<runCommand>
+							|<serverBuildInfo>
+							|<serverCmdLineOpts>
+							|<serverStatus>
+							|<setLogLevel>
+							|<setProfilingLevel>
+							|<shutdownServer>
+							|<db_stats>
+							|<version>
+							|<db_watch>
+							;		
+					
+<otherCollectionMethods>	::=	 <analyze_Shard_key>
+								|<collectionAggregate>
+								|<bulkWrite>
+								|<compactStructuredEncryptionData>
+								|<configureQueryAnalyzer>
+								|<count_command>
+								|<datasize_command>
+								|<delete_one>
+								|<delete_Many>
+								|<distinct>
+								|<drop_command>
+								|<estimateDocumentCount>
+								|<explain_command>
+								|<find_command>
+								|<get_Indexes>
+								|<get_shardDistribution>
+								|<get_shardversion>
+								|<hide_index>
+								|<iscapped>
+								|<latencyStats>
+								|<mapreduce>
+								|<reindedx>
+								|<remove>
+								|<renameCollection>
+								|<replaceOne>
+								|<collection_stats>
+								|<storageSize>
+								|<totalIndexSize>
+								|<totalSize>
+								|<unhide_index>
+								|<update_command>
+								|<collection_validate>
+								|<query_plancache>
+								|<collection_watch>
+								;								
+
+// Create Statements
+// Create collection Reference link: https://www.mongodb.com/docs/manual/reference/method/db.createCollection/
+
+<createCollection>	::= node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE", "MongoDB::collection")
+							<IDENTIFIER>
+							"."
+							"createCollection"
+							"("
+							<StringAsName>
+							["," <collectionOptions>]
+							")"
+							[";"]
+						);
+						
+<collectionOptions>		::= "{" [<collectionProperty> ("," <collectionProperty>)*] "}";
+<collectionProperty>	::= <collCapped> |
+							<collChangeStream> |
+							<collClusteredIndex> |
+							<collCollation> |
+							<collExpireAfter> |
+							<collIndexDefaults> |
+							<collMax> |
+							<collPipeline> |
+							<collSize> |
+							<collStorageEngine> |
+							<collTimeSeries> |
+							<collValidationLevel> |
+							<collValidationAction> |
+							<collValidator> |
+							<collViewOn> |
+							<collWriteConcern> |
+							<property>;
+							
+<collCapped>			::= node("capped", "capped" ":" <BOOLEAN>);
+<collChangeStream>		::= node("changeStreamPreAndPostImages", "changeStreamPreAndPostImages" ":" attribute("VALUE", <document_type>));
+<collClusteredIndex>	::= "clusteredIndex" ":" <clusteredIndexDocument>;
+<collCollation>			::= node("Collation", "COLLATION" ":" attribute("VALUE", <document_type>));
+<collExpireAfter>		::= node("expireAfterSeconds", "expireAfterSeconds" ":" attribute("VALUE", <NUMBER>));
+<collIndexDefaults>		::= node("indexOptionDefaults", "indexOptionDefaults" ":" attribute("VALUE", <document_type>));
+<collMax>				::= node("max", "max" ":" attribute("VALUE", <NUMBER>));
+<collPipeline>			::= node("Pipeline", "pipeline" ":" attribute("VALUE", <documentArray>));
+<collSize>				::= node("size", "size" ":" attribute("VALUE", <NUMBER>));
+<collStorageEngine>		::= node("storageEngine", "storageEngine" ":" attribute("VALUE", <document_type>));
+<collTimeSeries>		::= "timeseries" ":" <timeSeriesDocument>;
+<collValidationLevel>	::= node("validationLevel", "validationLevel" ":" <StringAsValue>);
+<collValidationAction>	::= node("validationAction", "validationAction" ":" <StringAsValue>);
+<collValidator>			::= node("validator", "validator" ":" attribute("VALUE", <document_type>));
+<collViewOn>			::= node("viewOn", "viewOn" ":" node("TARGET", <StringValue>));
+<collWriteConcern>		::= node("writeConcern", "writeConcern" ":" attribute("VALUE", <document_type>));
+
+<timeSeriesDocument>	::= "{" [<timeSeriesProperty> ("," <timeSeriesProperty>)*] "}";
+<timeSeriesProperty>	::= <tsTimeField> |
+							<tsMetaField> |
+							<tsGranularity> |
+							<tsbucketMaxSpanSeconds>|
+							<tsbucketRoundingSeconds>|
+							<property>;
+							
+<tsTimeField>			::= node("timeField", "timeField" ":" <StringAsValue>);
+<tsMetaField>			::= node("metaField", "metaField" ":" <StringAsValue>);
+<tsGranularity>			::= node("granularity", "granularity" ":" <StringAsValue>);
+<tsbucketMaxSpanSeconds>::= node("bucketMaxSpanSeconds","bucketMaxSpanSeconds" ":" attribute("VALUE",<NUMBER>));
+<tsbucketRoundingSeconds>::= node("bucketRoundingSeconds","bucketRoundingSeconds" ":" attribute("VALUE",<NUMBER>));
+
+<clusteredIndexDocument>::= "{" [<clusteredIndexProperty> ("," <clusteredIndexProperty>)*] "}";
+<clusteredIndexProperty>::= <clusteredIndexKey> |
+							<clusteredIndexUnique> |
+							<clusteredIndexName> |
+							<property>;
+							
+<clusteredIndexKey>		::= node("ClusteredIndexKey", ("key" | "\'" "key" "\'" | "\"" "key" "\"") ":" attribute("VALUE",<document_type>));
+<clusteredIndexUnique>	::= node("ClusteredIndexUnique", ("unique" | "\'" "unique" "\'" | "\"" "unique" "\"") ":" <BOOLEAN>);
+<clusteredIndexName>	::= node("ClusteredIndexName", ("name" | "\'" "name" "\'" | "\"" "name" "\"") ":" <StringAsValue>);
+
+
+//Create View Reference link:https://www.mongodb.com/docs/manual/reference/method/db.createView/
+
+<createView>		::= node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE", "MongoDB::view")
+							<IDENTIFIER>
+							"."
+							"createView"
+							"(" 
+							 <StringAsName> 						
+							[","]
+							[node("SourceName",
+								<StringAsValue>)]
+							[","]
+							[ node("viewdef",attribute("VALUE",<sub_arrayfield>))] [","]
+							["{" "collation" ":" node("Collation",attribute("VALUE",<document_type>))"}"]
+							")"
+							[";"]
+						);
+						
+// Insert Statements
+//Insert One reference link : https://www.mongodb.com/docs/manual/reference/method/db.collection.insertOne/
+
+<insertOne>			::= node("ELEMENT",
+						attributeEx("EATYPE", "Class")
+						attributeEx("EASTEREOTYPE" , "MongoDB::collection")
+						<IDENTIFIER>
+						"."
+						attribute("NAME",<collection_Name>)
+						"."
+						"insertOne"
+						"("
+							<document>
+						")"
+						[";"]);
+						
+<collection_Name>	::= <IDENTIFIER>;
+
+//Insert Many reference link : https://www.mongodb.com/docs/manual/reference/method/db.collection.insertMany/
+						
+<insertMany>		::= node("ELEMENT",
+						attributeEx("EATYPE", "Class")
+						attributeEx("EASTEREOTYPE" , "MongoDB::collection")
+						<IDENTIFIER>
+						"."
+						attribute("NAME",<collection_Name>)
+						"."
+						"insertMany"
+						"("
+						<documentArray>
+						")")
+						[";"];
+						
+<document_type>		::="{"[<fields>(","<fields>)*]"}";
+
+<fields>			::= (<fieldName>|<StringValue>) ":"<fieldValue>;
+
+<fieldName>			::=<IDENTIFIER>;
+
+<fieldValue>		::=<NUMBER> |
+						<StringValue> |
+						("true"|"false")|
+						<sub_field>|
+						<sub_arrayfield>;
+						
+<sub_field>			::="{"[<fields>(","<fields>)*]"}";
+<sub_arrayfield>	::="["[<sub_field>("," <sub_field>)*]"]";
+<documentArray>		::= "[" [<document> ("," <document>)*] "]";
+<document>			::= "{" [<property> ("," <property>)*] "}";
+
+<property>			::= node("ATTRIBUTE", attributeEx("EASTEREOTYPE","MongoDB::field")
+								(attribute("NAME",<Field_Name>)|<StringAsName>) ":" (<propertyValue>| <subfields>));
+								
+<Field_Name>		::=<IDENTIFIER>;
+
+<subfields> 		::= (node("SubField" ,  attribute("VALUE",<sub_field> ("," <sub_field>)* )))|
+						(node("SubField" ,  attribute("VALUE",<sub_arrayfield> ("," <sub_arrayfield>)* )));
+
+<propertyValue>		::= <decimal_type>|<number_type> |<StringValue_type> |<boolean_type>;
+
+<number_type>		::= node("FieldValue",attribute("VALUE",<NUMBER>))  node("TYPE" , attributeEx("NAME" , "integer")) ;
+
+<decimal_type>		::= node("FieldValue",attribute("VALUE", <NUMBER> "." <NUMBER>)) node("TYPE" , attributeEx("NAME" , "decimal")) ;
+
+<StringValue_type>		::= node("FieldValue",attribute("VALUE",<StringValue>)) node("TYPE" , attributeEx("NAME" , "string")) ;
+
+<boolean_type>		::= node("FieldValue",attribute("VALUE",("true"|"false"))) node("TYPE" , attributeEx("NAME" , "boolean")) ;
+
+//Create Index Reference Link :https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+
+<createindex>		::=node("OPERATION",
+							attributeEx("EASTEREOTYPE", "MongoDB::index")
+							<IDENTIFIER> 
+							"."
+							node("OWNER",attribute("NAME",<collection_Name>))
+							"."
+							"CREATEINDEX"
+							"("
+							node("Keys",attribute("VALUE","{"
+							(<indexparameter>(","<indexparameter>)*)
+							"}")) [","
+							"{"
+							<index_options>	(","<index_options>	)*
+							"}"]
+							[","node("commitQuorum",attribute("VALUE", (("VOTINGMEMBERS"|"MAJORITY")|<StringValue>|<NUMBER>)))]
+							")")[";"];
+							
+<indexparameter>	::=	(<fieldName>|<StringAsName>) ":"
+							(<NUMBER>|("\"" "TEXT" "\"")|("\"" "2dSphere" "\"")|("\"" "2d" "\"")|("\"" "hashed" "\"")) ;
+							
+<index_options>		::=		("UNIQUE" ":" ("true" node("Unique",attributeEx("VALUE","1"))|"false" node("Unique",attributeEx("VALUE","0")))|
+						"SPARSE" ":" node("Sparse",attribute("VALUE",<StringValue>))|
+						"NAME" ":" attribute("NAME",<IndexName>)|
+						"EXPIREAFTERSECONDS" ":" node("expireAfterSeconds",attribute("VALUE",<NUMBER>))|
+						"STORAGEENGINE" ":" node("storageEngine",attribute("VALUE",<document_type>)) |
+						"PARTIALFILTEREXPRESSION" ":" node("PartialFilterExpression",attribute("VALUE",<document_type>))|
+						["\""]"2dsphereIndexVersion"["\""] ":" node("2dsphereIndexVersion",attribute("VALUE",<NUMBER>))|
+						["\""]"bits"["\""] ":" node("bits",attribute("VALUE",<NUMBER>))|
+						["\""]"min"["\""] ":" node("min",attribute("VALUE",<NUMBER>))|
+						["\""]"max"["\""] ":" node("max",attribute("VALUE",<NUMBER>))|
+						["\""]"wildcardProjection"["\""] ":" node("wildcardProjection",attribute("VALUE",<document_type>))|
+						["\""]"weights"["\""] ":" node("weights",attribute("VALUE",<document_type>))|
+						["\""]"default_language"["\""] ":" node("defaultLanguage",attribute("VALUE",<StringValue>))|
+						["\""]"language_override"["\""] ":" node("language Override",attribute("VALUE",<StringValue>))|
+						["\""] "textIndexVersion" ["\""] ":" node("textIndexVersion",attribute("VALUE",<NUMBER>))|
+						"COLLATION" ":" node("Collation",attribute("VALUE",<document_type>))|
+						 ["\""]"wildcardProjection"["\""] ":" node("wildcardProjection",attribute("VALUE",<document_type>))
+						
+						);
+						
+						
+<IndexName> 		::= <IDENTIFIER>|<StringValue>;
+
+//Create Procedure reference link :https://www.mongodb.com/docs/manual/tutorial/store-javascript-function-on-server/
+
+<create_procedure>	::=node("ELEMENT",
+							attributeEx("EATYPE", "Class")
+							attributeEx("EASTEREOTYPE","MongoDB::procedure")
+							<IDENTIFIER> "." "system" "." "js" "." "INSERTONE" "("
+							"{"
+							
+							"_id" ":" <StringAsName> ","
+							"VALUE" ":" node("procdef", attribute("VALUE",<procedurefunction>))
+							
+							"}"
+							")" [";"] );
+
+<procedurefunction>	::= "function" "(" [<IDENTIFIER>("," <IDENTIFIER>)*] ")" "{" skipBalanced("{","}" )"}";
+
+<CreateIndexes>	::= mapRight(<IDENTIFIER> "."  node("OWNER",attribute("NAME",<collection_Name>)) "." "CREATEINDEXES" , <Indexbody> ) [";"];
+
+
+<Indexbody>				::= "(" mapLeft( "[" (<Index>(","<Index>)*) "]" ,
+							["," "{"	<index_options>	(","<index_options>	)*"}"]
+							[","node("commitQuorum",attribute("VALUE", ("VOTINGMEMBERS"|"MAJORITY"|<NUMBER>)))]
+								) ")" ;
+							
+<Index>			::= node("OPERATION",
+							attributeEx("EASTEREOTYPE", "MongoDB::index")
+							node("Keys",attribute("VALUE","{"(<indexparameter>(","<indexparameter>)*)"}")));
+						
+						
+<analyze_Shard_key>		::=	<IDENTIFIER> "." <IDENTIFIER>"." "ANALYZESHARDKEY" "(" skipBalanced("(",")") ")" [";"] ;
+
+<collectionAggregate>	::=	<IDENTIFIER> "."<IDENTIFIER>"." "AGGREGATE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<bulkWrite>				::= <IDENTIFIER> "." <IDENTIFIER> "." "BULKWRITE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<compactStructuredEncryptionData>	::= <IDENTIFIER> "." <IDENTIFIER> "."
+										"COMPACTSTRUCTUREDENCRYPTIONDATA" "(" skipBalanced("(",")") ")" [";"] ;
+										
+<configureQueryAnalyzer>		::= <IDENTIFIER> "." <IDENTIFIER> "." "CONFIGUREQUERYANALYZER" 	"(" skipBalanced("(",")") ")" [";"] ;
+
+<count_command>					::= <IDENTIFIER> "." <IDENTIFIER> "." ("COUNT"|"COUNTDOCUMENTS") "(" skipBalanced("(",")") ")" [";"] ;
+
+<datasize_command>				::= <IDENTIFIER> "." <IDENTIFIER> "." "DATASIZE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<delete_one>					::= <IDENTIFIER> "." <IDENTIFIER> "." "DELETEONE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<delete_Many>					::= <IDENTIFIER> "." <IDENTIFIER> "." "DELETEMANY" "(" skipBalanced("(",")") ")" [";"] ;
+
+<distinct>						::= <IDENTIFIER> "." <IDENTIFIER> "." "DISTINCT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<drop_command>					::= <IDENTIFIER> "." <IDENTIFIER> "." ("DROP"|"DROPINDEX"|"DROPINDEXES")
+									"(" skipBalanced("(",")") ")" [";"] ;
+									
+<estimateDocumentCount>			::=	<IDENTIFIER> "." <IDENTIFIER> "." "ESTIMATEDDOCUMENTCOUNT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<explain_command>				::= <IDENTIFIER> "." <IDENTIFIER> "." "EXPLAIN" "(" skipBalanced("(",")") ")"
+									["." <IDENTIFIER>"(" skipBalanced("(",")") ")"] [";"];
+									
+<find_command>					::= <IDENTIFIER> "." <IDENTIFIER> "." 
+									("FIND"|"FINDANDMODIFY"|"FINDONE"
+									|"FINDONEANDDELETE"|"FINDONEANDREPLACE"|
+									"FINDONEANDUPDATE")
+									"(" skipBalanced("(",")") ")" [("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+
+<get_Indexes>					::= <IDENTIFIER> "." <IDENTIFIER> "." "GETINDEXES" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_shardDistribution>			::= <IDENTIFIER> "." <IDENTIFIER> "." "GETSHARDDISTRIBUTION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_shardversion>				::= <IDENTIFIER> "." <IDENTIFIER> "." "GETSHARDVERSION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<hide_index>					::= <IDENTIFIER> "." <IDENTIFIER> "." "HIDEINDEX" "(" skipBalanced("(",")") ")" [";"] ;
+
+<iscapped>						::= <IDENTIFIER> "." <IDENTIFIER> "." "ISCAPPED" "(" skipBalanced("(",")") ")" [";"] ;
+
+<latencyStats>					::= <IDENTIFIER> "." <IDENTIFIER> "." "LATENCYSTATS" "(" skipBalanced("(",")") ")"
+											["." <IDENTIFIER> "(" skipBalanced("(",")") ")"][";"] ;
+
+<mapreduce>						::= <IDENTIFIER> "." <IDENTIFIER> "." "MAPREDUCE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<reindedx>						::= <IDENTIFIER> "." <IDENTIFIER> "." "REINDEX" "(" skipBalanced("(",")") ")" [";"] ;
+
+<remove>						::= <IDENTIFIER> "." <IDENTIFIER> "." "REMOVE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<renameCollection>				::= <IDENTIFIER> "." <IDENTIFIER> "." "RENAMECOLLECTION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replaceOne>					::= <IDENTIFIER> "." <IDENTIFIER> "." "REPLACEONE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<collection_stats>				::= <IDENTIFIER> "." <IDENTIFIER> "." "STATS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<storageSize>					::= <IDENTIFIER> "." <IDENTIFIER> "." "STORAGESIZE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<totalIndexSize>				::= <IDENTIFIER> "." <IDENTIFIER> "." "TOTALINDEXSIZE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<totalSize>						::= <IDENTIFIER> "." <IDENTIFIER> "." "TOTALSIZE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<unhide_index>					::= <IDENTIFIER> "." <IDENTIFIER> "." "UNHIDEINDEX" "(" skipBalanced("(",")") ")" [";"] ;
+
+<update_command>				::= <IDENTIFIER> "." <IDENTIFIER> "." ("UPDATEONE"|"UPDATEMANY") "(" skipBalanced("(",")") ")" [";"] ;
+
+<collection_watch>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]<IDENTIFIER> "." <IDENTIFIER> 
+									"." "WATCH" "(" skipBalanced("(",")") ")" [";"] ;
+
+<collection_validate>			::= <IDENTIFIER> "." <IDENTIFIER> "." "VALIDATE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_collection>				::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "." "GETCOLLECTION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<admin_command>					::= <IDENTIFIER> "." "ADMINCOMMAND"  "(" skipBalanced("(",")") ")" [";"] ;
+
+<db_aggregate>					::= <IDENTIFIER> "." "AGGREGATE"  "(" skipBalanced("(",")") ")" [";"] ;
+
+<command_help>					::= <IDENTIFIER> "." "COMMANDHELP" "(" skipBalanced("(",")") ")" [";"] ;
+
+<currentOp>						::= <IDENTIFIER> "." "CURRENTOP" "(" skipBalanced("(",")") ")" [";"] ;
+
+<drop_database>					::= <IDENTIFIER> "." "DROPDATABASE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<fsync_lock_and_Unlock>			::= <IDENTIFIER> "." ("FSYNCLOCk"|"FSYNCUNLOCk") "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_collection_infos>			::= <IDENTIFIER> "." "GETCOLLECTIONINFOS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_collextion_name>			::= <IDENTIFIER> "." "GETCOLLECTIONNAMES" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_log_components>			::= <IDENTIFIER> "." "GETLOGCOMPONENTS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<get_mongo_connection>			::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]<IDENTIFIER> "." "GETMONGO" "(" skipBalanced("(",")") ")" 
+										[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"];
+										
+<get_name>						::= <IDENTIFIER> "." "GETNAME" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getProfilingStatus>			::= <IDENTIFIER> "." "GETPROFILINGSTATUS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getReplicationInfo>			::= <IDENTIFIER> "." "GETREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getSiblingDB>					::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]
+										<IDENTIFIER> "." "GETSIBLINGDB" "(" skipBalanced("(",")") ")"
+										[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+
+<db_hello>						::= <IDENTIFIER> "." "HELLO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<db_help>						::= <IDENTIFIER> "." "HELP" "(" skipBalanced("(",")") ")" [";"] ;
+
+<hostInfo>						::= <IDENTIFIER> "." "HOSTINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<killOp>						::= <IDENTIFIER> "." "KILLOP" "(" skipBalanced("(",")") ")" [";"] ;
+
+<listCommands>					::= <IDENTIFIER> "." "LISTCOMMANDS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<logout>						::= <IDENTIFIER> "." "LOGOUT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<printCollectionStats>			::= <IDENTIFIER> "." "PRINTCOLLECTIONSTATS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<printReplicationInfo>			::= <IDENTIFIER> "." "PRINTREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<printSecondaryReplicationInfo>	::= <IDENTIFIER> "." "PRINTSECONDARYREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<printShardingStatus>			::= <IDENTIFIER> "." "PRINTSHARDINGSTATUS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<resetError>					::= <IDENTIFIER> "." "RESETERROR" "(" skipBalanced("(",")") ")" [";"] ;
+
+<rotateCertificates>			::= <IDENTIFIER> "." "ROTATECERTIFICATES" "(" skipBalanced("(",")") ")" [";"] ;
+
+<runCommand>					::= <IDENTIFIER> "." "RUNCOMMAND" "(" skipBalanced("(",")") ")" [";"] ;
+
+<serverBuildInfo>				::= <IDENTIFIER> "." "SERVERBUILDINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<serverCmdLineOpts>				::= <IDENTIFIER> "." "SERVERCMDLINEOPTS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<serverStatus>					::= <IDENTIFIER> "." "SERVERSTATUS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<setLogLevel>					::= <IDENTIFIER> "." "SETLOGLEVEL" "(" skipBalanced("(",")") ")" [";"] ;
+
+<setProfilingLevel>				::= <IDENTIFIER> "." "SETPROFILINGLEVEL" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shutdownServer>				::= <IDENTIFIER> "." "SHUTDOWNSERVER" "(" skipBalanced("(",")") ")" [";"] ;
+
+<db_stats>						::= <IDENTIFIER> "." "STATS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<version>						::= <IDENTIFIER> "." "VERSION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<db_watch>						::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]
+									<IDENTIFIER> "." "WATCH" "(" skipBalanced("(",")") ")" [";"] ;
+									
+<query_plancache>				::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "." <IDENTIFIER> "." "GETPLANCACHE" "(" ")"
+									"." ("HELP"|"CLEAR"|"CLEARPLANSBYQUERY"|"LIST") "(" skipBalanced("(",")") ")" [";"] ;	
+
+<bulk_operation>				::=	<bulk_intialize>
+									|<execute>
+									|<bulk_find>
+									|<insert>
+									|<tojson>
+									|<tostring>
+									|<get_operation>;
+
+
+<bulk_intialize>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>	"." <IDENTIFIER> 
+									"." ("INITIALIZEORDEREDBULKOP" |"INITIALIZEUNORDEREDBULKOP")"(" ")"	
+											[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+											
+<execute>						::= <IDENTIFIER> "." "EXECUTE"	"(" skipBalanced("(",")") ")" [";"] ;										
+
+<bulk_find>						::= <IDENTIFIER> "." "FIND" "(" skipBalanced("(",")") ")"
+									[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*][";"] ;
+									
+<insert>						::=	<IDENTIFIER> "." "INSERT" "(" skipBalanced("(",")") ")" [";"] ;	
+								
+<toJSON>						::=	<IDENTIFIER> "." "TOJSON" "(" skipBalanced("(",")") ")" [";"] ;	
+								
+<toString>						::=	<IDENTIFIER> "." "TOSTRING"	"(" skipBalanced("(",")") ")" [";"] ;		
+
+							
+<get_operation>					::=	<IDENTIFIER> "." "GETOPERATIONS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<user_management>				::= <authorization>
+									|<changepassword>
+									|<create_user>
+									|<drop_user>
+									|<dropAllUsers>
+									|<getUser>
+									|<getUsers>
+									|<grantRolesToUser>
+									|<removeUser>
+									|<revokeRolesFromUser>
+									|<updateUser>
+									;
+
+<authorization> 				::=<IDENTIFIER> "." "AUTH"	"(" skipBalanced("(",")") ")" [";"] ;		
+				
+<changepassword>				::= <IDENTIFIER> "." "CHANGEUSERPASSWORD"	"(" skipBalanced("(",")") ")" [";"] ;		
+
+<drop_user>						::=	<IDENTIFIER> "." "DROPUSER"	"(" skipBalanced("(",")") ")" [";"] ;		
+	
+<create_user>					::=	<IDENTIFIER> "." "CREATEUSER" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<dropAllUsers>					::=	<IDENTIFIER> "." "DROPALLUSERS" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<getUser>						::=	<IDENTIFIER> "." "GETUSER" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<getUsers>						::=	<IDENTIFIER> "." "GETUSERS" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<grantRolesToUser>				::=	<IDENTIFIER> "." "GRANTROLESTOUSER" "(" skipBalanced("(",")") ")" [";"] ;
+	
+<removeUser>					::=	<IDENTIFIER> "." "REMOVEUSER" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<revokeRolesFromUser>			::=	<IDENTIFIER> "." "REVOKEROLESFROMUSER" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<updateUser>					::=	<IDENTIFIER> "." "UPDATEUSER" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<role_management>				::= <create_role>
+									|<dropRole>
+									|<dropAllRoles>
+									|<getRole>
+									|<getRoles>
+									|<grantPrivilegesToRole>
+									|<revokePrivilegesFromRole>
+									|<grantRolesToRole>
+									|<revokeRolesFromRole>
+									|<updateRole>;
+
+<create_role>					::= <IDENTIFIER> "." "CREATEROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<dropRole>						::= <IDENTIFIER> "." "DROPROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<dropAllRoles>					::= <IDENTIFIER> "." "DROPALLROLES" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<getRole>						::= <IDENTIFIER> "." "GETROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<getRoles>						::= <IDENTIFIER> "." "GETROLES" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<grantPrivilegesToRole>			::= <IDENTIFIER> "." "GRANTPRIVILEGESTOROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<revokePrivilegesFromRole>		::= <IDENTIFIER> "." "REVOKEPRIVILEGESFROMROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<grantRolesToRole>				::= <IDENTIFIER> "." "GRANTROLESTOROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<revokeRolesFromRole>			::= <IDENTIFIER> "." "REVOKEROLESFROMROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<updateRole>					::= <IDENTIFIER> "." "UPDATEROLE" "(" skipBalanced("(",")") ")" [";"] ;	
+
+<replication_commands>			::= <replica_add>
+									|<replica_addArb>
+									|<replica_config>
+									|<replica_freeze>
+									|<replica_help>
+									|<replica_initiate>
+									|<replica_reconfig>
+									|<replica_reconfigForPSASet>
+									|<replica_remove>
+									|<replica_status>
+									|<replica_stepdown>
+									|<replica_syncFrom>
+									|<printSlaveReplicationInfo>
+									;
+
+
+<replica_add>					::= "RS" "." "ADD" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_addArb>				::= "RS" "." "ADDARB" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_config>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] "RS" "." "CONF" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_freeze>				::= "RS" "." "FREEZE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_help>					::= "RS" "." "HELP" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_initiate>				::= "RS" "." "INITIATE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_reconfig>				::= "RS" "." "RECONFIG" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_reconfigForPSASet>		::= "RS" "." "RECONFIGFORPSASET" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_remove>				::= "RS" "." "REMOVE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_status>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] "RS" "." "STATUS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_stepdown>				::= "RS" "." "STEPDOWN" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_syncFrom>				::= "RS" "." "SYNCFROM" "(" skipBalanced("(",")") ")" [";"] ;
+
+<printSlaveReplicationInfo>		::= "RS" "." "PRINTSLAVEREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<sharding_commands>				::= <checkMetadataConsistency>
+									|<abordReshardCollection>
+									|<addShard>
+									|<addShardToZone>
+									|<addTagRange>
+									|<convertShardKeyToHashed>
+									|<balancerCollectionStatus>
+									|<commitReshardCollection>
+									|<disableAutoMerger>
+									|<disableAutoSplit>
+									|<disableBalancing>
+									|<enableAutoMerger>
+									|<enableBalancing>
+									|<enableAutoSplit>
+									|<enableSharding>
+									|<getBalancerState>
+									|<getShardedDataDistribution>
+									|<isBalancerRunning>
+									|<moveChunk>
+									|<removeRangeFromZone>
+									|<removeShardTag>
+									|<removeShardFromZone>
+									|<removeTagRange>
+									|<reshardCollection>
+									|<setBalancerState>
+									|<shardCollection>
+									|<split>
+									|<startAutoMerger>
+									|<startBalancer>
+									|<shard_status>
+									|<stopAutoMerger>
+									|<stopBalancer>
+									|<updateZoneKeyRange>
+									|<waitForBalancer>
+									|<waitForBalancerOff>
+									|<waitForPingChange>
+									;
+
+<checkMetadataConsistency>		::= <IDENTIFIER> "." [<IDENTIFIER> "."] "CHECKMETADATACONSISTENCY"  "(" skipBalanced("(",")") ")" [";"] ;
+
+<abordReshardCollection>		::= "SH" "." "ABORTRESHARDCOLLECTION"  "(" skipBalanced("(",")") ")" [";"] ;
+
+<addShard>						::= "SH" "." "ADDSHARD" "(" skipBalanced("(",")") ")" [";"] ;
+
+<addShardToZone>				::= "SH" "." "ADDSHARDTOZONE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<addTagRange>					::= "SH" "." "ADDTAGRANGE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<convertShardKeyToHashed>		::= "CONVERTSHARDKEYTOHASHED" "(" skipBalanced("(",")") ")" [";"] ;
+
+<balancerCollectionStatus>		::="SH" "." "BALANCERCOLLECTIONSTATUS" "(" skipBalanced("(",")") ")" [";"] ;
+
+<commitReshardCollection>		::= "SH" "." "COMMITRESHARDCOLLECTION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<disableAutoMerger>				::= "SH" "." "DISABLEAUTOMERGER" "(" skipBalanced("(",")") ")" [";"] ;
+
+<disableAutoSplit>				::= "SH" "." "DISABLEAUTOSPLIT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<disableBalancing>				::= "SH" "." "DISABLEBALANCING" "(" skipBalanced("(",")") ")" [";"] ;
+
+<enableAutoMerger>				::= "SH" "." "ENABLEAUTOMERGER" "(" skipBalanced("(",")") ")" [";"] ;
+
+<enableBalancing>				::= "SH" "." "ENABLEBALANCING" "(" skipBalanced("(",")") ")" [";"] ;
+
+<enableAutoSplit>				::= "SH" "." "ENABLEAUTOSPLIT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<enableSharding>				::= "SH" "." "ENABLESHARDING" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getBalancerState>				::= "SH" "." "GETBALANCERSTATE" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getShardedDataDistribution>	::= "SH" "." "GETSHARDEDDATADISTRIBUTION" "(" skipBalanced("(",")") ")" [";"] ;
+
+<isBalancerRunning>				::= "SH" "." "ISBALANCERRUNNING" "(" skipBalanced("(",")") ")" [";"] ;
+
+<moveChunk>						::= "SH" "." "MOVECHUNK" "(" skipBalanced("(",")") ")" [";"] ;
+
+<removeRangeFromZone>			::= "SH" "." "removeRangeFromZone" "(" skipBalanced("(",")") ")" [";"] ;
+
+<removeShardTag>				::= "SH" "." "REMOVESHARDTAG" "(" skipBalanced("(",")") ")" [";"] ;
+
+<removeShardFromZone>			::= "SH" "." "removeShardFromZone" "(" skipBalanced("(",")") ")" [";"] ;
+
+<removeTagRange>				::= "SH" "." "removeTagRange" "(" skipBalanced("(",")") ")" [";"] ;
+
+<reshardCollection>				::= "SH" "." "reshardCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<setBalancerState>				::= "SH" "." "setBalancerState" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shardCollection>				::= "SH" "." "shardCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<split>							::= "SH" "." ("splitAt"|"splitFind") "(" skipBalanced("(",")") ")" [";"] ;
+
+<startAutoMerger>				::= "SH" "." "startAutoMerger" "(" skipBalanced("(",")") ")" [";"] ;
+
+<startBalancer>					::= "SH" "." "startBalancer" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shard_status>					::= "SH" "." "status" "(" skipBalanced("(",")") ")" [";"] ;
+
+<stopAutoMerger>				::= "SH" "." "stopAutoMerger" "(" skipBalanced("(",")") ")" [";"] ;
+
+<stopBalancer>					::= "SH" "." "stopBalancer" "(" skipBalanced("(",")") ")" [";"] ;
+
+<updateZoneKeyRange>			::= "SH" "." "updateZoneKeyRange" "(" skipBalanced("(",")") ")" [";"] ;
+
+<waitForBalancer>				::= "SH" "." "waitForBalancer" "(" skipBalanced("(",")") ")" [";"] ;
+
+<waitForBalancerOff>			::= "SH" "." "waitForBalancerOff" "(" skipBalanced("(",")") ")" [";"] ;
+
+<waitForPingChange>				::= "SH" "." "waitForPingChange" "(" skipBalanced("(",")") ")" [";"] ;
+
+<connection>					::= <connect>
+									|<mongo>
+									|<mongo_conn_getDB>
+									|<mongo_conn_getDBNames>
+									|<mongo_get_DBs>
+									|<mongo_getReadPrefMode>
+									|<mongo_getWriteConcern>
+									|<mongo_setCausalConsistency>
+									|<mongo_setReadPref>
+									|<mongo_startSession>
+									|<mongo_setWriteConcern>
+									;
+
+<connect> 						::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] "CONNECT" "(" skipBalanced("(",")") ")" [";"] ;
+
+<mongo>							::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] ["NEW"] "MONGO" "(" skipBalanced("(",")") ")" 
+										[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+										
+										
+<mongo_conn_getDB>				::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETDB"
+										"(" skipBalanced("(",")") ")" [";"] ;	
+										
+<mongo_conn_getDBNames>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETDBNAMES"
+										"(" skipBalanced("(",")") ")" [";"] ;
+										
+<mongo_get_DBs>					::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETDBS"
+										"(" skipBalanced("(",")") ")" [";"] ;	
+
+<mongo_getReadPrefMode>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETREADPREFMODE"
+										"(" skipBalanced("(",")") ")" [";"] ;
+										
+<mongo_getWriteConcern>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETWRITECONCERN"
+										"(" skipBalanced("(",")") ")" [";"] ;					
+
+<mongo_setCausalConsistency>	::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "SETCAUSALCONSISTENCY"
+										"(" skipBalanced("(",")") ")" [";"] ;											
+										
+<mongo_setReadPref>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "SETREADPREF"
+										"(" skipBalanced("(",")") ")" [";"] ;	
+
+<mongo_startSession>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "STARTSESSION"
+										"(" skipBalanced("(",")") ")" [";"] ;											
+										
+<mongo_setWriteConcern>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "SETWRITECONCERN"
+										"(" skipBalanced("(",")") ")" [";"] ;
+										
+<create_Search_index>			::=node("OPERATION",
+										attributeEx("EASTEREOTYPE", "MongoDB::index")
+										<IDENTIFIER> 
+										"."
+										node("OWNER",attribute("NAME",<collection_Name>))
+										"."
+										"CREATESEARCHINDEX"
+										node("isSearchIndex",attributeEx("VALUE","True"))
+										"("
+										  <StringAsName> [","]
+										["{"
+										node("Index Definition",attribute("VALUE",skipBalanced("{","}")))
+										"}"]
+										")")[";"];
+										
+<create_function>				::=	node("ELEMENT",
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "MongoDB::function")
+											"FUNCTION" attribute("NAME",<function_name>)
+											"(" node("Function Parameter",attribute("VALUE",skipBalanced("(",")"))) ")"
+											"{" node("funcdef",attribute("VALUE",skipBalanced("{","}"))) "}"
+											)[";"] ;
+											
+<function_name>					::= <IDENTIFIER> ;	
+
+<drop_search_index>				::= <IDENTIFIER>"." <IDENTIFIER>"." "DROPSEARCHINDEX" "("skipBalanced("(",")")")" [";"] ;
+
+<getSearchIndex>				::= <IDENTIFIER>"." <IDENTIFIER>"." "GETSEARCHINDEXES" "("skipBalanced("(",")")")" [";"] ;
+
+<updateSearchIndex>				::= <IDENTIFIER>"." <IDENTIFIER>"." "UPDATESEARCHINDEX" "("skipBalanced("(",")")")" [";"] ;
+
+<atlas_methods>					::= (<getSearchIndex>|<drop_search_index>|<updateSearchIndex>|<streamProcessor>);
+
+<streamProcessor>				::=<sample>
+									|<start>
+									|<stop>
+									;
+
+
+<sample>						::=<IDENTIFIER>"."<IDENTIFIER>"." "SAMPLE" "("skipBalanced("(",")")")" [";"] ;
+
+<start>							::=<IDENTIFIER>"."<IDENTIFIER>"." "START" "("skipBalanced("(",")")")" [";"] ;
+
+<stop>							::=<IDENTIFIER>"."<IDENTIFIER>"." "STOP" "("skipBalanced("(",")")")" [";"] ;
+

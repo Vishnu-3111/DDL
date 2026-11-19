@@ -1,0 +1,652 @@
+//
+// This file is conversion of the syntax form following web site:
+// https://spark.apache.org/docs/latest/sql-ref-syntax.html
+//
+
+CaseInsensitive();
+
+delimiters(<DELIMITER>);
+lex(<TOKENS>);
+
+parse(<language>);
+
+// Lexer rules
+<TOKENS>								::= <WHITESPACE> |
+											<COMMENT> |
+											token(<NUMBER>) |
+											token(<STRING>) |
+											token(<IDENTIFIER>) |
+											token(keywords());
+
+<DELIMITER>								::= "\n" | "\r" | "\t" | " "  | "~"  |
+											"`"  | "!"  | "@"  | "#"  | "$"  |
+											"%"  | "^"  | "&"  | "*"  | "("  |
+											")"  | "-"  | "+"  | "="  | "("  | 
+											"["  | ")"  | "]"  | ";"  | ":"  | 
+											"\\" | "\'" | "\"" | ","  | "<"  | 
+											">"  | "/"  | "?"  | "|"  | ".";
+
+<WHITESPACE>							::= " "  | "\r" | "\n" | "\t";
+
+// Not sure about comment like /*...*/?
+<COMMENT>								::= ("--"  skip(<eol>) <eol> )| 
+											("//" skip(<eol>) <eol> )|
+											("/*" skip("*/") "*/") ;
+
+<EOL>									::= "\r" "\n" |
+											"\n";
+
+<NUMBER>								::= ["-"]"0".."9"+;
+
+<DECIMAL>								::= <NUMBER> ("." <NUMBER>)* ;
+
+
+// Not sure about string wrapped by double quota (i.e. ")
+<STRING>								::=   ("\"\"\"" skip("\"\"\"") "\"\"\"") 
+											|("\'\'\'" skip("\'\'\'") "\'\'\'")
+											| ("$$" skip("$$") "$$") 
+											| ("\"" skip("\"", "\\\"") "\"" )
+											|("\'" skip("\'", "\\\'") "\'")
+										;
+								
+
+<IDENTIFIER>							::= ("a".."z" | "_"|"-") ("a".."z" | "0".."9" | "_"|"-")*;
+
+// Parser rules
+<language>								::= attributeEx("EAGENTYPE", "Spark") attributeEx("EAMAPPING", "DDL") <statement>*;
+
+<statement> 							::= <create_commands>
+											|<alter_commands>
+											|<Drop_commands>
+											|<other_commands>;
+
+<create_commands>						::= <create_table>
+											|<create_view>
+											|<create_funtion>
+											|<create_database>
+										;
+										
+<alter_commands>						::=	<alter_database>
+											|<alter_table>
+											|<alter_view>;	
+
+<drop_commands>							::=<drop_database>
+											|<drop_function>
+											|<drop_table>
+											|<drop_view>;	
+
+<other_commands>						::=<repair_table>
+											|<List_file>
+											|<truncate_table>
+											|<use_database>
+											|<refresh>
+											|<set_command>
+											|<show_columns>
+											|<show_create_table>
+											|<show_database>
+											|<show_partition>
+											|<show_function>
+											|<show_table>
+											|<show_tbl_properties>
+											|<reset>
+											|<insert>
+											|<load_data>
+											|<SelectQuery>
+											|<explain>
+											|<add_command>
+											|<analyze_command>
+											|<Cache_table>
+											|("CLEAR" "CACHE" [";"])
+											|<describe>
+											|<desc_query>											
+											|<show_view>
+											|<un_cache>
+											;
+											
+											
+<schema_name>					::=	(<IDENTIFIER>|("`" skip("`")"`"));							
+								
+<tbl_name>						::= (<IDENTIFIER>|("`" skip("`")"`"));
+
+<column_name>					::=(<IDENTIFIER>|("`" skip("`")"`")) ;
+								
+<skip_name>						::="`" attribute("NAME",skip("`"))"`";
+
+<skip_value>					::= "`" attribute("VALUE",skip("`"))"`";
+						
+<create_table>							::= node("ELEMENT",
+												attributeEx("EATYPE" , "Class")
+												attributeEx("EASTEREOTYPE" , "Spark::table")
+												"CREATE" ["EXTERNAL" node("Is External",attributeEx("VALUE","True"))] "TABLE" 
+												[ "IF" "NOT" "EXISTS" node("Not Exist" , attributeEx("VALUE" , "True")) ]
+												[node("Schema and Database",((attribute("VALUE",<IDENTIFIER>))|<skip_value>)".")]
+												((attribute("NAME",<table_name>))|<skip_name>)
+												[ "(" <column_defintion> ("," <column_defintion>)* ")" ]
+												["LIKE" <source_table_identifier>]
+												[<other_properties>* ]
+												[";"]
+										);	
+<source_table_identifier>				::= node("CONNECTOR",
+											attributeEx("EATYPE","Generalization")
+											attributeEx("EASTEREOTYPE","Spark::like")
+											[node("Target Table schema",((attribute("VALUE",<IDENTIFIER>))|<skip_value>)".")]
+												node("TARGET",((attribute("NAME",<taget_table>))|<skip_name>))
+										);
+										
+<taget_table>							::= <IDENTIFIER>;
+
+<other_properties>						::=( "COMMENT" node("Comment", attribute("VALUE",<table_comment>)) )
+											|( "TBLPROPERTIES" "(" node("Table Properties",attribute("VALUE",<table_property>("," <table_property>)*)) ")" )
+											|("OPTIONS" "(" node("Table Options", attribute("VALUE",<key>"="<val> ("," <key>"="<val>)*)) ")" )
+											|("PARTITIONED" "BY" "("node("Partition By",attribute("VALUE", (<partitioned_by_values> ("," <partitioned_by_values>)*))) ")")
+											|(
+												"CLUSTERED" "BY" "(" node("Clustered By",attribute("VALUE",<column_name>("," <column_name> )*))")"
+												[ "SORTED" "BY" "("node("Sorted By",attribute("VALUE", (<column_name> ["ASC" | "DESC"] (","<column_name> ["ASC" | "DESC"])*))) ")" ] 
+												"INTO" node("Number of Buckets",attribute("VALUE",<num_buckets>)) "BUCKETS"
+												)
+											|( "ROW" "FORMAT"node("Row Format",attribute("VALUE", <row_format> )))
+											|("STORED" "AS" <file_format>)
+											|("LOCATION" node("Location",attribute("VALUE",<path>)))
+											|("USING" node("Data Source",attribute("VALUE",<data_source>)))
+											|( "AS" node("Select Query",attribute("VALUE",<SelectQuery>))  )
+										;
+								
+<partitioned_by_values>					::= <column_name> [[":"] <col_type>] [ "COMMENT" <col_comment> ] ;
+								
+								
+<file_format>							::=	(
+											node("Stored AS",attributeEx("VALUE","Format Options")) 
+											"INPUTFORMAT" node("Input Format",attribute("VALUE",<STRING>))
+											"OUTPUTFORMAT" node("Output Format",attribute("VALUE",<STRING>)) 
+										 )
+										|("PARQUET" node("Stored AS",attributeEX("VALUE","PARQUET")))
+										|("SEQUENCEFILE" node("Stored AS",attributeEX("VALUE","SEQUENCEFILE")))
+										|("TEXTFILE" node("Stored AS",attributeEX("VALUE","TEXTFILE")))
+										|("ORC" node("Stored AS",attributeEX("VALUE","ORC")))
+										|("AVRO" node("Stored AS",attributeEX("VALUE","AVRO")))
+										|("JSONFILE" node("Stored AS",attributeEX("VALUE","JSON")));
+
+						
+<num_buckets>							::= <NUMBER>;
+				
+<table_identifier>						::= <tbl_name>;
+
+<table_name>							::= <IDENTIFIER>;
+
+<database_name>							::= (<IDENTIFIER>|("`" skip("`")"`"));
+
+<column_defintion>						::= node("ATTRIBUTE",
+												attributeEx("EATYPE","Class")
+												attributeEx("EASTEREOTYPE","Spark::column")
+												((attribute("NAME" , <col_name>))|<skip_name>)[":"] <col_type> 
+												[<datatype_properties>]
+												
+												[ "COMMENT"
+													node("Comment", attribute("VALUE",<col_comment>)) ]
+											);
+
+<col_name>								::= <IDENTIFIER>;
+
+<col_type>								::= node("TYPE" , attribute("NAME" , <col_data_type>)
+												["("((attribute("PRECISION" , <NUMBER>)","
+												attribute("SCALE" , <NUMBER>))
+												|(attribute("LENGTH" , <NUMBER>)))")"]) ;
+												
+
+<data_type>								::= <numeric_type> | <string_type> | <binary_type> | <boolean_type> | <datetime_type>|<interval_type>|<Array_type>|<map_type>|<struct_type> ;
+
+<Array_type>							::= "ARRAY" "<" <data_type> ">";
+
+<map_type>								::= "MAP" "<" <mapvaltype> ("," <mapvaltype>) ">";
+
+<struct_type>							::="STRUCT" "<"  <key_values> ("," <key_values>)*  ">";
+
+<key_values>							::= <keyname> ":" <keytype> ; 
+
+<keyname>								::=<IDENTIFIER>;
+
+<keytype>								::=<data_type>;
+
+<mapvaltype>							::=<data_type>;
+
+<numeric_type>							::= "INT" | "LONG" | "FLOAT" | ("DECIMAL" ["(" <NUMBER> ("," <NUMBER>)* ")"]) ;
+
+<string_type>							::= "STRING" | (("VARCHAR" | "CHAR") ["(" <NUMBER> ")"]);
+
+<binary_type>							::= "BINARY";
+
+<boolean_type>							::= "BOOLEAN" ;
+
+<datetime_type>							::= ("DATE" | "TIME" 
+											|(("TIMESTAMP"
+												|"TIMESTAMP_LTZ"
+												|"TIMESTAMP_LNZ" )["(" <NUMBER> ")"]
+											));
+
+<interval_type>							::= <Year_Month_Interval_Type>|<Day_Time_Interval_Type>;
+
+<Year_Month_Interval_Type>				::= ("INTERVAL" ["YEAR"]["TO"] ["MONTH"]);
+
+<Day_Time_Interval_Type> 				::=("INTERVAL" [["DAY"|"MINUTE"|"HOUR"|"SECOND"] ["TO"] ["HOUR"|"MINUTE"|"SECOND"]]);
+
+<col_comment>							::= <STRING>;
+
+<data_source>							::= <IDENTIFIER>;
+
+<table_comment>							::= <STRING>;
+
+<table_property>						::= <key>"="<val>;
+
+<key>									::= <STRING>;
+
+<val>									::= <STRING>;
+
+<path>									::= <STRING>;
+
+<row_format>							::= ("SERDE" <serde_class> [ "WITH" "SERDEPROPERTIES" "("<key>"="<val>("," <key>"="<val>)* ")" ])
+												| ("DELIMITED" [ <delimiters_values>* ] 
+											);
+
+<delimiters_values>						::= ("FIELDS" "TERMINATED" "BY" <fields_terminated_char>)
+											| ("ESCAPED" "BY" <escaped_char>) 
+											| ("COLLECTION" "ITEMS" "TERMINATED" "BY" <collection_items_terminated_char>)
+											| ("MAP" "KEYS" "TERMINATED" "BY" <map_key_terminated_char>)
+											| ("LINES" "TERMINATED" "BY" <row_terminated_char>)
+											| ("NULL" "DEFINED" "AS" <null_char>) ;
+							
+							
+<null_char>								::=<STRING>;
+
+<row_terminated_char>					::=<STRING>;
+
+<map_key_terminated_char>				::=<STRING>;
+
+<collection_items_terminated_char>		::=<STRING>;
+
+<fields_terminated_char> 				::=<STRING>;
+
+<escaped_char>							::=<STRING>;
+
+<serde_class>							::=<STRING>;
+
+//Create view syntax
+
+<create_view>							::=node("ELEMENT",
+											attributeEx("EATYPE","Class")
+											attributeEx("EASTEREOTYPE","Spark::view")
+											"CREATE" [ "OR" "REPLACE" node("Is Replace",attributeEx("VALUE","True")) ]
+											[ <global_temp>  ] 
+											"VIEW" [ "IF" "NOT" "EXISTS" node("Not Exist",attributeEx("VALUE","True")) ]
+											[node("Schema and Database",((attribute("VALUE",<IDENTIFIER>))|<skip_value>)".")]
+											((attribute("NAME",<view_identifier>))|<skip_name>)
+											[ <create_view_clauses>* ]
+											[";"]
+										);
+										
+<global_temp>							::=	[ "GLOBAL" node("Is Global",attributeEx("VALUE","True")) ]
+											["TEMPORARY" node("Is Temporary",attributeEx("VALUE","True")) ];
+
+<create_view_clauses>					::=	( "(" node("View Columns",attribute("VALUE",<view_columns> ("," <view_columns>)* ))")" )
+											| ("COMMENT" node("Comment",attribute("VALUE",<view_comment>))) 
+											|( "TBLPROPERTIES" "("node("Table Properties",attribute("VALUE", <table_property>(","<table_property>)))")" )
+											| ("AS" node("viewdef",attribute("VALUE",<SelectQuery>)));
+							
+<view_columns>							::= <column_name> [ "COMMENT" <col_comment> ] ;
+							
+
+<view_comment>							::=<STRING>;
+
+<view_identifier>						::=(<IDENTIFIER>|("`" skip("`")"`"));
+
+//Create funtion syntax
+<create_funtion>						::= node("ELEMENT",
+												attributeEx("EATYPE","Class")
+												attributeEx("EASTEREOTYPE","Spark::function")
+												"CREATE" [ "OR" "REPLACE" node("Is Replace",attributeEx("VALUE","True")) ]
+												[ "TEMPORARY" node("Is Temporary",attributeEx("VALUE","True")) ] 
+												"FUNCTION" [ "IF" "NOT" "EXISTS" node("Not Exist",attributeEx("VALUE","True")) ]
+												[node("Schema and Database",((attribute("VALUE",<IDENTIFIER>))|<skip_value>)".")]
+												((attribute("NAME",<function_name>))|<skip_name>) "AS" node("Class Name",attribute("VALUE",<class_name>))
+												[ <resource_locations> ]
+												[";"]
+										);
+<class_name>							::=<STRING>;
+
+<function_name>							::= (<IDENTIFIER>|("`" skip("`")"`"));
+
+<resource_locations>					::= "USING" node("Resource Location",attribute("VALUE",(<res_loc> ("," <res_loc>)* ))) ;
+
+<res_loc>								::= (("JAR"| "FILE" | "ARCHIVE") <resource_uri>);
+
+<resource_uri>							::= <STRING>;
+
+
+
+  
+
+
+//select query DML
+
+<SelectQuery> 							::= [<with_table_expression>	 ("," <with_table_expression>)*]
+											"SELECT"  
+											skip("FROM")
+											[<from>] 
+											[<Join_value>*] 
+											[<groupBy>]
+											[<where_condition>] 
+											[<having>]
+											[<union_condition>] 
+											["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
+											[ "NULLS" "FIRST" | "NULLS" "LAST" ]
+											[ "OFFSET" <start> ]
+											["START" "WITH" <condition>]
+											["CONNECT" "BY" <condition>]
+											["START" "WITH" <condition>]
+											[ "LIMIT" ( <NUMBER> | "ALL" ) ]  
+											[<groupBy>] 
+											[ "OPTION" "(" <option_clause> ")" ]
+											[";"]
+										;	
+										  
+<with_table_expression>					::=  "WITH" ["RECURSIVE"] <col_names> "AS" "(" skipBalanced("(",")")")" ;
+
+<col_names>								::= <column_name> ("," <column_name>)* ;
+
+<from>									::= "FROM" (<rowset_function_limited>|<fromClause>);
+
+<rowset_function_limited>				::=  <open_value> [ (("AS" |".")  <IDENTIFIER> ["(" <IDENTIFIER> ("," <IDENTIFIER>)*  ")"])* ] ;
+
+<open_value>							::= "(" "VALUES"  <row_values> ("," <row_values>)* ")";
+
+<row_values>							::= "ROW" "(" <NUMBER> ("," <NUMBER>)* ")";
+
+<fromClause>                        	::=  <from_tables> [ "NATURAL" ];
+
+<from_tables>							::= <from_table> ("," <from_table>)*;
+
+<from_table> 							::= [ ( <IDENTIFIER>  ".")* ] 
+											<tbl_name> 
+											[
+												<selequeryproperties>*
+											];
+
+<selequeryproperties>					::=(<Join_value>)
+											| (<groupBy>)
+											| (<where_condition>) 
+											| (<union_condition>)
+											| ( "ORDER" "BY" (<order_expr> ("," <order_expr>)*))
+											| ("LIMIT" ( <NUMBER> | "ALL"|("LENGTH" "("(<STRING>|<IDENTIFIER>)")") ))
+											| (<having>)
+											| ("OPTION" "(" <option_clause>  ")") 
+											| ("SORT" "BY" <NUMBER>)
+											| ("OFFSET"(<NUMBER>| ("LENGTH" "("(<STRING>|<IDENTIFIER>)")")))
+											| ( ["AS"] <IDENTIFIER> )
+											| (("(" skipBalanced("(",")")")")(","("(" skipBalanced("(",")")")"))*)
+											;
+
+
+<Join_value> 							::= <join_type> <tbl_name>[("." <IDENTIFIER>) | ("AS"  <IDENTIFIER>)| ("(" <IDENTIFIER> [("." <IDENTIFIER>)*]")" <IDENTIFIER>)]
+											[<join_on_value>] ;
+										
+<join_on_value>							::= ("ON" <join_con> ) | ("USING" "(" <column_name>  ("," <column_name>)* ")");
+										
+<join_type>								::= ("JOIN") |("INNER" "JOIN") | ("LEFT" "JOIN") | ("LEFT" "OUTER" "JOIN")	
+											| ("RIGHT" "JOIN") | ("RIGHT" "OUTER" "JOIN") | ("FULL" "JOIN") |
+											("FULL" "OUTER" "JOIN") | ("CROSS" "JOIN") ;
+										
+<join_con>								::= <logical_Expression> ;
+
+<logical_Expression>					::= <join_condition> (("AND"|"OR") (<join_condition>) )* ;
+
+<join_condition>						::= (<substring>|<tbl_name> | <NUMBER>)[(("*" | "+"|"." |"-") (<column_name> | "*" ) )*] ["(" <column_name> ")"] 
+											[<comparison_Operator> ] [ ([<IDENTIFIER>] "(" skipBalanced("(" , ")" ) ")") |("CONVERT" "("skipBalanced("(" , ")" )")" )  | ( [<tbl_name>  | <STRING> | (<DECIMAL>)|(<NUMBER>) ] [("." (<column_name>| <NUMBER> | "*") )*] ["AND" (<DECIMAL> | <NUMBER>)] ["*" [(<IDENTIFIER> ".")*] <IDENTIFIER>])| (<default_expr> )  ];	
+										
+<substring>								::= "SUBSTR" "(" <substring_name> "," <NUMBER> ["," <NUMBER>] ")";
+
+<substring_name>						::= <IDENTIFIER>;
+
+<comparison_Operator> 					::= ("=") | 
+											("!""=") | 
+											("=""=") | 
+											("+") |
+											("-") |
+											("/") |
+											("<" [">"]["="]) | 
+											("OF") | 
+											(">" [">"] ["="])| 
+											("BETWEEN") | 
+											("IN") | 
+											("NOT" "IN") |
+											("IS" "NULL") | 
+											("IS" "NOT" "NULL") |
+											("IS" "DISTINCT" "FROM") |
+											("LIKE") |
+											("&" "&") |
+											("|" "|")
+										;
+										
+<default_expr> 							::=  (<NUMBER> ["." <NUMBER>] )| [<STRING>]  ;
+
+<groupBy>								::= "GROUP" "BY" <IDENTIFIER> "(" <group_condition> ("," <group_condition>)* ")";
+
+<group_condition>						::=  ( (  [ (["["] <IDENTIFIER> ["]"] "." )*]  ["["] <tbl_name> ["]"] )| <NUMBER> | <STRING>) ;
+
+<where_condition>						::= "WHERE" ["NOT" "EXISTS"]  <condition>   ; 
+<condition>								::= <join_con> ;
+
+
+<union_condition>						::= ( "UNION" [ "ALL" ] | "INTERSECT" | "EXCEPT" | "MINUS" )
+											<SelectQuery>* ;
+										
+<order_expr> 							::= <column_with_expression> [ "ASC" | "DESC" | ("USING" <operator>) ];
+
+<column_with_expression>				::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<tbl_name> "." | <SelectQuery>] ["("] (<column_name> ["/" <column_name>] | <NUMBER> | <STRING> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
+
+<having>								::= "HAVING" <condition> ;
+
+<start> 								::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
+
+<option>								::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+
+<option_clause>							::=  (<query_hint> |<boundary_value>) ([","] (<query_hint> |<boundary_value>) )* ;
+
+<query_hint> 							::=   "HASH" "JOIN"   
+												| "LOOP" "JOIN"   
+												| "MERGE" "JOIN"   
+												| "FORCE" "ORDER"   
+												| (( "FORCE" | "DISABLE" ) "EXTERNALPUSHDOWN" )
+												| ( "LABEL" "=" <IDENTIFIER> <STRING> )
+										;
+										
+<boundary_value>						::= <NUMBER> [<string>] | <IDENTIFIER> [<string>] | <string> | "="  ;
+
+
+<convert_expression> 					::= <convert_value> ("," <convert_value> )* ;
+
+<convert_value>							::= (("CONVERT"| (<IDENTIFIER> ["." <IDENTIFIER>])) "(" [<convert_expression>] ")");
+
+<operator>								::= <comparison_Operator> ;
+
+<alter_database>				::= "ALTER" ( "DATABASE" | "SCHEMA" | "NAMESPACE" ) <database_name>
+										"SET" ((( "DBPROPERTIES" | "PROPERTIES" )
+										"(" skipBalanced("(",")")")")
+										|( "LOCATION" <STRING>))[";"] ;
+										
+<alter_table>					::=	"ALTER" "TABLE" [<schema_name>"."]<table_identifier> (("RENAME" "COLUMN" <column_name> "TO" <column_name>)
+												|("RENAME" "TO" <table_identifier>)
+												|("ADD" "COLUMNS" "(" skipBalanced("(",")")")")
+												|("DROP" ("COLUMN"|"COLUMNS") [ "(" ] <column_name> ("," <column_name>)* [ ")" ])
+												|(("ALTER"|"CHANGE")["COLUMN"] <column_name> <alterColumnAction>)
+												|("ADD" ["IF" "NOT" "EXISTS"] <partition_spec>*)
+												|("DROP" [ "IF" "EXISTS" ] <partition_spec> ["PURGE"])
+												|("SET" "TBLPROPERTIES" "("  skipBalanced("(",")") ")")
+												|("UNSET" "TBLPROPERTIES" [ "IF" "EXISTS" ] "("  skipBalanced("(",")")")")
+												|("SET" "SERDEPROPERTIES" "(" skipBalanced("(",")") ")")
+												|("SET" "SERDE" <serde_class_name>
+												 [ "WITH" "SERDEPROPERTIES" "(" skipBalanced("(",")")")" ])
+												|("RECOVER" "PARTITIONS")
+												|([ <partition_spec> ] "SET" "FILEFORMAT" <file_format>)
+												|([ <partition_spec> ] "SET" "LOCATION" <STRING>)
+												|([ <partition_spec> ] "REPLACE" "COLUMNS"  
+													[ "(" ] <qualified_col_type_with_position_list>
+													(","<qualified_col_type_with_position_list>)*[ ")" ])
+												|(<partition_spec> "RENAME" "TO" <partition_spec>)) [";"];
+												
+												
+<alterColumnAction>				::= (<data_type>
+									|(<IDENTIFIER><data_type>)
+									| ("SET" "DEFAULT" (<STRING>|<NUMBER>|<IDENTIFIER>))
+									|("DROP" "DEFAULT")
+									|("COMMENT" <STRING>));
+									
+<partition_spec>				::= "PARTITION" "(" skipBalanced("(",")") ")" ;		
+
+
+<qualified_col_type_with_position_list>		::= <column_name> <data_type> [ <col_comments> ] [ <col_position> ] ;
+
+<col_comments>				::= "COMMENT" <STRING> ;
+
+<col_position>				::=	<NUMBER> ;	
+
+<serde_class_name>			::=<STRING> ;
+
+<alter_view>				::= "ALTER" "VIEW" [<schema_name>"."] <view_identifier> (("RENAME" "TO" [<schema_name>"."]<view_identifier>)
+								|(("SET"|"UNSET") "TBLPROPERTIES" [ "IF" "EXISTS" ] "(" skipBalanced("(",")") ")")
+								|("AS" <SelectQuery>))[";"]  ;
+
+<create_database>			::= "CREATE" ( "DATABASE" | "SCHEMA" ) [ "IF" "NOT" "EXISTS" ] <database_name>
+								[ "COMMENT" <STRING> ]
+								[ "LOCATION" <STRING> ]
+								[ "WITH" "DBPROPERTIES" "(" skipBalanced("(",")")")" ] [";"] ;
+								
+<drop_database>				::= "DROP" ( "DATABASE" | "SCHEMA") [ "IF" "EXISTS"] <database_name> [ "RESTRICT" | "CASCADE" ][";"] ;
+
+<drop_function>				::= "DROP" [ "TEMPORARY" ] "FUNCTION" [ "IF" "EXISTS" ] [<schema_name>"."]<function_name> [";"] ;
+
+<drop_table>				::= "DROP" "TABLE" [ "IF" "EXISTS" ][<schema_name>"."] <table_identifier> [ "PURGE" ] [";"]; 
+
+<drop_view>					::= "DROP" "VIEW" [ "IF" "EXISTS" ][<schema_name>"."] <view_identifier>  [";"]; 
+
+
+<repair_table> 				::= ["MSCK"] "REPAIR" "TABLE" [<schema_name>"."]<table_identifier> [("ADD"|"DROP"|"SYNC") "PARTITIONS"] [";"] ;
+
+<truncate_table>			::= "TRUNCATE" "TABLE" [<schema_name>"."]<table_identifier> [ <partition_spec> ] [";"] ;
+
+<use_database>				::= "USE" <database_name> ;
+
+<insert>					::= "INSERT"  [("INTO"|"OVERWRITE")] [[ "LOCAL"] "DIRECTORY" [ <STRING> ]]  [ "TABLE" ] [<schema_name>"."]<table_identifier> 
+									[(<spark_format> | <hive_format>)]
+								(("REPLACE" "WHERE" <logical_Expression> <SelectQuery>)
+								|( [ <partition_spec> ]  ["(" skipBalanced("(",")") ")" ]
+								(( "VALUES" "(" skipBalanced("(",")")")" ("," "(" skipBalanced("(",")")")" )*) | <SelectQuery>))
+								|("FROM" <tbl_name> (<insert_select>|<SelectQuery>) )
+								)[";"] ;
+
+<insert_select>				::= "SELECT"<col_names> ["WHERE" <condition>] ;
+
+<spark_format>				::=	"USING" <file_format> [ "OPTIONS" "(" skipBalanced("(",")") ")" ] ;
+
+<hive_format>				::= [ "ROW" "FORMAT" <row_format> ] [ "STORED" "AS" <hive_serde> ] [";"] ;
+
+<hive_serde>				::=<IDENTIFIER> ;
+
+<load_data>					::= "LOAD" "DATA" [ "LOCAL"] "INPATH" <path> [ "OVERWRITE" ]
+								"INTO" "TABLE" <table_identifier> [ <partition_spec>] [";"] ;
+								
+<explain>					::=	"EXPLAIN" [ "EXTENDED" | "CODEGEN" | "COST" | "FORMATTED" ] <statement> [";"] ;	
+
+<add_command>					::= "ADD" ("FILE" | "FILES"|"JAR"|"JARS") <resource_name>* [";"] ;
+
+<resource_name>				::=<STRING> ;
+
+<analyze_command>			::= "ANALYZE" [<schema_name>"."](("TABLE" <table_identifier> [ <partition_spec> ])
+											|("TABLES"[ ( "FROM" | "IN") <database_name> ]))
+									"COMPUTE" "STATISTICS" [ "NOSCAN" 
+									| ("FOR" "COLUMNS" <col_names>) |("FOR" "ALL" "COLUMNS") ][";"] ;
+									
+<Cache_table>				::=	"CACHE" [ "LAZY" ] "TABLE" [<schema_name>"."] <table_identifier>
+								[ "OPTIONS" "(" skipBalanced("(",")") ")" ] [ [ "AS"] <SelectQuery> ]	[";"] ;						
+
+<describe>					::=("DESC" | "DESCRIBE" ) ("DATABASE"|"FUNCTION") [ "EXTENDED" ][<schema_name>"."] <name>[";"] ;
+
+<name>						::=<IDENTIFIER> ;
+
+<desc_query>				::= ( "DESC" | "DESCRIBE" ) [ "QUERY"] <input_statement> [";"] ;
+
+<input_statement>			::= (("FROM" <tbl_name><insert_select>)|<SelectQuery>|<value_statement>|<desc_table> ) ;
+
+<value_statement>			::= "VALUES" "(" skipBalanced("(",")")")" [["AS"] <tbl_name> "(" <col_names>")"];
+
+
+<desc_table>				::=   ["TABLE"] [ "EXTENDED" ] [<schema_name>"."]<table_identifier>
+									[ <partition_spec> ] [<table_identifier>"."] [<column_name> ]  ;
+									
+<List_file>					::= "LIST" ( "FILE" | "FILES" |"JAR" | "JARS" ) <file_name>* [";"] ;
+
+<file_name>					::=<STRING> ;	
+
+<refresh>					::= "REFRESH" ["TABLE"|"FUNCTION"] [<schema_name>"."] (<resource_path>|<table_identifier>) [";"] ;
+
+<resource_path>				::=<STRING> ;
+
+<reset>						::= "RESET" [<schema_name>"."] [<configuration_key>][";"] ;
+
+<configuration_key>			::=<table_identifier> ;
+
+<set_command>				::= "SET" [<property_key>[ "=" <property_value> ]] [";"] ;
+
+<property_key>				::=<IDENTIFIER>[("."<IDENTIFIER>)*];
+
+<property_value>			::=<IDENTIFIER> ;
+
+<show_columns>				::= "SHOW" "COLUMNS" ("IN"|"FROM") [<schema_name>"."]<table_identifier> [ <in_database> ] [";"] ;
+
+
+<in_database>				::= ("IN"|"FROM")<IDENTIFIER> ;
+
+<show_create_table>			::= "SHOW" "CREATE" "TABLE" [<schema_name>"."] <table_identifier> [ "AS" "SERDE" ] [";"] ;
+
+<show_database>				::= "SHOW" ("DATABASES" | "SCHEMAS" ) [ "LIKE" <regex_pattern> ] [";"] ;
+
+<regex_pattern>				::=<STRING> ;
+
+<show_function>				::= "SHOW" [ <function_kind> ] "FUNCTIONS" 
+								[ ( "FROM" | "IN" ) <database_name> ] 
+								[ "LIKE" <regex_pattern> ] [";"] ;
+								
+<function_kind>				::="USER"|"SYSTEM"|"ALL" ;		
+
+<show_partition>			::= "SHOW" "PARTITIONS" [<schema_name>"."] <table_identifier> [ <partition_spec> ]	[";"] ;
+	
+<show_table>				::= "SHOW" ("TABLE"|"TABLES") [["EXTENDED"] [ ("IN" | "FROM") <database_name> ]
+								["LIKE" <regex_pattern>] [ <partition_spec> ]] [";"] ;
+								
+<show_tbl_properties>		::= "SHOW" "TBLPROPERTIES" [<schema_name>"."] <table_identifier> [ "(" skipBalanced("(",")")")" ] [";"] ;
+								
+<show_view>					::=	"SHOW" "VIEWS" [ ("FROM" |"IN") <database_name> ] [ "LIKE" <regex_pattern> ] [";"];						
+
+<un_cache>					::= "UNCACHE" "TABLE" [ "IF" "EXISTS" ] [<schema_name>"."] <table_identifier> [";"] ;
+
+
+<col_data_type>								::= <numeric_types> | <string_types> | <binary_type> | <boolean_type> | <datetime_types>|<Array_types>|<map_types>|<struct_types> ;
+
+<Array_types>							::= "ARRAY" ;
+
+<map_types>								::= "MAP" ;
+
+<struct_types>							::="STRUCT" ; 
+<numeric_types>							::= "INT" | "LONG" | "FLOAT" | ("DECIMAL" ) ;
+
+<string_types>							::= "STRING" | (("VARCHAR" | "CHAR") );
+
+
+<datetime_types>							::= ("DATE" | "TIME" 
+											|(("TIMESTAMP"
+												|"TIMESTAMP_LTZ"
+												|"TIMESTAMP_LNZ" )
+											));
+											
+<datatype_properties>					::= node("Field Value Types",
+												attribute("VALUE",(("<" <mapvaltype> ("," <mapvaltype>) ">")
+												|("<" <key_values> ("," <key_values>)*">")
+												|("<" <data_type> ">") ))) ;										

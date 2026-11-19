@@ -1,0 +1,38 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="CFAD2AD45E" name="PostgreSQL" version="1.0" notes="PostgreSQL"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="PostgreSQL" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="PostgreSQL::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="PostgreSQL::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="PostgreSQL::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="PostgreSQL::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="PostgreSQL::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="PostgreSQL::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="PostgreSQL::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
+					<Tag name="PostgreSQL::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="PostgreSQL::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+					<Tag name="PostgreSQL::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="PostgreSQL::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="PostgreSQL::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="PostgreSQL::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

@@ -1,0 +1,37 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="E74D061CF4" name="Teradata" version="1.0" notes="Teradata"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Teradata" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Teradata::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="Teradata::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Teradata::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Teradata::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="Teradata::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="Teradata::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Teradata::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Teradata::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
+					<Tag name="Teradata::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Teradata::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Teradata::error(UML::Generalization)" type="" description="" unit="" values="" default="Error"/>
+					<Tag name="Teradata::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

@@ -1,0 +1,248 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="91B2E32E8E" name="SqlServer" version="1.0" notes="SqlServer"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="varchar">
+				<AppliesTo>
+					<Apply type="Attribute">
+						<Property name="_tagGroups" value="Common Properties,Computed Column Definition,Column Set Definition,SQL Server Column Properties"/>
+						<Property name="_tagGroupStates" value="Computed Column Definition=closed;Column Set Definition=closed;Common Properties=open;SQL Server Column Properties=closed;"/>
+						<Property name="_tagGroupings" value="Column Index=Common Properties;Collate=Common Properties;Identity=Common Properties;Sparse=Common Properties;Computed Column Expression=Computed Column Definition;Persisted=Computed Column Definition;Set Definition=Column Set Definition;Temporal Data=SQL Server Column Properties;Filestream=SQL Server Column Properties;Masked Function=SQL Server Column Properties;Not For Replication=SQL Server Column Properties;Generate As=SQL Server Column Properties;RowGuidCol=SQL Server Column Properties;Encrypted With=SQL Server Column Properties;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collate" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Computed Column Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encrypted With" type="" description="" unit="" values="" default=""/>
+					<Tag name="Filestream" type="" description="" unit="" values="" default=""/>
+					<Tag name="Generate As" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity" type="" description="" unit="" values="" default=""/>
+					<Tag name="Masked Function" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not For Replication" type="" description="" unit="" values="" default=""/>
+					<Tag name="Persisted" type="" description="" unit="" values="" default=""/>
+					<Tag name="RowGuidCol" type="" description="" unit="" values="" default=""/>
+					<Tag name="Set Definition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sparse" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporal Data" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Delete" type="" description="" unit="" values="" default=""/>
+					<Tag name="Update" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="SQL Server 2012"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Order Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Returns" type="Returns" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+						<Property name="_tagGroups" value="Common Properties,XML Index Properties,Spatial Index property,SQl Server Index Propeties"/>
+						<Property name="_tagGroupings" value="XML Index Name=XML Index Properties;Is Primary=XML Index Properties;Is Selective=XML Index Properties;Index For=XML Index Properties;Tessellation Type=Spatial Index property;Table Index=Common Properties;Clustered=Common Properties;Unique=Common Properties;property=Common Properties;Index Option=Common Properties;Index Type=Common Properties;Is Columnstore=SQl Server Index Propeties;Include=SQl Server Index Propeties;Where Condition=SQl Server Index Propeties;On Value=SQl Server Index Propeties;Filestream On=SQl Server Index Propeties;Order By=SQl Server Index Propeties;"/>
+						<Property name="_tagGroupStates" value="XML Index Properties=closed;Spatial Index property=closed;Common Properties=open;SQl Server Index Propeties=closed;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Clustered" type="" description="" unit="" values="" default=""/>
+					<Tag name="Filestream On" type="" description="" unit="" values="" default=""/>
+					<Tag name="Include" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index For" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Option" type="Index Option" description="" unit="" values="" default=""/>
+					<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
+					<Tag name="Is Columnstore" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Primary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Selective" type="" description="" unit="" values="" default=""/>
+					<Tag name="On Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Order By" type="" description="" unit="" values="" default=""/>
+					<Tag name="property" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+					<Tag name="Tessellation Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="Where Condition" type="" description="" unit="" values="" default=""/>
+					<Tag name="XML Index Name" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="SQL Server 2012"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="For Replication" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Parameters" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="sequence" metatype="sequence" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::dbsequence" baseStereotypes="EAUML::dbsequence">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="SQL Server 2012"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroups" value="Common Properties,Range Specification"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Range Specification=closed;"/>
+						<Property name="_tagGroupings" value="Data Type Specification=Common Properties;Start With=Common Properties;Increment By=Common Properties;Circular Sequence=Common Properties;Caching=Common Properties;Cache Value=Common Properties;Schema and Database=Common Properties;MinValue Specification=Range Specification;MinValue=Range Specification;MaxValue Specification=Range Specification;MaxValue=Range Specification;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Cache Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Caching" type="" description="" unit="" values="" default=""/>
+					<Tag name="Circular Sequence" type="" description="" unit="" values="" default=""/>
+					<Tag name="Data Type Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Increment By" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MaxValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="MinValue Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Start With" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="systemversion" metatype="systemversion" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="SqlServer::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="SqlServer::FK" constraint="SqlServer::table"/>
+					<stereotypedrelationship stereotype="SqlServer::systemversion" constraint="SqlServer::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="SQL Server 2012"/>
+						<Property name="isActive" value=""/>
+						<Property name="_tagGroups" value="Common Properties,Table As,Period for System Time,Table Structure Specification,SQL Grap Table Property"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Table Structure Specification=closed;SQL Grap Table Property=closed;Period for System Time=closed;"/>
+						<Property name="_tagGroupings" value="Schema and Database=Common Properties;Is Filetable=Common Properties;Table Option=Common Properties;Is External=Common Properties;Select Query=Table As;Temporal Data=Period for System Time;Partition Clause=Table Structure Specification;Text Image Clause=Table Structure Specification;File Stream Clause=Table Structure Specification;Graph Type=SQL Grap Table Property;"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="File Stream Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Graph Type" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Filetable" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partition Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Option" type="Table Option" description="" unit="" values="" default=""/>
+					<Tag name="Temporal Data" type="" description="" unit="" values="" default=""/>
+					<Tag name="Text Image Clause" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Is Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Logon" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not For Replication" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+					<Tag name="Trigger Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Append" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="SQL Server 2012"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Is Alter" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Check" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Index Option" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Full Text,Spatial,XML;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Returns" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Index" description="" notes="Type=Boolean;&#xA;Default=False;"/>
+			<TaggedValueType property="Table Option" description="" notes="Type=Memo;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>

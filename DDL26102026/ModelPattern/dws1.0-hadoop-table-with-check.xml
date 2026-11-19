@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no" ?>
+<XMI xmi.version="1.1" xmlns:UML="omg.org/UML1.3" timestamp="2024-10-25 11:48:06">
+	<XMI.header>
+		<XMI.documentation>
+			<XMI.exporter>Enterprise Architect</XMI.exporter>
+			<XMI.exporterVersion>2.5</XMI.exporterVersion>
+			<XMI.exporterID>1704</XMI.exporterID>
+		</XMI.documentation>
+	</XMI.header>
+	<XMI.content>
+		<UML:Model name="EA Model" xmi.id="MX_EAID_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D">
+			<UML:Namespace.ownedElement>
+				<UML:Class name="EARootClass" xmi.id="EAID_11111111_5487_4080_A7F4_41526CB0AA00" isRoot="true" isLeaf="false" isAbstract="false"/>
+				<UML:Package name="Table with Check Constraint (Hadoop)" xmi.id="EAPK_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D" isRoot="false" isLeaf="false" isAbstract="false" visibility="public">
+					<UML:ModelElement.taggedValue>
+						<UML:TaggedValue tag="parent" value="EAPK_E389AABF_F468_4324_A322_9BBE42E81BBD"/>
+						<UML:TaggedValue tag="ea_package_id" value="9"/>
+						<UML:TaggedValue tag="created" value="2024-10-25 11:40:53"/>
+						<UML:TaggedValue tag="modified" value="2024-10-25 11:42:00"/>
+						<UML:TaggedValue tag="iscontrolled" value="0"/>
+						<UML:TaggedValue tag="lastloaddate" value="2024-10-25 11:40:53"/>
+						<UML:TaggedValue tag="lastsavedate" value="2024-10-25 11:40:53"/>
+						<UML:TaggedValue tag="version" value="1.0"/>
+						<UML:TaggedValue tag="isprotected" value="0"/>
+						<UML:TaggedValue tag="usedtd" value="0"/>
+						<UML:TaggedValue tag="logxml" value="0"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="packageFlags" value="isModel=1;VICON=3;"/>
+						<UML:TaggedValue tag="batchsave" value="0"/>
+						<UML:TaggedValue tag="batchload" value="0"/>
+						<UML:TaggedValue tag="phase" value="1.0"/>
+						<UML:TaggedValue tag="status" value="Proposed"/>
+						<UML:TaggedValue tag="author" value="SYSTEM"/>
+						<UML:TaggedValue tag="complexity" value="1"/>
+						<UML:TaggedValue tag="ea_stype" value="Public"/>
+						<UML:TaggedValue tag="tpos" value="0"/>
+						<UML:TaggedValue tag="gentype" value="Java"/>
+					</UML:ModelElement.taggedValue>
+					<UML:Namespace.ownedElement>
+						<UML:Class name="Customer" xmi.id="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD" visibility="public" namespace="EAPK_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D" isRoot="false" isLeaf="false" isAbstract="false" isActive="false">
+							<UML:ModelElement.stereotype>
+								<UML:Stereotype name="table"/>
+							</UML:ModelElement.stereotype>
+							<UML:ModelElement.taggedValue>
+								<UML:TaggedValue tag="isSpecification" value="false"/>
+								<UML:TaggedValue tag="ea_stype" value="Class"/>
+								<UML:TaggedValue tag="ea_ntype" value="0"/>
+								<UML:TaggedValue tag="package" value="EAPK_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D"/>
+								<UML:TaggedValue tag="date_created" value="2024-10-25 11:40:53"/>
+								<UML:TaggedValue tag="date_modified" value="2024-10-25 11:46:39"/>
+								<UML:TaggedValue tag="gentype" value="Hadoop"/>
+								<UML:TaggedValue tag="tagged" value="0"/>
+								<UML:TaggedValue tag="package_name" value="Table with Check Constraint (Hadoop)"/>
+								<UML:TaggedValue tag="author" value="SYSTEM"/>
+								<UML:TaggedValue tag="complexity" value="2"/>
+								<UML:TaggedValue tag="product_name" value="Hadoop"/>
+								<UML:TaggedValue tag="stereotype" value="table"/>
+								<UML:TaggedValue tag="tpos" value="0"/>
+								<UML:TaggedValue tag="ea_localid" value="18"/>
+								<UML:TaggedValue tag="ea_eleType" value="element"/>
+								<UML:TaggedValue tag="style" value="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+								<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={BFD68F8C-0FDA-4ce5-A8F0-569580F26C13}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=table;FQName=Hadoop::table;@ENDSTEREO;$DES;$CLT={A44F7FE3-A6FA-4C9A-916F-AFC6554AB8BD}$CLT;$ENDXREF;"/>
+							</UML:ModelElement.taggedValue>
+							<UML:Classifier.feature>
+								<UML:Attribute name="ID" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid0"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="INT"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="0"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="0"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="1"/>
+										<UML:TaggedValue tag="ea_guid" value="{99E52DC7-8F13-F446-91CE-E1AEEA38DBC2}"/>
+										<UML:TaggedValue tag="ea_localid" value="26"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={B65869DF-29A5-4d2d-B037-3FEFADE28A50}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Hadoop::column;@ENDSTEREO;$DES;$CLT={99E52DC7-8F13-F446-91CE-E1AEEA38DBC2}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Check Constraint" xmi.id="EAID_82928883_3134_e531_AC07_221D80574FCA"/>
+										<UML:TaggedValue tag="Column Comment" xmi.id="EAID_0BECA661_72D2_5e72_BC14_32C7B2697C60"/>
+										<UML:TaggedValue tag="Default" xmi.id="EAID_04C5B725_8CD6_9c8c_BE69_4699C5611E6C"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_F435_a4f4_9273_05D67F3FD1B0"/>
+										<UML:TaggedValue tag="NoValidate" xmi.id="EAID_533A3327_5B18_435b_A5B5_4C84CA9FF67D"/>
+										<UML:TaggedValue tag="Rely Option" xmi.id="EAID_75719B75_CD86_88cd_A59F_13BC6D8BAB39"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="LastName" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="50"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="1"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="1"/>
+										<UML:TaggedValue tag="ea_guid" value="{89DC586C-0440-93D3-8EEC-72CA765FE6DC}"/>
+										<UML:TaggedValue tag="ea_localid" value="27"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={F5D8A990-7483-4e3b-9292-A4A3951A8F43}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Hadoop::column;@ENDSTEREO;$DES;$CLT={89DC586C-0440-93D3-8EEC-72CA765FE6DC}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Check Constraint" xmi.id="EAID_82928883_3134_e531_8535_CA8FEF0C13B3"/>
+										<UML:TaggedValue tag="Column Comment" xmi.id="EAID_0BECA661_72D2_5e72_B49E_B04A3E0C0982"/>
+										<UML:TaggedValue tag="Default" xmi.id="EAID_04C5B725_8CD6_9c8c_B059_C210DB93F614"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_F435_a4f4_A04B_AC61AC960DA5"/>
+										<UML:TaggedValue tag="NoValidate" xmi.id="EAID_533A3327_5B18_435b_967A_0FFC124B5625"/>
+										<UML:TaggedValue tag="Rely Option" xmi.id="EAID_75719B75_CD86_88cd_9E2D_2619F3568D89"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="FirstName" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid1"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="VARCHAR"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="50"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="2"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{ACAA95C7-EFB5-8447-B612-B5FE45263E02}"/>
+										<UML:TaggedValue tag="ea_localid" value="28"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={77D01751-C4FE-438a-B205-3083759B8D19}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Hadoop::column;@ENDSTEREO;$DES;$CLT={ACAA95C7-EFB5-8447-B612-B5FE45263E02}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Check Constraint" xmi.id="EAID_82928883_3134_e531_AB3B_9CFA6F10A468"/>
+										<UML:TaggedValue tag="Column Comment" xmi.id="EAID_0BECA661_72D2_5e72_89BA_6F9DA5CF89F9"/>
+										<UML:TaggedValue tag="Default" xmi.id="EAID_04C5B725_8CD6_9c8c_89D0_BB587EA11EAA"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_F435_a4f4_819B_FB67100775B8"/>
+										<UML:TaggedValue tag="NoValidate" xmi.id="EAID_533A3327_5B18_435b_9817_C9ADA19A7C4F"/>
+										<UML:TaggedValue tag="Rely Option" xmi.id="EAID_75719B75_CD86_88cd_8814_9DA60AA2AEA5"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Attribute name="Age" changeable="none" visibility="public" ownerScope="instance" targetScope="instance">
+									<UML:Attribute.initialValue>
+										<UML:Expression/>
+									</UML:Attribute.initialValue>
+									<UML:StructuralFeature.type>
+										<UML:Classifier xmi.idref="eaxmiid0"/>
+									</UML:StructuralFeature.type>
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="column"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="type" value="INT"/>
+										<UML:TaggedValue tag="derived" value="0"/>
+										<UML:TaggedValue tag="containment" value="Not Specified"/>
+										<UML:TaggedValue tag="length" value="0"/>
+										<UML:TaggedValue tag="ordered" value="0"/>
+										<UML:TaggedValue tag="precision" value="0"/>
+										<UML:TaggedValue tag="scale" value="0"/>
+										<UML:TaggedValue tag="static" value="0"/>
+										<UML:TaggedValue tag="stereotype" value="column"/>
+										<UML:TaggedValue tag="collection" value="false"/>
+										<UML:TaggedValue tag="position" value="3"/>
+										<UML:TaggedValue tag="lowerBound" value="1"/>
+										<UML:TaggedValue tag="upperBound" value="1"/>
+										<UML:TaggedValue tag="duplicates" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{B96F0062-EA98-F404-9A6C-669450D4AD39}"/>
+										<UML:TaggedValue tag="ea_localid" value="29"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={7F156FB0-3450-4775-9FE5-D21B8FFCD470}$XID;$NAM=Stereotypes$NAM;$TYP=attribute property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=column;FQName=Hadoop::column;@ENDSTEREO;$DES;$CLT={B96F0062-EA98-F404-9A6C-669450D4AD39}$CLT;$ENDXREF;"/>
+										<UML:TaggedValue tag="Check Constraint" xmi.id="EAID_82928883_3134_e531_AB6F_74C2D8A1DD60"/>
+										<UML:TaggedValue tag="Column Comment" xmi.id="EAID_0BECA661_72D2_5e72_A2D0_DC4FA3410A15"/>
+										<UML:TaggedValue tag="Default" xmi.id="EAID_04C5B725_8CD6_9c8c_9ADD_3C70C83FE337"/>
+										<UML:TaggedValue tag="Inline Constraint" xmi.id="EAID_01B8B164_F435_a4f4_8BA1_31EE45FBB2B0"/>
+										<UML:TaggedValue tag="NoValidate" xmi.id="EAID_533A3327_5B18_435b_97A2_E160B2E734F3"/>
+										<UML:TaggedValue tag="Rely Option" xmi.id="EAID_75719B75_CD86_88cd_AC47_077BC3C8023D"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Attribute>
+								<UML:Operation name="Check_Age" visibility="public" ownerScope="instance" isQuery="false" concurrency="sequential">
+									<UML:ModelElement.stereotype>
+										<UML:Stereotype name="check"/>
+									</UML:ModelElement.stereotype>
+									<UML:ModelElement.taggedValue>
+										<UML:TaggedValue tag="const" value="false"/>
+										<UML:TaggedValue tag="code" value="Age&gt;=18"/>
+										<UML:TaggedValue tag="stereotype" value="check"/>
+										<UML:TaggedValue tag="synchronised" value="0"/>
+										<UML:TaggedValue tag="concurrency" value="Sequential"/>
+										<UML:TaggedValue tag="position" value="0"/>
+										<UML:TaggedValue tag="returnarray" value="0"/>
+										<UML:TaggedValue tag="pure" value="0"/>
+										<UML:TaggedValue tag="ea_guid" value="{927CC5F9-9A7E-113A-88D1-655ECE9D34CA}"/>
+										<UML:TaggedValue tag="ea_localid" value="6"/>
+										<UML:TaggedValue tag="$ea_xref_property" value="$XREFPROP=$XID={53AB9C5F-4905-4232-A75D-E913B06BED08}$XID;$NAM=Stereotypes$NAM;$TYP=operation property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=check;FQName=Hadoop::check;@ENDSTEREO;$DES;$CLT={927CC5F9-9A7E-113A-88D1-655ECE9D34CA}$CLT;$ENDXREF;"/>
+									</UML:ModelElement.taggedValue>
+								</UML:Operation>
+							</UML:Classifier.feature>
+						</UML:Class>
+					</UML:Namespace.ownedElement>
+				</UML:Package>
+				<UML:DataType xmi.id="eaxmiid0" name="INT" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid1" name="VARCHAR" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+			</UML:Namespace.ownedElement>
+		</UML:Model>
+		<UML:TaggedValue tag="Clustered By" xmi.id="EAID_DBCA4746_FE31_30fe_8524_DAB97CBC1755" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="DBVersion" xmi.id="EAID_6110716C_E090_bfe0_AA44_617BD371994C" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Location" xmi.id="EAID_FA518F19_7CA4_367c_9011_EF0A6EFA9683" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Not Exists" xmi.id="EAID_DFEB7A11_E23C_1ce2_8944_11B6A7563AFC" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Number of Buckets" xmi.id="EAID_ECB57B0F_3CDA_ea3c_9CE9_694959F7379F" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Owner" xmi.id="EAID_081BC26B_53CF_db53_A4AB_3670FA1F9B58" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Partitioned By" xmi.id="EAID_F9A9751E_1AC9_ab1a_942E_83F36F327CA3" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Row Format" xmi.id="EAID_B6925CC1_C4EC_c3c4_A050_2A277C5C20CF" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Schema and Database" xmi.id="EAID_6AB401F9_E684_73e6_9957_CACCFFEBEB73" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Select Query" xmi.id="EAID_D630E936_9421_5494_9489_2BB1688BDEE8" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Skewed By" xmi.id="EAID_8F15AE7E_4949_9849_828B_E94BD93D5F86" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Skewed data definition" xmi.id="EAID_A7BF8686_CB51_07cb_B88B_AE813B5C5E6E" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Sorted By" xmi.id="EAID_21D29DEC_38B7_5538_9B10_B2D0179CA309" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Stored As" xmi.id="EAID_D382BEA5_5970_0559_970E_53DD897AE1E5" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Stored As Directories" xmi.id="EAID_A7A10442_7F6D_a07f_A54D_7D2C48031F3D" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Stored By" xmi.id="EAID_D382BECC_5997_0559_A9A2_CC06E079EF18" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Table Comment" xmi.id="EAID_92308B7B_0FC6_270f_9957_BC31112E0702" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Table Properties" xmi.id="EAID_42675D75_81E0_2881_AB42_A29716FF3AA8" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Table Type" xmi.id="EAID_D0D3790A_6935_9869_91D4_B4F3B2B4C057" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="Tablespace" xmi.id="EAID_D6AED194_E178_14e1_95D4_17F3EC81BA37" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:TaggedValue tag="With SerdeProperties" xmi.id="EAID_0556D15C_8B27_618b_BE2B_858E2B49FF39" modelElement="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD"/>
+		<UML:Diagram name="Table with Check Constraint (Hadoop)" xmi.id="EAID_A22B0005_9000_37DE_9212_DA66EC21373E" diagramType="ClassDiagram" owner="EAPK_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D" toolName="Enterprise Architect 2.5">
+			<UML:ModelElement.taggedValue>
+				<UML:TaggedValue tag="version" value="1.0"/>
+				<UML:TaggedValue tag="author" value="SYSTEM"/>
+				<UML:TaggedValue tag="created_date" value="2024-10-25 11:40:53"/>
+				<UML:TaggedValue tag="modified_date" value="2024-10-25 11:41:48"/>
+				<UML:TaggedValue tag="package" value="EAPK_8FC47FA8_AE22_CDE5_BD88_102BC56AA69D"/>
+				<UML:TaggedValue tag="type" value="Logical"/>
+				<UML:TaggedValue tag="swimlanes" value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=16777215;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;"/>
+				<UML:TaggedValue tag="matrixitems" value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;clrLine=0;"/>
+				<UML:TaggedValue tag="ea_localid" value="8"/>
+				<UML:TaggedValue tag="EAStyle" value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=1;HighlightForeign=1;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=100;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;ShowShape=1;AllDockable=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<UML:TaggedValue tag="styleex" value="SaveTag=6FC16497;ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLineClr=0;MatrixLocked=0;TConnectorNotation=UML 2.1;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;m_bElementClassifier=1;SPT=1;MDGDgm=Hadoop::Hadoop;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;Theme=:119;"/>
+				<UML:TaggedValue tag="persistentstyle" value="DGS=On=0:CNT=8:W=120:H=40:SG=0:SGH=0:AEB=0:;AR=0;DCL=0;Swimlanes=locked=false;orientation=0;width=0;inbar=false;names=false;color=-1;bold=false;fcol=0;tcol=-1;ofCol=-1;ufCol=-1;hl=1;ufh=0;hh=0;cls=0;bw=0;hli=0;bro=0;SwimlaneFont=lfh:-10,lfw:0,lfi:0,lfu:0,lfs:0,lfface:Calibri,lfe:0,lfo:0,lfchar:1,lfop:0,lfcp:0,lfq:0,lfpf=0,lfWidth=0;;"/>
+			</UML:ModelElement.taggedValue>
+			<UML:Diagram.element>
+				<UML:DiagramElement geometry="Left=332;Top=132;Right=437;Bottom=275;" subject="EAID_A44F7FE3_A6FA_4C9A_916F_AFC6554AB8BD" seqno="1" style="NSL=0;BCol=-1;BFol=-1;LCol=-1;LWth=-1;fontsz=0;bold=0;black=0;italic=0;ul=0;charset=0;pitch=0;HideIcon=0;DUID=882389D4;"/>
+			</UML:Diagram.element>
+		</UML:Diagram>
+	</XMI.content>
+	<XMI.difference/>
+	<XMI.extensions xmi.extender="Enterprise Architect 2.5"/>
+</XMI>

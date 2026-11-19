@@ -1,0 +1,7 @@
+<MDG.Selections model="MDG-BigQuery --- DBType=11;Connect=Provider=SSDB;SRC=D:\Datawarehouse project\datawarehouse\datawarehouse\bigquery\Big_Query_MDG_Sourcefile\MDG-BigQuery.qea;UID=;PWD=;">
+	<Technology id="DW_BQ" name="BigQuery" version="1.0" notes="Bigquery DDL Artifacts" filename="D:\Datawarehouse project\datawarehouse\datawarehouse\bigquery\Big_Query_MDG_Sourcefile\BIgQuery_MDG.xml"/>
+	<Profiles directory="D:\Datawarehouse project\datawarehouse\datawarehouse\bigquery\Big_Query_MDG_Sourcefile" files="profile.xml"/>
+	<TagVals tags="All Columns,Array Field List,Cluster By,Collate,Column Options,Connection With,Dataset,Datasource,Determinism Specifier,funcdef,Function Options,Function Parameters,Index Options,Is Temporary,IsReplace,Language,Not Exist,Partition By,Partition Columns With,procdef,Procedure Arguments,Procedure Options,Range type,Remote Connection,Return,Select Query,Storing,Struct Field List,System Time,Table Options,View Columns,View Options,viewdef"/>
+	<DiagramProfile directory="D:\Datawarehouse project\datawarehouse\datawarehouse\bigquery\Big_Query_MDG_Sourcefile" files="diagram.xml"/>
+	<UIToolboxes directory="D:\Datawarehouse project\datawarehouse\datawarehouse\bigquery\Big_Query_MDG_Sourcefile" files="toolbox.xml"/>
+</MDG.Selections>

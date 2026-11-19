@@ -1,0 +1,252 @@
+<?xml  version='1.0' encoding='windows-1252' ?>
+<UMLProfile profiletype="uml2">
+	<Documentation id="035BE4E6A2" name="Teradata" version="1.0" notes="Teradata"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="check" metatype="check" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::check" baseStereotypes="EAUML::check">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="error" metatype="error" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="All Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Column By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
+					<Tag name="Is Temporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Order By" type="" description="" unit="" values="" default=""/>
+					<Tag name="property" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+					<Tag name="Table Option" type="Table Option" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Load" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="trigger" metatype="trigger" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::trigger" baseStereotypes="EAUML::trigger">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="For Each" type="" description="" unit="" values="" default=""/>
+					<Tag name="Reference" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Search Condition" type="" description="" unit="" values="" default=""/>
+					<Tag name="Temporal Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_EVENT" type="" description="" unit="" values="" default=""/>
+					<Tag name="TRG_TIME" type="" description="" unit="" values="" default=""/>
+					<Tag name="Trigger Order" type="" description="" unit="" values="" default=""/>
+					<Tag name="Trigger Status" type="Trigger Status" description="" unit="" values="" default=""/>
+					<Tag name="Trigger Type" type="Table Type" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute">
+						<Property name="_tagGroupings" value="Format=Additional Datatype tagged values;Inline Length=Additional Datatype tagged values;Interval Field List=Additional Datatype tagged values;Period Field List=Additional Datatype tagged values;Snappy Compress=Additional Datatype tagged values;Storage Format=Additional Datatype tagged values;CharacterSet=Additional Datatype tagged values;"/>
+						<Property name="_tagGroups" value="Additional Datatype tagged values"/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Auto Increment" type="Auto Increment" description="" unit="" values="" default=""/>
+					<Tag name="Case Sensitivity" type="" description="" unit="" values="" default=""/>
+					<Tag name="CharacterSet" type="" description="" unit="" values="" default=""/>
+					<Tag name="Compression Attribute" type="" description="" unit="" values="" default=""/>
+					<Tag name="Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity Column" type="" description="" unit="" values="" default=""/>
+					<Tag name="Inline Length" type="" description="" unit="" values="" default=""/>
+					<Tag name="Interval Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Named" type="" description="" unit="" values="" default=""/>
+					<Tag name="Period Field List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Snappy Compress" type="" description="" unit="" values="" default=""/>
+					<Tag name="Storage Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Title" type="" description="" unit="" values="" default=""/>
+					<Tag name="Uppercase" type="" description="" unit="" values="" default=""/>
+					<Tag name="With Default" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<metarelationships>
+					<metarelationship metaclass="Association" constraint="Teradata::table"/>
+				</metarelationships>
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="Teradata::error" constraint="Teradata::table"/>
+					<stereotypedrelationship stereotype="Teradata::FK" constraint="Teradata::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Teradata"/>
+						<Property name="_tagGroupings" value="Schema and Database=Common Properties;Table Option=Common Properties;Table Index=Common Properties;As Clause=Common Properties;Table Preservation=Common Properties;Foreign Table Expression=Foreign Table Property;No RLS=Error Table Property;Is Queue=Queue Table Property;Duplication Mode=Table Kind;Table Type=Table Kind;"/>
+						<Property name="_tagGroups" value="Common Properties,Foreign Table Property,Error Table Property,Queue Table Property,Table Kind"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Foreign Table Property=closed;Error Table Property=closed;Queue Table Property=closed;Table Kind=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="As Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Duplication Mode" type="" description="" unit="" values="" default=""/>
+					<Tag name="Foreign Table Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Queue" type="" description="" unit="" values="" default=""/>
+					<Tag name="No RLS" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Index" type="Table Index" description="" unit="" values="" default=""/>
+					<Tag name="Table Option" type="Table Option" description="" unit="" values="" default=""/>
+					<Tag name="Table Preservation" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Type" type="Table Type" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Teradata"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Is Recursive" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Teradata"/>
+						<Property name="_tagGroupings" value="Procedure Type=Common Properties;Schema and Database=Common Properties;Parameter Specification=Common Properties;Sql Security=Common Properties;Parameter Style=Common Properties;Is External=Common Properties;procdef=Procedure Definition;Glop Set=External Procedure Properties;External Name=External Procedure Properties;Language Clause=External Procedure Properties;Dynamic Result Sets=SQL form Procedure Properties;Sql Data Access=SQL form Procedure Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition,External Procedure Properties,SQL form Procedure Properties"/>
+						<Property name="_tagGroupStates" value="Procedure Definition=closed;Common Properties=open;External Procedure Properties=closed;SQL form Procedure Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Dynamic Result Sets" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Glop Set" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Style" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Procedure Type" type="Procedure Type" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Data Access" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Security" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Teradata"/>
+						<Property name="_tagGroupings" value="Function Type=Common Properties;Is Mapping=Common Properties;Schema and Database=Common Properties;Parameter Specification=Common Properties;Return Table Statement=Common Properties;Return datatype=Common Properties;Parameter Style=Common Properties;Return Expression=Common Properties;For Table=Mapping Function Properties;Server Name=Mapping Function Properties;Map Json=Mapping Function Properties;Stored As=Mapping Function Properties;Table List=Mapping Function Properties;Glop Set=External Function Properties;External Name=External Function Properties;Type Specifier=External Function Properties;Is Definer=SQl Form Funtion Properties;Collation Invoker=SQl Form Funtion Properties;Language Clause=Language And Access Specification;Sql Data Access=Language And Access Specification;External Security=Teradata Function Properties;Is External=Teradata Function Properties;Function Option=Teradata Function Properties;Function Class=Teradata Function Properties;Deterministic=Teradata Function Properties;Null Handling=Teradata Function Properties;Null Semantics=Teradata Function Properties;Specific Table=Teradata Function Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Mapping Function Properties,External Function Properties,SQl Form Funtion Properties,Language And Access Specification,Teradata Function Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Mapping Function Properties=closed;External Function Properties=closed;SQl Form Funtion Properties=closed;Language And Access Specification=closed;Teradata Function Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collation Invoker" type="" description="" unit="" values="" default=""/>
+					<Tag name="Deterministic" type="Deterministic" description="" unit="" values="" default=""/>
+					<Tag name="External Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="External Security" type="" description="" unit="" values="" default=""/>
+					<Tag name="For Table" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Class" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Option" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Type" type="Function Type" description="" unit="" values="" default=""/>
+					<Tag name="Glop Set" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Definer" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is External" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is Mapping" type="" description="" unit="" values="" default=""/>
+					<Tag name="Language Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Map Json" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Handling" type="" description="" unit="" values="" default=""/>
+					<Tag name="Null Semantics" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Specification" type="" description="" unit="" values="" default=""/>
+					<Tag name="Parameter Style" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return datatype" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return Expression" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return Table Statement" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Server Name" type="" description="" unit="" values="" default=""/>
+					<Tag name="Specific Table" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sql Data Access" type="" description="" unit="" values="" default=""/>
+					<Tag name="Stored As" type="Stored As" description="" unit="" values="" default=""/>
+					<Tag name="Table List" type="" description="" unit="" values="" default=""/>
+					<Tag name="Type Specifier" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Auto Increment" description="" notes="Type=Enum;&#xA;Value=Auto Column,Not Auto Column;"/>
+			<TaggedValueType property="Deterministic" description="" notes="Type=Enum;&#xA;Values=Yes,No;"/>
+			<TaggedValueType property="Function Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+			<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Join,Hash;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Procedure Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+			<TaggedValueType property="Stored As" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,TextFile,Parquet;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Table Index" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Option" description="" notes="Type=Memo;"/>
+			<TaggedValueType property="Table Type" description="" notes="Type=Enum;&#xA;Values=Global Temporary, Global Temporary Trace, Volatile, Foreign, &lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Trigger Status" description="" notes="Type=Enum;&#xA;Values=&lt;none&gt;,Enabled,Disabled;&#xA;Default=&lt;none&gt;;"/>
+			<TaggedValueType property="Trigger Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+			<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=Create,Replace;&#xA;Default=Create;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile>
