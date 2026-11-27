@@ -802,10 +802,19 @@ parse(<language>);
 							
 					
 								  
-<mutation_list> 		::=  (("INSERT" ("OR" "UPDATE" "OR" "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete"))) 
-								| ("INSERT" ("OR" "UPDATE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update")))
-								| ("INSERT" ("OR" "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Delete"))) 
-								| ("UPDATE" ("OR" "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Update or Delete"))) 
+							//Vis_15102026_[151001000]_Expanded mutation_list from 7 to 15 alternatives to cover all permutations of INSERT, UPDATE, DELETE combinations
+<mutation_list> 		::=  (("INSERT" "OR" "UPDATE" "OR" "DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("INSERT" "OR" "DELETE" "OR" "UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("UPDATE" "OR" "INSERT" "OR" "DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("UPDATE" "OR" "DELETE" "OR" "INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("DELETE" "OR" "INSERT" "OR" "UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("DELETE" "OR" "UPDATE" "OR" "INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete")))
+								| ("INSERT" "OR" "UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update")))
+								| ("INSERT" "OR" "DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Delete")))
+								| ("UPDATE" "OR" "INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update")))
+								| ("UPDATE" "OR" "DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Update or Delete")))
+								| ("DELETE" "OR" "INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Delete")))
+								| ("DELETE" "OR" "UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Update or Delete")))
 								| ("INSERT" node("TRG_EVENT" , attributeEx("VALUE" , "Insert")))
 								| ("DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Delete")))
 								| ("UPDATE" node("TRG_EVENT" , attributeEx("VALUE" , "Update"))) )
@@ -874,7 +883,8 @@ parse(<language>);
 <alter_domain>			::=	"ALTER" "DOMAIN" <name>  ["TO" <name>]  ["TYPE" <datatype>]
 							[(("SET" "DEFAULT" (<literal> | "NULL" | <context_var>)) | ("DROP" "DEFAULT"))]
 							  [("SET" | "DROP") "NOT" "NULL"]
-							  [(("ADD" ["CONSTRAINT"] "CHECK" "(" skipBalanced("(",")") ")") | ("DROP CONSTRAINT"))]	[";"] ;
+							//Vis_15102026_[151001001]_Fixed DROP CONSTRAINT from single token to two separate tokens for correct lexer matching
+							  [(("ADD" ["CONSTRAINT"] "CHECK" "(" skipBalanced("(",")") ")") | ("DROP" "CONSTRAINT"))]	[";"] ;
 
 
 <drop_domain>			::= "DROP" "DOMAIN" <name> [";"] ;
@@ -884,44 +894,53 @@ parse(<language>);
 
 						//Raji_07102026_071001009_Updated the grammar file to support the RESTRICT keyword in ALTER TABLE statements.
 
+//Vis_26112026_[261101034]_Added optional COLUMN keyword to ALTER TABLE ADD/DROP column (operation, alt_col_def)
 <operation>				::= (("ADD" ((node("OPERATION" ,<tconstraint>))|<foreign_key>))
 								  |("ADD" <alt_col_def>)
 								  | ("DROP" ("CONSTRAINT" <constr_name> | "SQL" "SECURITY"))
-								  | ("DROP" <colname> ["RESTRICT"])
+								  | ("DROP" ["COLUMN"] <colname> ["RESTRICT"])
 								  | ("ALTER" "SQL" "SECURITY" ("INVOKER" | "DEFINER"))
 								  | ("ALTER" ["COLUMN"] <colname> <col_mod>)
 								  | (("ENABLE" | "DISABLE") "PUBLICATION")) ;
 								  
-<alt_col_def>			::=	( <colname> |<StringValue>)<col_properties_alter>* ;
+<alt_col_def>			::=	(["COLUMN"] (<colname> |<StringValue>))<col_properties_alter>* ;
 
+//Vis_26112026_[261101035]_Removed node/attribute AST output from ALTER TABLE ADD column properties (col_properties_alter, regular_col_def_alter, inlineForeignKey_alter)
 <col_properties_alter>	::= (<regular_col_def_alter>)
-								| (node("Computed Column Definition" , attribute("VALUE" , <computed_col_def>))) 
+								| ( <computed_col_def>) 
 								| (<identity_col_def>)
 								| (<column_type>  )
-								| (node("Type" , ((attribute("NAME",<domainname>))|<StringAsName>)))
+								| (<domainname>|<StringAsName>)
 								;
 								
-<regular_col_def_alter>	::=   ("DEFAULT" attribute("DEFAULT" , (<literal> | "NULL" | <context_var>)) )
-								 |("NOT" "NULL" attributeEx("NOTNULL", "true")) 
+
+								
+<regular_col_def_alter>	::=   ("DEFAULT"  (<literal> | "NULL" | <context_var>)) 
+								 |("NOT" "NULL") 
 								 | (<col_constraint_alter>  )
-								 | ("COLLATE" node("Collation" , attribute("VALUE" ,<collation_name>)) )
-								 | ("[" node("Column Range" , attribute("VALUE" , (<NUMBER> ":" <NUMBER>)))  "]")
-								 | ("CHARACTER" "SET" node("CharacterSet" ,attribute("VALUE",<charset> )))
-								 | (node("Array Field List",attribute("VALUE",<array_dim>)))
+								 | ("COLLATE" <collation_name>)
+								 | ("[" (<NUMBER> ":" <NUMBER>)  "]")
+								 | ("CHARACTER" "SET"<charset> )
+								 | (<array_dim>)
 								  ;									
 								
+//Vis_26112026_[261101036]_Switched col_constraint_alter to new non-reflecting PK/UNIQUE/CHECK rules (nonreflectedinlinePrimaryKey, nonreflectedinlineuniquekey, nonreflectedinlinecheck)
 <col_constraint_alter>			::= 
-								( (<inlinePrimaryKey> [<using_index>])
-								| (<inlineUnique>  [<using_index>])
+								( (<nonreflectedinlinePrimaryKey> [<using_index>])
+								| (<nonreflectedinlineuniquekey>  [<using_index>])
 								| (<inlineForeignKey_alter> [<using_index>]
 									[<table_on_value>*]
 								  )
-								| (<inlinecheck>)
-								) ;							
+								| (<nonreflectedinlinecheck>)
+								) ;		
+
+<nonreflectedinlinecheck>		::=	["CONSTRAINT" (<constr_name>|<StringAsName>)]"CHECK" "("  attribute("CODE" , <check_condition>) ")";
+
+<nonreflectedinlinePrimaryKey>	::=  ["CONSTRAINT" (<constr_name>|<StringAsName>)] "PRIMARY" "KEY" ;		
+
+<nonreflectedinlineuniquekey>		::=	["CONSTRAINT" (<constr_name>|<StringAsName>)] "UNIQUE" ;	
 							
-<inlineForeignKey_alter>  ::= ("CONSTRAINT" ((attribute("NAME",<constr_name>))|<StringAsName>)
-								"REFERENCES" <other_table> <singleColumnConstraint>
-							);
+<inlineForeignKey_alter>  ::= ("CONSTRAINT" (<constr_name>|<StringAsName>)"REFERENCES" <other_table> <singleColumnConstraint>);
 								
 
 <col_mod>				::= (("TO" <name>)  | ("POSITION" <NUMBER>) | <regular_col_mod> | <identity_col_mod> );
@@ -960,9 +979,13 @@ parse(<language>);
 <drop_view>					::= "DROP" "VIEW" <viewname>[";"] ;								  
 									  
 									  
+							//Vis_15102026_[151001002]_Added psql_trigger_alter rule with DROP SQL SECURITY support for ALTER TRIGGER
 <alter_trigger>				::=	"ALTER" "TRIGGER" <trigname>  [("ACTIVE" | "INACTIVE")]  [("BEFORE" | "AFTER") <mutation_list>]
 							  ["POSITION" <NUMBER>]
-							  [(<psql_trigger> | <external_module_body>)]	[";"] ;		
+							  [(<psql_trigger_alter> | <external_module_body>)]	[";"] ;
+
+<psql_trigger_alter>			::= [("SQL" "SECURITY" ("INVOKER" | "DEFINER")) | ("DROP" "SQL" "SECURITY")]
+								[<psql_trigger_module_body>] ;		
 
 
 <drop_trigger>				::=	"DROP" "TRIGGER" <trigname> [";"] ;	
@@ -1244,7 +1267,10 @@ parse(<language>);
 <create_role>					::= "CREATE" "ROLE" <name>  ["SET" "SYSTEM" "PRIVILEGES" "TO" <sys_privileges>] [";"];
 
 
-<sys_privileges>				::= ( "USER_MANAGEMENT" | "READ_RAW_PAGES"
+							//Vis_15102026_[151001003]_Split sys_privileges into comma-separated list with new sys_privilege rule per Firebird 5.0 spec
+<sys_privileges>				::= <sys_privilege> ("," <sys_privilege>)* ;
+
+<sys_privilege>					::= ( "USER_MANAGEMENT" | "READ_RAW_PAGES"
 									  | "CREATE_USER_TYPES" | "USE_NBACKUP_UTILITY"
 									  | "CHANGE_SHUTDOWN_MODE" | "TRACE_ANY_ATTACHMENT"
 									  | "MONITOR_ANY_ATTACHMENT" | "ACCESS_SHUTDOWN_DATABASE"
@@ -1286,10 +1312,26 @@ parse(<language>);
 <end_set_term>					::= [<DELIMITER>] "SET" "TERM" ";" <DELIMITER> ;
 
 
-<Grant_command>					::= "GRANT" <privileges>
+							//Vis_15102026_[151001004]_Added GRANT role syntax with role_granted_list, role_grantee_list, and WITH ADMIN OPTION support
+<Grant_command>					::= (<grant_privileges> | <grant_roles>) ;
+
+<grant_privileges>				::= "GRANT" <privileges>
 										  "TO" <grantee_list>
 										  ["WITH" "GRANT" "OPTION"]
 										  [(("GRANTED" "BY") | "AS") ["USER"] <grantor>]	[";"];
+
+<grant_roles>					::= "GRANT" <role_granted_list>
+										  "TO" <role_grantee_list>
+										  ["WITH" "ADMIN" "OPTION"]
+										  [(("GRANTED" "BY") | "AS") ["USER"] <grantor>]	[";"];
+
+<role_granted_list>				::= <role_granted> ("," <role_granted>)* ;
+
+<role_granted>					::= ["DEFAULT"] <name> ;
+
+<role_grantee_list>				::= <role_grantee> ("," <role_grantee>)* ;
+
+<role_grantee>					::= (("USER" <name>) | ("ROLE" <name>) | <name>) ;
 
  <privileges>					::= ( <table_privileges>
 										| <execute_privilege>
@@ -1380,7 +1422,8 @@ parse(<language>);
 												
 <round_mode>					::=	 "CEILING" | "UP" | "HALF_UP" | "HALF_EVEN"| "HALF_DOWN" | "DOWN" | "FLOOR" | "REROUND"	;
 
-<trap_opt>						::=  "DIVISON_BY_ZERO" | "INEXACT" | "INVALID_OPERATION"  | "OVERFLOW" | "UNDERFLOW" ;
+							//Vis_15102026_[151001005]_Fixed DIVISON_BY_ZERO typo to DIVISION_BY_ZERO in trap_opt rule
+<trap_opt>						::=  "DIVISION_BY_ZERO" | "INEXACT" | "INVALID_OPERATION"  | "OVERFLOW" | "UNDERFLOW" ;
 
 <alter_external_connection>		::= "ALTER" "EXTERNAL" "CONNECTIONS" "POOL"
 									  (( "CLEAR" "ALL")
@@ -1417,8 +1460,9 @@ parse(<language>);
 
 <drop_mapping>					::= "DROP" ["GLOBAL"] "MAPPING" <name> [";"];
 
+							//Vis_15102026_[151001006]_Changed user_option from single to one-or-more (+) to support multiple CREATE USER options
 <create_user>					::= "CREATE" ["OR" "ALTER"] "USER" <name>
-									  <user_option> 
+									  <user_option>+
 									  ["TAGS" "(" skipBalanced("(",")") ")"] [";"] ;
 									  
 <user_option>					::=	 (("PASSWORD" <StringValue>)
@@ -1437,8 +1481,15 @@ parse(<language>);
 
 <drop_user>						::=	"DROP" "USER" <name>  ["USING" "PLUGIN" <name>] [";"] ;								  
 
-<revoke_commands>				::=	"REVOKE" ["GRANT" "OPTION" "FOR"] <privileges>
+							//Vis_15102026_[151001007]_Added REVOKE role syntax and REVOKE ALL ON ALL support per Firebird 5.0 spec
+<revoke_commands>				::=	(<revoke_privileges> | <revoke_roles> | <revoke_all>) ;
+
+<revoke_privileges>				::=	"REVOKE" ["GRANT" "OPTION" "FOR"] <privileges>
 									  "FROM" <grantee_list>
-									  [("GRANTED" "BY" | "AS") ["USER"] <grantor>] [";"] ;	
-									  
-						  
+									  [("GRANTED" "BY" | "AS") ["USER"] <grantor>] [";"] ;
+
+<revoke_roles>					::= "REVOKE" ["ADMIN" "OPTION" "FOR"] <role_granted_list>
+									  "FROM" <role_grantee_list>
+									  [("GRANTED" "BY" | "AS") ["USER"] <grantor>] [";"] ;
+
+<revoke_all>					::= "REVOKE" "ALL" "ON" "ALL" "FROM" <grantee_list> [";"] ;

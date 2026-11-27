@@ -3,420 +3,186 @@
 	<Documentation id="DW_MDB" name="MongoDB" version="1.0" notes="MongoDB DDL Artifacts"/>
 	<UMLProfiles>
 		<UMLProfile profiletype="uml2">
-			<Documentation id="50F302446F" name="MongoDB" version="1.0" notes="MongoDB"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="collection" metatype="collection" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="MongoDB"/>
-								<Property name="_tagGroupings" value="timeField=TimeSeries;metaField=TimeSeries;granularity=TimeSeries;bucketMaxSpanSeconds=TimeSeries;bucketRoundingSeconds=TimeSeries;expireAfterSeconds=TimeSeries;ClusteredIndexKey=Clustered;ClusteredIndexUnique=Clustered;ClusteredIndexName=Clustered;validator=Validation;validationLevel=Validation;validationAction=Validation;capped=Behavior;changeStreamPreAndPostImages=Behavior;size=Behavior;max=Behavior;storageEngine=Behavior;indexOptionDefaults=Behavior;viewOn=Behavior;writeConcern=Behavior;Collation=Behavior;Pipeline=Behavior;"/>
-								<Property name="_tagGroups" value="TimeSeries,Clustered,Validation,Behavior"/>
-								<Property name="_tagGroupStates" value="TimeSeries=closed;Clustered=closed;Validation=closed;Behavior=open;"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="bucketMaxSpanSeconds" type="" description="" unit="" values="" default=""/>
-							<Tag name="bucketRoundingSeconds" type="" description="" unit="" values="" default=""/>
-							<Tag name="capped" type="" description="" unit="" values="" default=""/>
-							<Tag name="changeStreamPreAndPostImages" type="" description="" unit="" values="" default=""/>
-							<Tag name="ClusteredIndexKey" type="" description="" unit="" values="" default=""/>
-							<Tag name="ClusteredIndexName" type="" description="" unit="" values="" default=""/>
-							<Tag name="ClusteredIndexUnique" type="" description="" unit="" values="" default=""/>
-							<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
-							<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
-							<Tag name="granularity" type="" description="" unit="" values="" default=""/>
-							<Tag name="indexOptionDefaults" type="" description="" unit="" values="" default=""/>
-							<Tag name="max" type="" description="" unit="" values="" default=""/>
-							<Tag name="metaField" type="" description="" unit="" values="" default=""/>
-							<Tag name="Pipeline" type="" description="" unit="" values="" default=""/>
-							<Tag name="size" type="" description="" unit="" values="" default=""/>
-							<Tag name="storageEngine" type="" description="" unit="" values="" default=""/>
-							<Tag name="timeField" type="" description="" unit="" values="" default=""/>
-							<Tag name="validationAction" type="" description="" unit="" values="" default=""/>
-							<Tag name="validationLevel" type="" description="" unit="" values="" default=""/>
-							<Tag name="validator" type="" description="" unit="" values="" default=""/>
-							<Tag name="viewOn" type="" description="" unit="" values="" default=""/>
-							<Tag name="writeConcern" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="field" metatype="field" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="string">
-						<AppliesTo>
-							<Apply type="Attribute"/>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="FieldValue" type="" description="" unit="" values="" default=""/>
-							<Tag name="SubField" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="MongoDB"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
-							<Tag name="Function Parameter" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
-						<AppliesTo>
-							<Apply type="Operation">
-								<Property name="_tagGroupings" value="Unique=MongoDB Index Properties;StorageEngine=MongoDB Index Properties;PartialFilterExpression=MongoDB Index Properties;Collation=MongoDB Index Properties;IndexValue=MongoDB Index Properties;expireAfterSeconds=MongoDB Index Properties;isSearchIndex=MongoDB Index Properties;weights=Text tags;textIndexVersion=Text tags;defaultLanguage=Text tags;language Override=Text tags;2dsphereIndexVersion=2d Sphere tags;min=2d Indexes;bits=2d Indexes;max=2d Indexes;wildcardProjection=Wildcard Tags;Index Definition=Search Index;Keys=Index keys;commitQuorum=Replica Sets;"/>
-								<Property name="_tagGroups" value="Index keys,MongoDB Index Properties,Text tags,2d Sphere tags,2d Indexes,Wildcard Tags,Search Index,Replica Sets"/>
-								<Property name="_tagGroupStates" value="MongoDB Index Properties=closed;Text tags=closed;2d Sphere tags=closed;2d Indexes=closed;Wildcard Tags=closed;Index keys=open;Replica Sets=closed;Search Index=closed;"/>
-								<Property name="isOrdered" value=""/>
-								<Property name="isQuery" value="false"/>
-								<Property name="isUnique" value=""/>
-								<Property name="lower" value=""/>
-								<Property name="upper" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="2dsphereIndexVersion" type="" description="" unit="" values="" default=""/>
-							<Tag name="bits" type="" description="" unit="" values="" default=""/>
-							<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
-							<Tag name="commitQuorum" type="" description="" unit="" values="" default=""/>
-							<Tag name="defaultLanguage" type="" description="" unit="" values="" default=""/>
-							<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
-							<Tag name="Index Definition" type="" description="" unit="" values="" default=""/>
-							<Tag name="IndexValue" type="" description="" unit="" values="" default=""/>
-							<Tag name="isSearchIndex" type="" description="" unit="" values="" default=""/>
-							<Tag name="Keys" type="" description="" unit="" values="" default=""/>
-							<Tag name="language Override" type="" description="" unit="" values="" default=""/>
-							<Tag name="max" type="" description="" unit="" values="" default=""/>
-							<Tag name="min" type="" description="" unit="" values="" default=""/>
-							<Tag name="PartialFilterExpression" type="" description="" unit="" values="" default=""/>
-							<Tag name="StorageEngine" type="" description="" unit="" values="" default=""/>
-							<Tag name="textIndexVersion" type="" description="" unit="" values="" default=""/>
-							<Tag name="Unique" type="" description="" unit="" values="" default=""/>
-							<Tag name="weights" type="" description="" unit="" values="" default=""/>
-							<Tag name="wildcardProjection" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="MongoDB"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="procdef" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="MongoDB"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
-							<Tag name="SourceName" type="" description="" unit="" values="" default=""/>
-							<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes>
-					<TaggedValueType property="Collation" description="" notes="Type=Memo;"/>
-				</TaggedValueTypes>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</UMLProfiles>
-	<TaggedValueTypes>
-		<RefData version="1.0" exporter="EA.25">
-			<DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'">
-				<DataRow>
-					<Column name="Property" value="ClusteredIndexName"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="ClusteredIndexKey"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="ClusteredIndexUnique"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="SubField"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="FieldValue"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Unique"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="PartialFilterExpression"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Sparse"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="SourceName"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="viewdef"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="procdef"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="bucketMaxSpanSeconds"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="bucketRoundingSeconds"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="capped"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="changeStreamPreAndPostImages"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="expireAfterSeconds"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="granularity"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="indexOptionDefaults"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="max"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="metaField"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="size"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="storageEngine"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="validationAction"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="validationLevel"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="validator"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="writeConcern"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="timeField"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="viewOn"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="IndexValue"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Pipeline"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="weights"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="defaultLanguage"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="language Override"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="textIndexVersion"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="2dsphereIndexVersion"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="bits"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="min"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="wildcardProjection"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="funcdef"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Index Definition"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Function Parameter"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="isSearchIndex"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Keys"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="commitQuorum"/>
-				</DataRow>
-			</DataSet>
-		</RefData>
-	</TaggedValueTypes>
-	<DDLModules>
-		<DDLModule language="MongoDB" notes="">
-			<CodeTypes>
-				<RefData version="1.0" exporter="EA.25">
-					<DataSet name="Model Data Types - Code and DDL" table="t_datatypes" filter="Type='#Type#' and ProductName='#ProductName#' and DataType='#DataType#'" stoplist=";DatatypeID;">
-						<DataRow>
-							<Column name="Type" value="DDL"/>
-							<Column name="ProductName" value="MongoDB"/>
-							<Column name="DataType" value="boolean"/>
-							<Column name="Size" value="0"/>
-							<Column name="MaxLen" value="0"/>
-							<Column name="MaxPrec" value="0"/>
-							<Column name="MaxScale" value="0"/>
-							<Column name="DefaultLen" value="0"/>
-							<Column name="DefaultPrec" value="0"/>
-							<Column name="DefaultScale" value="0"/>
-							<Column name="User" value="1"/>
-							<Column name="GenericType" value="boolean"/>
-							<Column name="DatatypeID" value="847"/>
-						</DataRow>
-						<DataRow>
-							<Column name="Type" value="DDL"/>
-							<Column name="ProductName" value="MongoDB"/>
-							<Column name="DataType" value="int"/>
-							<Column name="Size" value="0"/>
-							<Column name="MaxLen" value="0"/>
-							<Column name="MaxPrec" value="0"/>
-							<Column name="MaxScale" value="0"/>
-							<Column name="DefaultLen" value="0"/>
-							<Column name="DefaultPrec" value="0"/>
-							<Column name="DefaultScale" value="0"/>
-							<Column name="User" value="1"/>
-							<Column name="GenericType" value="integer"/>
-							<Column name="DatatypeID" value="848"/>
-						</DataRow>
-						<DataRow>
-							<Column name="Type" value="DDL"/>
-							<Column name="ProductName" value="MongoDB"/>
-							<Column name="DataType" value="decimal"/>
-							<Column name="Size" value="0"/>
-							<Column name="MaxLen" value="0"/>
-							<Column name="MaxPrec" value="0"/>
-							<Column name="MaxScale" value="0"/>
-							<Column name="DefaultLen" value="0"/>
-							<Column name="DefaultPrec" value="0"/>
-							<Column name="DefaultScale" value="0"/>
-							<Column name="User" value="1"/>
-							<Column name="GenericType" value="decimal"/>
-							<Column name="DatatypeID" value="849"/>
-						</DataRow>
-						<DataRow>
-							<Column name="Type" value="DDL"/>
-							<Column name="ProductName" value="MongoDB"/>
-							<Column name="DataType" value="string"/>
-							<Column name="Size" value="1"/>
-							<Column name="MaxLen" value="250"/>
-							<Column name="MaxPrec" value="0"/>
-							<Column name="MaxScale" value="0"/>
-							<Column name="DefaultLen" value="250"/>
-							<Column name="DefaultPrec" value="0"/>
-							<Column name="DefaultScale" value="0"/>
-							<Column name="User" value="1"/>
-							<Column name="GenericType" value="nvarchar"/>
-							<Column name="DatatypeID" value="850"/>
-						</DataRow>
-						<DataRow>
-							<Column name="Type" value="DDL"/>
-							<Column name="ProductName" value="MongoDB"/>
-							<Column name="DataType" value="document"/>
-							<Column name="Size" value="0"/>
-							<Column name="MaxLen" value="0"/>
-							<Column name="MaxPrec" value="0"/>
-							<Column name="MaxScale" value="0"/>
-							<Column name="DefaultLen" value="0"/>
-							<Column name="DefaultPrec" value="0"/>
-							<Column name="DefaultScale" value="0"/>
-							<Column name="User" value="1"/>
-							<Column name="DatatypeID" value="853"/>
-						</DataRow>
-					</DataSet>
-				</RefData>
-			</CodeTypes>
-			<DDLTemplates>
-				<RefData version="1.0" exporter="EA.25">
-</RefData>
-			</DDLTemplates>
-		</DDLModule>
-	</DDLModules>
-	<DiagramProfile>
-		<UMLProfile profiletype="uml2">
-			<Documentation id="48E4028A80" name="MongoDB" version="1.0" notes="MongoDB"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="MongoDB" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="Diagram_Logical">
-								<Property name="alias" value="MongoDB"/>
-								<Property name="toolbox" value="MongoDB"/>
-							</Apply>
-						</AppliesTo>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes/>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</DiagramProfile>
-	<UIToolboxes>
-		<UMLProfile profiletype="uml2">
-			<Documentation id="9F08A667E3" name="MongoDB" version="1.0" notes="MongoDB"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="MongoDB" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="ToolboxPage"/>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="MongoDB::collection(UML::Class)" type="" description="" unit="" values="" default="Collection"/>
-							<Tag name="MongoDB::field(UML::Attribute)" type="" description="" unit="" values="" default="Field"/>
-							<Tag name="MongoDB::function(UML::Class)" type="" description="" unit="" values="" default="function"/>
-							<Tag name="MongoDB::Index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
-							<Tag name="MongoDB::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
-							<Tag name="MongoDB::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
-						</TaggedValues>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes/>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</UIToolboxes>
-</MDG.Technology>
+	<Documentation id="50F302446F" name="MongoDB" version="1.0" notes="MongoDB"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="collection" metatype="collection" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="_tagGroupings" value="timeField=TimeSeries;metaField=TimeSeries;granularity=TimeSeries;bucketMaxSpanSeconds=TimeSeries;bucketRoundingSeconds=TimeSeries;expireAfterSeconds=TimeSeries;ClusteredIndexKey=Clustered;ClusteredIndexUnique=Clustered;ClusteredIndexName=Clustered;validator=Validation;validationLevel=Validation;validationAction=Validation;capped=Behavior;changeStreamPreAndPostImages=Behavior;size=Behavior;max=Behavior;storageEngine=Behavior;indexOptionDefaults=Behavior;viewOn=Behavior;writeConcern=Behavior;Collation=Behavior;Pipeline=Behavior;"/>
+						<Property name="_tagGroups" value="TimeSeries,Clustered,Validation,Behavior"/>
+						<Property name="_tagGroupStates" value="TimeSeries=closed;Clustered=closed;Validation=closed;Behavior=open;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="bucketMaxSpanSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="bucketRoundingSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="capped" type="" description="" unit="" values="" default=""/>
+					<Tag name="changeStreamPreAndPostImages" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexKey" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexName" type="" description="" unit="" values="" default=""/>
+					<Tag name="ClusteredIndexUnique" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="EncryptedFields" type="" description="" unit="" values="" default=""/>
+					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="granularity" type="" description="" unit="" values="" default=""/>
+					<Tag name="indexOptionDefaults" type="" description="" unit="" values="" default=""/>
+					<Tag name="max" type="" description="" unit="" values="" default=""/>
+					<Tag name="metaField" type="" description="" unit="" values="" default=""/>
+					<Tag name="Pipeline" type="" description="" unit="" values="" default=""/>
+					<Tag name="size" type="" description="" unit="" values="" default=""/>
+					<Tag name="storageEngine" type="" description="" unit="" values="" default=""/>
+					<Tag name="timeField" type="" description="" unit="" values="" default=""/>
+					<Tag name="validationAction" type="" description="" unit="" values="" default=""/>
+					<Tag name="validationLevel" type="" description="" unit="" values="" default=""/>
+					<Tag name="validator" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewOn" type="" description="" unit="" values="" default=""/>
+					<Tag name="writeConcern" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="encryptedCollection" metatype="EncryptedCollection" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="createCollectionOptions" type="" description="" unit="" values="" default=""/>
+					<Tag name="masterKey" type="" description="" unit="" values="" default=""/>
+					<Tag name="provider" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="field" metatype="field" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="string">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="FieldValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="SubField" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Parameter" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="_tagGroupings" value="Unique=MongoDB Index Properties;StorageEngine=MongoDB Index Properties;PartialFilterExpression=MongoDB Index Properties;Collation=MongoDB Index Properties;IndexValue=MongoDB Index Properties;expireAfterSeconds=MongoDB Index Properties;isSearchIndex=MongoDB Index Properties;weights=Text tags;textIndexVersion=Text tags;defaultLanguage=Text tags;language Override=Text tags;2dsphereIndexVersion=2d Sphere tags;min=2d Indexes;bits=2d Indexes;max=2d Indexes;wildcardProjection=Wildcard Tags;Index Definition=Search Index;Keys=Index keys;commitQuorum=Replica Sets;"/>
+						<Property name="_tagGroups" value="Index keys,MongoDB Index Properties,Text tags,2d Sphere tags,2d Indexes,Wildcard Tags,Search Index,Replica Sets"/>
+						<Property name="_tagGroupStates" value="MongoDB Index Properties=closed;Text tags=closed;2d Sphere tags=closed;2d Indexes=closed;Wildcard Tags=closed;Index keys=open;Replica Sets=closed;Search Index=closed;"/>
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="2dsphereIndexVersion" type="" description="" unit="" values="" default=""/>
+					<Tag name="bits" type="" description="" unit="" values="" default=""/>
+					<Tag name="Borough" type="" description="" unit="" values="" default=""/>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="commitQuorum" type="" description="" unit="" values="" default=""/>
+					<Tag name="defaultLanguage" type="" description="" unit="" values="" default=""/>
+					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="Hidden Index" type="" description="" unit="" values="" default=""/>
+					<Tag name="Index Definition" type="" description="" unit="" values="" default=""/>
+					<Tag name="IndexValue" type="" description="" unit="" values="" default=""/>
+					<Tag name="isSearchIndex" type="" description="" unit="" values="" default=""/>
+					<Tag name="Keys" type="" description="" unit="" values="" default=""/>
+					<Tag name="language Override" type="" description="" unit="" values="" default=""/>
+					<Tag name="max" type="" description="" unit="" values="" default=""/>
+					<Tag name="min" type="" description="" unit="" values="" default=""/>
+					<Tag name="PartialFilterExpression" type="" description="" unit="" values="" default=""/>
+					<Tag name="storageEngine" type="" description="" unit="" values="" default=""/>
+					<Tag name="textIndexVersion" type="" description="" unit="" values="" default=""/>
+					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
+					<Tag name="weights" type="" description="" unit="" values="" default=""/>
+					<Tag name="wildcardProjection" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="SourceName" type="" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Collation" description="" notes="Type=Memo;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UMLProfiles><TaggedValueTypes><RefData version="1.0" exporter="EA.25"><DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'"><DataRow><Column name="Property" value="ClusteredIndexName"/></DataRow><DataRow><Column name="Property" value="ClusteredIndexKey"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="ClusteredIndexUnique"/><Column name="Notes" value="Type=Boolean;&#xA;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="SubField"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="FieldValue"/></DataRow><DataRow><Column name="Property" value="Unique"/></DataRow><DataRow><Column name="Property" value="PartialFilterExpression"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Sparse"/></DataRow><DataRow><Column name="Property" value="SourceName"/></DataRow><DataRow><Column name="Property" value="viewdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="procdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="bucketMaxSpanSeconds"/></DataRow><DataRow><Column name="Property" value="bucketRoundingSeconds"/></DataRow><DataRow><Column name="Property" value="capped"/><Column name="Notes" value="Type=Boolean;&#xA;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="changeStreamPreAndPostImages"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="expireAfterSeconds"/></DataRow><DataRow><Column name="Property" value="granularity"/></DataRow><DataRow><Column name="Property" value="indexOptionDefaults"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="max"/></DataRow><DataRow><Column name="Property" value="metaField"/></DataRow><DataRow><Column name="Property" value="size"/></DataRow><DataRow><Column name="Property" value="storageEngine"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="validationAction"/></DataRow><DataRow><Column name="Property" value="validationLevel"/></DataRow><DataRow><Column name="Property" value="validator"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="writeConcern"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="timeField"/></DataRow><DataRow><Column name="Property" value="viewOn"/></DataRow><DataRow><Column name="Property" value="IndexValue"/></DataRow><DataRow><Column name="Property" value="Pipeline"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="weights"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="defaultLanguage"/></DataRow><DataRow><Column name="Property" value="language Override"/></DataRow><DataRow><Column name="Property" value="textIndexVersion"/></DataRow><DataRow><Column name="Property" value="2dsphereIndexVersion"/></DataRow><DataRow><Column name="Property" value="bits"/></DataRow><DataRow><Column name="Property" value="min"/></DataRow><DataRow><Column name="Property" value="wildcardProjection"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="funcdef"/></DataRow><DataRow><Column name="Property" value="Index Definition"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Function Parameter"/></DataRow><DataRow><Column name="Property" value="isSearchIndex"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Keys"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="commitQuorum"/></DataRow><DataRow><Column name="Property" value="Provider"/></DataRow><DataRow><Column name="Property" value="createCollectionOptions"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="masterKey"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="EncryptedFields"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Hidden Index"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="Borough"/></DataRow></DataSet></RefData></TaggedValueTypes><DDLModules><DDLModule language="MongoDB" notes=""><CodeTypes><RefData version="1.0" exporter="EA.25"><DataSet name="Model Data Types - Code and DDL" table="t_datatypes" filter="Type='#Type#' and ProductName='#ProductName#' and DataType='#DataType#'" stoplist=";DatatypeID;"><DataRow><Column name="Type" value="DDL"/><Column name="ProductName" value="MongoDB"/><Column name="DataType" value="boolean"/><Column name="Size" value="0"/><Column name="MaxLen" value="0"/><Column name="MaxPrec" value="0"/><Column name="MaxScale" value="0"/><Column name="DefaultLen" value="0"/><Column name="DefaultPrec" value="0"/><Column name="DefaultScale" value="0"/><Column name="User" value="1"/><Column name="GenericType" value="boolean"/><Column name="DatatypeID" value="847"/></DataRow><DataRow><Column name="Type" value="DDL"/><Column name="ProductName" value="MongoDB"/><Column name="DataType" value="int"/><Column name="Size" value="0"/><Column name="MaxLen" value="0"/><Column name="MaxPrec" value="0"/><Column name="MaxScale" value="0"/><Column name="DefaultLen" value="0"/><Column name="DefaultPrec" value="0"/><Column name="DefaultScale" value="0"/><Column name="User" value="1"/><Column name="GenericType" value="integer"/><Column name="DatatypeID" value="848"/></DataRow><DataRow><Column name="Type" value="DDL"/><Column name="ProductName" value="MongoDB"/><Column name="DataType" value="decimal"/><Column name="Size" value="0"/><Column name="MaxLen" value="0"/><Column name="MaxPrec" value="0"/><Column name="MaxScale" value="0"/><Column name="DefaultLen" value="0"/><Column name="DefaultPrec" value="0"/><Column name="DefaultScale" value="0"/><Column name="User" value="1"/><Column name="GenericType" value="decimal"/><Column name="DatatypeID" value="849"/></DataRow><DataRow><Column name="Type" value="DDL"/><Column name="ProductName" value="MongoDB"/><Column name="DataType" value="string"/><Column name="Size" value="1"/><Column name="MaxLen" value="250"/><Column name="MaxPrec" value="0"/><Column name="MaxScale" value="0"/><Column name="DefaultLen" value="250"/><Column name="DefaultPrec" value="0"/><Column name="DefaultScale" value="0"/><Column name="User" value="1"/><Column name="GenericType" value="nvarchar"/><Column name="DatatypeID" value="850"/></DataRow><DataRow><Column name="Type" value="DDL"/><Column name="ProductName" value="MongoDB"/><Column name="DataType" value="document"/><Column name="Size" value="0"/><Column name="MaxLen" value="0"/><Column name="MaxPrec" value="0"/><Column name="MaxScale" value="0"/><Column name="DefaultLen" value="0"/><Column name="DefaultPrec" value="0"/><Column name="DefaultScale" value="0"/><Column name="User" value="1"/><Column name="DatatypeID" value="853"/></DataRow></DataSet></RefData></CodeTypes><DDLTemplates><RefData version="1.0" exporter="EA.25">
+</RefData></DDLTemplates></DDLModule></DDLModules><DiagramProfile><UMLProfile profiletype="uml2">
+	<Documentation id="48E4028A80" name="MongoDB" version="1.0" notes="MongoDB"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="MongoDB" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Diagram_Logical">
+						<Property name="alias" value="MongoDB"/>
+						<Property name="toolbox" value="MongoDB"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></DiagramProfile><UIToolboxes><UMLProfile profiletype="uml2">
+	<Documentation id="9F08A667E3" name="MongoDB" version="1.0" notes="MongoDB"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="MongoDB" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="MongoDB::collection(UML::Class)" type="" description="" unit="" values="" default="Collection"/>
+					<Tag name="MongoDB::EncryptedCollection(UML::Class)" type="" description="" unit="" values="" default="EncryptedCollection"/>
+					<Tag name="MongoDB::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+					<Tag name="MongoDB::function(UML::Class)" type="" description="" unit="" values="" default="function"/>
+					<Tag name="MongoDB::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="MongoDB::field(UML::Attribute)" type="" description="" unit="" values="" default="Field"/>					
+					<Tag name="MongoDB::Index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>					
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UIToolboxes></MDG.Technology>

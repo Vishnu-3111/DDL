@@ -73,16 +73,23 @@ parse(<language>);
 						<replication_commands>|
 						<sharding_commands>|
 						<connection>|
-						<atlas_methods>
+						<atlas_methods>|
+						<session_methods>|
+						<encryption_methods>|
+						<native_methods>|
+						<shell_helpers>|
+						<cursor_methods>
 						;
 						
 <createCommands>	::=	<createCollection> |
+						<createEncryptedCollection>|
 						<createView> |
 						<createindex>|
 						<create_procedure>|
 						<CreateIndexes> |
 						<create_Search_index>|
 						<create_function>
+						
 						;
 						
 <database_method>		::= <admin_command>
@@ -141,6 +148,7 @@ parse(<language>);
 								|<get_Indexes>
 								|<get_shardDistribution>
 								|<get_shardversion>
+								|<get_shardLocation>
 								|<hide_index>
 								|<iscapped>
 								|<latencyStats>
@@ -158,7 +166,7 @@ parse(<language>);
 								|<collection_validate>
 								|<query_plancache>
 								|<collection_watch>
-								;								
+								;							
 
 // Create Statements
 // Create collection Reference link: https://www.mongodb.com/docs/manual/reference/method/db.createCollection/
@@ -193,7 +201,8 @@ parse(<language>);
 							<collValidator> |
 							<collViewOn> |
 							<collWriteConcern> |
-							<property>;
+							<property>|
+							<collencryptedFileds>;
 							
 <collCapped>			::= node("capped", "capped" ":" <BOOLEAN>);
 <collChangeStream>		::= node("changeStreamPreAndPostImages", "changeStreamPreAndPostImages" ":" attribute("VALUE", <document_type>));
@@ -211,6 +220,8 @@ parse(<language>);
 <collValidator>			::= node("validator", "validator" ":" attribute("VALUE", <document_type>));
 <collViewOn>			::= node("viewOn", "viewOn" ":" node("TARGET", <StringValue>));
 <collWriteConcern>		::= node("writeConcern", "writeConcern" ":" attribute("VALUE", <document_type>));
+//Vis_26112026_[261101037]_Added encryptedFields option to createCollection (EncryptedFields tag)
+<collencryptedFileds>	::= node("EncryptedFields", "encryptedFields" ":" attribute("VALUE", <document_type>));//new added property for collection
 
 <timeSeriesDocument>	::= "{" [<timeSeriesProperty> ("," <timeSeriesProperty>)*] "}";
 <timeSeriesProperty>	::= <tsTimeField> |
@@ -290,6 +301,8 @@ parse(<language>);
 						")")
 						[";"];
 						
+
+						
 <document_type>		::="{"[<fields>(","<fields>)*]"}";
 
 <fields>			::= (<fieldName>|<StringValue>) ":"<fieldValue>;
@@ -347,6 +360,7 @@ parse(<language>);
 <indexparameter>	::=	(<fieldName>|<StringAsName>) ":"
 							(<NUMBER>|("\"" "TEXT" "\"")|("\"" "2dSphere" "\"")|("\"" "2d" "\"")|("\"" "hashed" "\"")) ;
 							
+//Vis_26112026_[261101038]_Added hidden and borough index options; removed duplicate wildcardProjection alternative
 <index_options>		::=		("UNIQUE" ":" ("true" node("Unique",attributeEx("VALUE","1"))|"false" node("Unique",attributeEx("VALUE","0")))|
 						"SPARSE" ":" node("Sparse",attribute("VALUE",<StringValue>))|
 						"NAME" ":" attribute("NAME",<IndexName>)|
@@ -363,7 +377,8 @@ parse(<language>);
 						["\""]"language_override"["\""] ":" node("language Override",attribute("VALUE",<StringValue>))|
 						["\""] "textIndexVersion" ["\""] ":" node("textIndexVersion",attribute("VALUE",<NUMBER>))|
 						"COLLATION" ":" node("Collation",attribute("VALUE",<document_type>))|
-						 ["\""]"wildcardProjection"["\""] ":" node("wildcardProjection",attribute("VALUE",<document_type>))
+						 "hidden" ":" node("Hidden Index" ,attributeEx("VALUE","True"))|
+						 "borough" ":" node("Borough" ,attribute("VALUE", <NUMBER>))
 						
 						);
 						
@@ -389,9 +404,10 @@ parse(<language>);
 <CreateIndexes>	::= mapRight(<IDENTIFIER> "."  node("OWNER",attribute("NAME",<collection_Name>)) "." "CREATEINDEXES" , <Indexbody> ) [";"];
 
 
+//Vis_26112026_[261101039]_Allowed string value for commitQuorum in createIndexes
 <Indexbody>				::= "(" mapLeft( "[" (<Index>(","<Index>)*) "]" ,
 							["," "{"	<index_options>	(","<index_options>	)*"}"]
-							[","node("commitQuorum",attribute("VALUE", ("VOTINGMEMBERS"|"MAJORITY"|<NUMBER>)))]
+							[","node("commitQuorum",attribute("VALUE", ("VOTINGMEMBERS"|"MAJORITY"|<NUMBER>|<StringValue>)))]
 								) ")" ;
 							
 <Index>			::= node("OPERATION",
@@ -440,6 +456,9 @@ parse(<language>);
 
 <get_shardversion>				::= <IDENTIFIER> "." <IDENTIFIER> "." "GETSHARDVERSION" "(" skipBalanced("(",")") ")" [";"] ;
 
+//Vis_26112026_[261101040]_Added getShardLocation collection method (non-modelled)
+<get_shardLocation>				::= <IDENTIFIER> "." <IDENTIFIER> "." "GETSHARDLOCATION" "(" skipBalanced("(",")") ")" [";"] ;
+
 <hide_index>					::= <IDENTIFIER> "." <IDENTIFIER> "." "HIDEINDEX" "(" skipBalanced("(",")") ")" [";"] ;
 
 <iscapped>						::= <IDENTIFIER> "." <IDENTIFIER> "." "ISCAPPED" "(" skipBalanced("(",")") ")" [";"] ;
@@ -467,14 +486,16 @@ parse(<language>);
 
 <unhide_index>					::= <IDENTIFIER> "." <IDENTIFIER> "." "UNHIDEINDEX" "(" skipBalanced("(",")") ")" [";"] ;
 
-<update_command>				::= <IDENTIFIER> "." <IDENTIFIER> "." ("UPDATEONE"|"UPDATEMANY") "(" skipBalanced("(",")") ")" [";"] ;
+//Vis_26112026_[261101041]_Added legacy update() to the update command
+<update_command>				::= <IDENTIFIER> "." <IDENTIFIER> "." ("UPDATEONE"|"UPDATEMANY"|"UPDATE") "(" skipBalanced("(",")") ")" [";"] ;
 
 <collection_watch>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]<IDENTIFIER> "." <IDENTIFIER> 
 									"." "WATCH" "(" skipBalanced("(",")") ")" [";"] ;
 
 <collection_validate>			::= <IDENTIFIER> "." <IDENTIFIER> "." "VALIDATE" "(" skipBalanced("(",")") ")" [";"] ;
 
-<get_collection>				::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "." "GETCOLLECTION" "(" skipBalanced("(",")") ")" [";"] ;
+//Vis_26112026_[261101042]_Allowed chained method calls after getCollection()
+<get_collection>				::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "." "GETCOLLECTION" "(" skipBalanced("(",")") ")" [("." <IDENTIFIER> "(" skipBalanced("(",")") ")")*] [";"] ;
 
 <admin_command>					::= <IDENTIFIER> "." "ADMINCOMMAND"  "(" skipBalanced("(",")") ")" [";"] ;
 
@@ -555,12 +576,13 @@ parse(<language>);
 <query_plancache>				::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "." <IDENTIFIER> "." "GETPLANCACHE" "(" ")"
 									"." ("HELP"|"CLEAR"|"CLEARPLANSBYQUERY"|"LIST") "(" skipBalanced("(",")") ")" [";"] ;	
 
+//Vis_26112026_[261101043]_Corrected <tojson>/<tostring> references to the defined <toJSON>/<toString> rules
 <bulk_operation>				::=	<bulk_intialize>
 									|<execute>
 									|<bulk_find>
 									|<insert>
-									|<tojson>
-									|<tostring>
+									|<toJSON>
+									|<toString>
 									|<get_operation>;
 
 
@@ -573,7 +595,10 @@ parse(<language>);
 <bulk_find>						::= <IDENTIFIER> "." "FIND" "(" skipBalanced("(",")") ")"
 									[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*][";"] ;
 									
-<insert>						::=	<IDENTIFIER> "." "INSERT" "(" skipBalanced("(",")") ")" [";"] ;	
+//<insert>						::=	<IDENTIFIER>["."<IDENTIFIER>] "." "INSERT" "(" skipBalanced("(",")") ")" [";"] ;	
+
+//Vis_26112026_[261101044]_Added db.collection.insert() alongside bulk.insert()
+<insert>						::=	((<IDENTIFIER> "." "INSERT")|(<IDENTIFIER>"."<IDENTIFIER> "." "INSERT")) "(" skipBalanced("(",")") ")" [";"] ;	
 								
 <toJSON>						::=	<IDENTIFIER> "." "TOJSON" "(" skipBalanced("(",")") ")" [";"] ;	
 								
@@ -661,6 +686,8 @@ parse(<language>);
 									|<replica_stepdown>
 									|<replica_syncFrom>
 									|<printSlaveReplicationInfo>
+									|<replica_printReplicationInfo>
+									|<replica_printSecondaryReplicationInfo>
 									;
 
 
@@ -689,6 +716,11 @@ parse(<language>);
 <replica_syncFrom>				::= "RS" "." "SYNCFROM" "(" skipBalanced("(",")") ")" [";"] ;
 
 <printSlaveReplicationInfo>		::= "RS" "." "PRINTSLAVEREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+//Vis_26112026_[261101045]_Added rs.printReplicationInfo and rs.printSecondaryReplicationInfo (non-modelled)
+<replica_printReplicationInfo>	::= "RS" "." "PRINTREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
+
+<replica_printSecondaryReplicationInfo>	::= "RS" "." "PRINTSECONDARYREPLICATIONINFO" "(" skipBalanced("(",")") ")" [";"] ;
 
 <sharding_commands>				::= <checkMetadataConsistency>
 									|<abordReshardCollection>
@@ -726,6 +758,20 @@ parse(<language>);
 									|<waitForBalancer>
 									|<waitForBalancerOff>
 									|<waitForPingChange>
+									|<abortMoveCollection>
+									|<abortUnshardCollection>
+									|<addShardTag>
+									|<disableMigrations>
+									|<enableMigrations>
+									|<getTransitionToDedicatedConfigServerStatus>
+									|<shard_help>
+									|<isConfigShardEnabled>
+									|<listShards>
+									|<moveCollection>
+									|<moveRange>
+									|<shardAndDistributeCollection>
+									|<shardDrainingStatus>
+									|<unshardCollection>
 									;
 
 <checkMetadataConsistency>		::= <IDENTIFIER> "." [<IDENTIFIER> "."] "CHECKMETADATACONSISTENCY"  "(" skipBalanced("(",")") ")" [";"] ;
@@ -800,6 +846,35 @@ parse(<language>);
 
 <waitForPingChange>				::= "SH" "." "waitForPingChange" "(" skipBalanced("(",")") ")" [";"] ;
 
+//Vis_26112026_[261101046]_Added sh.* sharding methods abortMoveCollection through unshardCollection (non-modelled)
+<abortMoveCollection>			::= "SH" "." "abortMoveCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<abortUnshardCollection>		::= "SH" "." "abortUnshardCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<addShardTag>					::= "SH" "." "addShardTag" "(" skipBalanced("(",")") ")" [";"] ;
+
+<disableMigrations>				::= "SH" "." "disableMigrations" "(" skipBalanced("(",")") ")" [";"] ;
+
+<enableMigrations>				::= "SH" "." "enableMigrations" "(" skipBalanced("(",")") ")" [";"] ;
+
+<getTransitionToDedicatedConfigServerStatus>	::= "SH" "." "getTransitionToDedicatedConfigServerStatus" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shard_help>					::= "SH" "." "help" "(" skipBalanced("(",")") ")" [";"] ;
+
+<isConfigShardEnabled>			::= "SH" "." "isConfigShardEnabled" "(" skipBalanced("(",")") ")" [";"] ;
+
+<listShards>					::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] "SH" "." "listShards" "(" skipBalanced("(",")") ")" [";"] ;
+
+<moveCollection>				::= "SH" "." "moveCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<moveRange>						::= "SH" "." "moveRange" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shardAndDistributeCollection>	::= "SH" "." "shardAndDistributeCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
+<shardDrainingStatus>			::= "SH" "." "shardDrainingStatus" "(" skipBalanced("(",")") ")" [";"] ;
+
+<unshardCollection>				::= "SH" "." "unshardCollection" "(" skipBalanced("(",")") ")" [";"] ;
+
 <connection>					::= <connect>
 									|<mongo>
 									|<mongo_conn_getDB>
@@ -811,6 +886,9 @@ parse(<language>);
 									|<mongo_setReadPref>
 									|<mongo_startSession>
 									|<mongo_setWriteConcern>
+									|<mongo_getURI>
+									|<mongo_getReadPrefTagSet>
+									|<mongo_bulkWrite>
 									;
 
 <connect> 						::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] "CONNECT" "(" skipBalanced("(",")") ")" [";"] ;
@@ -844,6 +922,17 @@ parse(<language>);
 										"(" skipBalanced("(",")") ")" [";"] ;											
 										
 <mongo_setWriteConcern>			::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "SETWRITECONCERN"
+										"(" skipBalanced("(",")") ")" [";"] ;
+
+//Vis_26112026_[261101047]_Added Mongo getURI, getReadPrefTagSet and bulkWrite connection methods (non-modelled)
+<mongo_getURI>					::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETURI"
+										"(" skipBalanced("(",")") ")" [";"] ;
+
+<mongo_getReadPrefTagSet>		::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "GETREADPREFTAGSET"
+										"(" skipBalanced("(",")") ")" [";"] ;
+
+//Mongo.bulkWrite() and Session.bulkWrite() reference link : https://www.mongodb.com/docs/manual/reference/method/Mongo.bulkWrite/
+<mongo_bulkWrite>				::=	[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "BULKWRITE"
 										"(" skipBalanced("(",")") ")" [";"] ;
 										
 <create_Search_index>			::=node("OPERATION",
@@ -882,7 +971,20 @@ parse(<language>);
 <streamProcessor>				::=<sample>
 									|<start>
 									|<stop>
+									|<createStreamProcessor>
+									|<listStreamProcessors>
+									|<sp_process>
+									|<sp_modify>
 									;
+
+//Vis_26112026_[261101048]_Added stream processor createStreamProcessor, listStreamProcessors, process and modify (non-modelled)
+<createStreamProcessor>			::=<IDENTIFIER>"." "CREATESTREAMPROCESSOR" "("skipBalanced("(",")")")" [";"] ;
+
+<listStreamProcessors>			::=[["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER>"." "LISTSTREAMPROCESSORS" "("skipBalanced("(",")")")" [";"] ;
+
+<sp_process>					::=<IDENTIFIER>"." "PROCESS" "("skipBalanced("(",")")")" [";"] ;
+
+<sp_modify>						::=<IDENTIFIER>"."<IDENTIFIER>"." "MODIFY" "("skipBalanced("(",")")")" [";"] ;
 
 
 <sample>						::=<IDENTIFIER>"."<IDENTIFIER>"." "SAMPLE" "("skipBalanced("(",")")")" [";"] ;
@@ -890,4 +992,104 @@ parse(<language>);
 <start>							::=<IDENTIFIER>"."<IDENTIFIER>"." "START" "("skipBalanced("(",")")")" [";"] ;
 
 <stop>							::=<IDENTIFIER>"."<IDENTIFIER>"." "STOP" "("skipBalanced("(",")")")" [";"] ;
+
+//Session methods reference link : https://www.mongodb.com/docs/manual/reference/method/Session/
+
+//Vis_26112026_[261101049]_Added Session methods and Session/SessionOptions constructors (non-modelled)
+<session_methods>				::= <session_call>
+									|<session_constructor>
+									;
+
+<session_call>					::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "."
+									("STARTTRANSACTION"|"COMMITTRANSACTION"|"ABORTTRANSACTION"|"WITHTRANSACTION"
+									|"ENDSESSION"|"GETDATABASE"|"HASENDED"|"GETOPTIONS"|"GETCLUSTERTIME"
+									|"GETOPERATIONTIME"|"ADVANCECLUSTERTIME"|"ADVANCEOPERATIONTIME")
+									"(" skipBalanced("(",")") ")"
+									[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+
+<session_constructor>			::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] ["NEW"] ("SESSION"|"SESSIONOPTIONS")
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+//In-Use Encryption methods reference link : https://www.mongodb.com/docs/manual/reference/method/#in-use-encryption
+//ClientEncryption.createEncryptedCollection() is not included here because it has the same shape as db.createEncryptedCollection().
+
+
+//Vis_26112026_[261101050]_Added createEncryptedCollection as MongoDB::encryptedCollection with Provider, createCollectionOptions and masterkey tags
+<createEncryptedCollection>		::= 		node("ELEMENT",
+											attributeEx("EATYPE", "Class")
+											attributeEx("EASTEREOTYPE", "MongoDB::encryptedCollection")
+											<IDENTIFIER> "." "createEncryptedCollection" "("
+										   <collName> ","
+										   "{"
+											  <EncryptedCollectionOptions>("," <EncryptedCollectionOptions>)*
+										   "}"
+										")") [";"]
+										;
+										
+<EncryptedCollectionOptions>	::= 			("provider" ":" node("Provider", <StringAsValue>)|
+											  ("createCollectionOptions" ":" node("createCollectionOptions",attribute("VALUE",(<document>|<IDENTIFIER>))))|
+											  ("masterKey"  ":" node("masterkey",attribute("VALUE",(<document>|<IDENTIFIER>)))));						
+										
+<collName>						::=<StringAsName>	;									
+
+//Vis_26112026_[261101051]_Added In-Use Encryption key vault and ClientEncryption methods (non-modelled)
+<encryption_methods>			::= <get_keyVault>
+									|<keyVault_methods>
+									|<clientEncryption_methods>
+									;
+
+<get_keyVault>					::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] [<IDENTIFIER> "."] ("GETKEYVAULT"|"GETCLIENTENCRYPTION")
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+<keyVault_methods>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "."
+									("CREATEKEY"|"CREATEDATAKEY"|"DELETEKEY"|"GETKEY"|"GETKEYS"
+									|"ADDKEYALTERNATENAME"|"ADDKEYALTNAME"|"REMOVEKEYALTERNATENAME"|"REMOVEKEYALTNAME"
+									|"GETKEYBYALTNAME"|"REWRAPMANYDATAKEY")
+									"(" skipBalanced("(",")") ")"
+									[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
+
+<clientEncryption_methods>		::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "."
+									("ENCRYPT"|"ENCRYPTEXPRESSION"|"DECRYPT")
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+//Native methods reference link : https://www.mongodb.com/docs/manual/reference/method/#native
+
+//Vis_26112026_[261101052]_Added mongosh native methods (load, sleep, cat, quit, ...) (non-modelled)
+<native_methods>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="]
+									("CAT"|"GETHOSTNAME"|"GETMEMINFO"|"HOSTNAME"|"ISINTERACTIVE"|"LISTFILES"
+									|"LOAD"|"LS"|"MD5SUMFILE"|"MKDIR"|"QUIT"|"REMOVEFILE"|"SLEEP"|"VERSION"
+									|"_ISWINDOWS"|"_RAND")
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+//mongosh shell helpers (show, print, printjson, it, exit)
+
+//Vis_26112026_[261101053]_Added shell helpers show, print/printjson/console.log, it and exit (non-modelled)
+<shell_helpers>					::= <show_command>
+									|<print_command>
+									|<it_command>
+									|<exit_command>
+									;
+
+<show_command>					::= "SHOW" ("DBS"|"DATABASES"|"COLLECTIONS"|"TABLES"|"USERS"|"ROLES"|"PROFILE"
+									|"LOG" [<IDENTIFIER>|<StringValue>]|"LOGS") [";"] ;
+
+<print_command>					::= (("PRINT"|"PRINTJSON")|("CONSOLE" "." "LOG"))
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+<it_command>					::= "IT" [";"] ;
+
+<exit_command>					::= "EXIT" ["(" skipBalanced("(",")") ")"] [";"] ;
+
+//Cursor methods called on a cursor variable reference link : https://www.mongodb.com/docs/manual/reference/method/#cursor
+
+//Vis_26112026_[261101054]_Added cursor methods on a cursor variable with chaining (non-modelled)
+<cursor_methods>				::= [["VAR"|"LET"|"CONST"]<IDENTIFIER>"="] <IDENTIFIER> "."
+									("ADDOPTION"|"ALLOWDISKUSE"|"BATCHSIZE"|"CLOSE"|"COLLATION"|"COMMENT"|"COUNT"
+									|"DISABLEBLOCKWARNINGS"|"EXPLAIN"|"FOREACH"|"HASNEXT"|"HINT"|"ISCLOSED"
+									|"ISEXHAUSTED"|"ITCOUNT"|"LIMIT"|"MAP"|"MAX"|"MAXAWAITTIMEMS"|"MAXTIMEMS"
+									|"MIN"|"NEXT"|"NOCURSORTIMEOUT"|"OBJSLEFTINBATCH"|"PRETTY"|"READCONCERN"
+									|"READPREF"|"RETURNKEY"|"SHOWRECORDID"|"SIZE"|"SKIP"|"SORT"|"TAILABLE"
+									|"TOARRAY"|"TRYNEXT")
+									"(" skipBalanced("(",")") ")"
+									[("." <IDENTIFIER>"(" skipBalanced("(",")") ")")*] [";"] ;
 

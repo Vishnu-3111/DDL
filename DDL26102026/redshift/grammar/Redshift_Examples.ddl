@@ -1569,6 +1569,384 @@ DROP EXTERNAL VIEW gsds.glue_data_catalog_view IF EXISTS
 
 SHOW COLUMNS FROM TABLE awsdatacatalog.batman.nation LIMIT 2;
 
+// Vis_25112026_[251101000]_ALTER EXTERNAL SCHEMA (URI, IAM_ROLE, AUTHENTICATION MTLS, AUTHENTICATION_ARN)
+ALTER EXTERNAL SCHEMA schema_name
+URI 'lkc-ghidef-67890.centralus.azure.glb.confluent.cloud:9092';
 
+ALTER EXTERNAL SCHEMA kafka_schema IAM_ROLE default AUTHENTICATION mtls AUTHENTICATION_ARN 'arn:aws:acm:us-east-1:123456789012:certificate/abcd1234';
 
+// Vis_25112026_[251101001]_CREATE DATABASE: FROM INTEGRATION SET options, COLLATE CI, IAM_ROLE, quoted OF ACCOUNT id
+CREATE DATABASE sales_zetl FROM INTEGRATION 'a1b2c3d4-5678-90ab-cdef-EXAMPLE11111' DATABASE 'sourcedb' SET ACCEPTINVCHARS = TRUE HISTORY_MODE = TRUE REFRESH_INTERVAL 600;
 
+CREATE DATABASE sampledb2 WITH OWNER dwuser CONNECTION LIMIT UNLIMITED COLLATE CI ISOLATION LEVEL SNAPSHOT;
+
+CREATE DATABASE lf_db FROM ARN 'arn:aws:glue:us-east-1:123456789012:database/lf_db' WITH DATA CATALOG SCHEMA 'lf_schema' IAM_ROLE default;
+
+CREATE DATABASE sales_db WITH PERMISSIONS FROM DATASHARE salesshare OF ACCOUNT '123456789012' NAMESPACE '13b8833d-17c6-4f16-8fe4-1a018f5ed00d';
+
+// Vis_25112026_[251101002]_ALTER DATABASE: combined options, COLLATE CS, INTEGRATION REFRESH REMEDIABLE, INTEGRATION SET
+ALTER DATABASE sampledb CONNECTION LIMIT 50 COLLATE CS ISOLATION LEVEL SERIALIZABLE;
+
+ALTER DATABASE sample_integration_db INTEGRATION REFRESH REMEDIABLE TABLES IN SCHEMA sample_schema;
+
+ALTER DATABASE sample_integration_db INTEGRATION SET QUERY_ALL_STATES = TRUE HISTORY_MODE = TRUE FOR TABLE sample_schema.orders;
+
+// Vis_25112026_[251101003]_DROP DATABASE FORCE
+DROP DATABASE tickit_test FORCE;
+
+// Vis_25112026_[251101004]_CREATE SCHEMA AUTHORIZATION username
+CREATE SCHEMA AUTHORIZATION dwuser QUOTA 50 GB;
+
+// Vis_25112026_[251101005]_CREATE EXTERNAL SCHEMA: FROM KAFKA, AUTHENTICATION MTLS, optional source, clauses in any order
+CREATE EXTERNAL SCHEMA kafka_schema
+FROM KAFKA
+IAM_ROLE default
+URI 'b-1.mycluster.kafka.us-east-1.amazonaws.com:9094'
+AUTHENTICATION mtls
+AUTHENTICATION_ARN 'arn:aws:acm:us-east-1:123456789012:certificate/abcd1234';
+
+CREATE EXTERNAL SCHEMA spectrum_schema2 FROM DATABASE 'spectrum_db' IAM_ROLE 'SESSION' CATALOG_ROLE 'SESSION';
+
+// Vis_25112026_[251101006]_ALTER DATASHARE: SET INCLUDENEW TRUE FOR SCHEMA, function with empty argument list
+ALTER DATASHARE salesshare SET INCLUDENEW = TRUE FOR SCHEMA public;
+
+ALTER DATASHARE salesshare ADD FUNCTION public.get_version();
+
+// Vis_25112026_[251101007]_DESC DATASHARE with numeric account id
+DESC DATASHARE salesshare OF ACCOUNT 123456789012 NAMESPACE '13b8833d-17c6-4f16-8fe4-1a018f5ed00d';
+
+// Vis_25112026_[251101008]_Column COLLATE CI / CS abbreviations
+CREATE TABLE t_collate_abbrev (id INTEGER, name VARCHAR(50) COLLATE CI, code CHAR(5) COLLATE CS);
+
+// Vis_25112026_[251101009]_New data types: SUPER, BOOL, NCHAR, BINARY VARYING, INTERVAL, TIME/TIMESTAMP WITH TIME ZONE
+CREATE TABLE t_new_types (c1 SUPER, c2 BOOL, c3 NCHAR(10), c4 BINARY VARYING(20), c5 INTERVAL YEAR TO MONTH, c6 INTERVAL DAY TO SECOND, c7 TIMESTAMP WITH TIME ZONE, c8 TIME WITH TIME ZONE);
+
+// Vis_25112026_[251101010]_CREATE EXTERNAL TABLE STORED AS RCFILE
+CREATE EXTERNAL TABLE spectrum.sales_rc (salesid INTEGER, pricepaid DECIMAL(8,2))
+STORED AS RCFILE
+LOCATION 's3://amzn-s3-demo-bucket/tickit/spectrum/sales_rc/';
+
+// Vis_25112026_[251101011]_ALTER TABLE: RLS CONJUNCTION TYPE, MASKING FOR DATASHARES, comma-separated clauses, multi-column PARTITION, multiple TABLE PROPERTIES
+ALTER TABLE tickit_category_redshift ROW LEVEL SECURITY ON CONJUNCTION TYPE OR FOR DATASHARES;
+
+ALTER TABLE tickit_category_redshift MASKING ON FOR DATASHARES;
+
+ALTER TABLE sales ALTER SORTKEY (salesid, listid), ALTER DISTKEY sellerid;
+
+ALTER TABLE spectrum.sales_part ADD IF NOT EXISTS PARTITION (saledate='2008-01-01', region='us') LOCATION 's3://amzn-s3-demo-bucket/tickit/spectrum/sales_partition/saledate=2008-01/';
+
+ALTER TABLE spectrum.sales SET TABLE PROPERTIES ('numRows'='170000', 'skip.header.line.count'='1');
+
+// Vis_25112026_[251101012]_ALTER TABLE APPEND with schema-qualified target
+ALTER TABLE public.sales APPEND FROM public.sales_monthly IGNOREEXTRA;
+
+// Vis_25112026_[251101013]_TRUNCATE schema-qualified table
+TRUNCATE TABLE public.category;
+
+// Vis_25112026_[251101014]_ALTER MATERIALIZED VIEW: AUTO REFRESH YES INTERVAL, ALTER DISTSTYLE/SORTKEY
+ALTER MATERIALIZED VIEW tickets_mv AUTO REFRESH YES INTERVAL 3600;
+
+ALTER MATERIALIZED VIEW tickets_mv ALTER DISTSTYLE KEY DISTKEY catgroup;
+
+ALTER MATERIALIZED VIEW tickets_mv ALTER COMPOUND SORTKEY (catgroup, sold);
+
+// Vis_25112026_[251101015]_DROP MATERIALIZED VIEW list with CASCADE
+DROP MATERIALIZED VIEW IF EXISTS tickets_mv, public.sales_mv CASCADE;
+
+// Vis_25112026_[251101016]_REFRESH MATERIALIZED VIEW schema-qualified with CASCADE
+REFRESH MATERIALIZED VIEW public.tickets_mv CASCADE;
+
+// Vis_25112026_[251101017]_DROP FUNCTION with any argument list and schema-qualified name
+DROP FUNCTION f_sql_greater(float, float);
+
+DROP FUNCTION public.f_py_greater(a float, b float) CASCADE;
+
+// Vis_25112026_[251101018]_ALTER / DROP / SHOW PROCEDURE with argmode argument lists, optional list, schema-qualified names
+ALTER PROCEDURE public.quarterly_revenue(volume INOUT bigint, at_price IN numeric) RENAME TO quarterly_revenue2;
+
+DROP PROCEDURE quarterly_revenue(volume INOUT bigint, at_price IN numeric,result OUT int);
+
+SHOW PROCEDURE test_sp2(int, varchar);
+
+SHOW PROCEDURE public.test_sp1;
+
+// Vis_25112026_[251101020]_CALL with argument expressions, empty list and schema-qualified name
+CALL public.test_sp1(3, 'book');
+
+CALL test_sp2();
+
+// Vis_25112026_[251101019]_CREATE PROCEDURE SET configuration with a string value
+CREATE OR REPLACE PROCEDURE sp_set_path()
+AS $$
+BEGIN
+  RAISE INFO 'ok';
+END;
+$$ LANGUAGE plpgsql
+SET search_path TO 'public';
+
+// Vis_25112026_[251101021]_CREATE MODEL with schema-qualified model name
+CREATE MODEL demo_ml.customer_churn_auto
+FROM customer_activity
+TARGET churn
+FUNCTION ml_fn_customer_churn_auto
+IAM_ROLE default
+SETTINGS (S3_BUCKET 'amzn-s3-demo-bucket');
+
+// Vis_25112026_[251101022]_CREATE EXTERNAL MODEL (Bedrock) with quoted and unquoted SETTINGS values
+CREATE EXTERNAL MODEL llm_claude
+FUNCTION llm_claude_func
+IAM_ROLE 'arn:aws:iam::123456789012:role/RedshiftBedrockRole'
+MODEL_TYPE BEDROCK
+SETTINGS (
+    MODEL_ID 'anthropic.claude-v2:1',
+    PROMPT 'Summarize the following text:',
+    REQUEST_TYPE RAW,
+    RESPONSE_TYPE SUPER);
+
+CREATE EXTERNAL MODEL llm_titan FUNCTION llm_titan_func IAM_ROLE default MODEL_TYPE BEDROCK SETTINGS (MODEL_ID amazon.titan-text-express-v1, REQUEST_TYPE UNIFIED);
+
+// Vis_25112026_[251101023]_ALTER USER: comma-separated options, NOLOGIN, LOGIN PASSWORD
+ALTER USER dbuser CONNECTION LIMIT 10, SESSION TIMEOUT 300;
+
+ALTER USER dbuser NOLOGIN;
+
+ALTER USER dbuser LOGIN PASSWORD 'Abcd1234';
+
+// Vis_25112026_[251101024]_ALTER DEFAULT PRIVILEGES ... ON PROCEDURES / ON TABLES
+ALTER DEFAULT PRIVILEGES IN SCHEMA sales GRANT EXECUTE ON PROCEDURES TO ROLE sales_role;
+
+ALTER DEFAULT PRIVILEGES FOR USER report_admin GRANT SELECT ON TABLES TO GROUP report_readers;
+
+// Vis_25112026_[251101025]_GRANT/REVOKE: mixed privileges, new ON objects, scoped FOR ... IN, ADMIN/GRANT OPTION FOR, new grantees
+GRANT EXECUTE ON PROCEDURE public.sp_get_current_user_definer() TO ROLE analyst;
+
+GRANT EXECUTE ON FUNCTION f_sql_greater(float, float) TO GROUP report_readers;
+
+GRANT SELECT, TRUNCATE ON ALL TABLES IN SCHEMA sales TO ROLE etl_role;
+
+GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA sales TO bob;
+
+GRANT EXECUTE FOR FUNCTIONS IN SCHEMA Sales_schema TO bob;
+
+REVOKE EXECUTE FOR FUNCTIONS IN SCHEMA Sales_schema FROM bob;
+
+GRANT SELECT FOR TABLES IN SCHEMA sales DATABASE dev TO ROLE analyst;
+
+GRANT ALTER, DROP ON COPY JOB my_copy_job TO ROLE etl_role;
+
+GRANT USAGE ON TEMPLATE test_schema.demo_template TO ROLE etl_role;
+
+GRANT EXECUTE ON MODEL customer_churn TO ROLE analyst;
+
+GRANT CREATE, ALTER, DROP ON EXTERNAL SCHEMA spectrum_schema TO IAM_ROLE 'arn:aws:iam::123456789012:role/myrole';
+
+GRANT ACCESS SYSTEM TABLE, IGNORE RLS, EXPLAIN MASKING TO ROLE auditor;
+
+GRANT SELECT ON TABLE lookup_table TO MASKING POLICY mask_credit_card;
+
+GRANT CONNECT ON WORKGROUP TO idc:alice;
+
+REVOKE ADMIN OPTION FOR ROLE sample_role FROM bob;
+
+REVOKE GRANT OPTION SELECT FOR TABLES IN SCHEMA sales FROM bob;
+
+GRANT DEBUG ON DATABASE fed_db TO ADMINS OF ACCOUNT '123456789012';
+
+GRANT EXECUTE ON PROCEDURE sales_sp(int) TO DATASHARE salesshare;
+
+// Vis_25112026_[251101028]_RLS policies: database-qualified names, multi-column WITH, unquoted alias, ATTACH/DETACH on db.schema.table
+CREATE RLS POLICY policy_concerts
+WITH (catgroup VARCHAR(10))
+USING (catgroup = 'Concerts');
+
+CREATE RLS POLICY dev.policy_sales WITH (region VARCHAR(20), amount INTEGER) AS s USING (region = 'us-east');
+
+ALTER RLS POLICY dev.policy_sales USING (region = 'us-west');
+
+DROP RLS POLICY IF EXISTS dev.policy_sales CASCADE;
+
+ATTACH RLS POLICY dev.policy_sales ON TABLE dev.public.sales TO ROLE analyst, ROLE dbadmin;
+
+DETACH RLS POLICY dev.policy_sales ON TABLE dev.public.sales FROM ROLE analyst;
+
+// Vis_25112026_[251101028]_Masking policies with database-qualified policy names
+CREATE MASKING POLICY dev.mask_credit_card WITH (credit_card VARCHAR(256)) USING ('XXXXXXXXXXXX'::TEXT);
+
+ALTER MASKING POLICY dev.mask_credit_card USING ('000000000000'::TEXT);
+
+// Vis_25112026_[251101029]_ATTACH / DETACH MASKING POLICY on qualified relation with USING (input columns)
+ATTACH MASKING POLICY dev.mask_credit_card ON dev.public.credit_cards (credit_card) USING (credit_card) TO ROLE analyst PRIORITY 10;
+
+DETACH MASKING POLICY dev.mask_credit_card ON dev.public.credit_cards (credit_card) FROM ROLE analyst;
+
+// Vis_25112026_[251101028]_DROP MASKING POLICY with database-qualified name
+DROP MASKING POLICY dev.mask_credit_card;
+
+// Vis_25112026_[251101026]_CREATE IDENTITY PROVIDER with APPLICATION_ARN and IAM_ROLE, no PARAMETERS
+CREATE IDENTITY PROVIDER "redshift-idc-app" TYPE AWSIDC
+NAMESPACE 'awsidc'
+APPLICATION_ARN 'arn:aws:sso::123456789012:application/ssoins-12345f67fe123d4/apl-a0b0a12dc123b1a4'
+IAM_ROLE 'arn:aws:iam::123456789012:role/MyRedshiftRole';
+
+// Vis_25112026_[251101027]_ALTER IDENTITY PROVIDER with multiple clauses and AUTO_CREATE_ROLES
+ALTER IDENTITY PROVIDER "my-redshift-idc-application" IAM_ROLE 'arn:aws:iam::123456789012:role/myadministratorrole' AUTO_CREATE_ROLES TRUE INCLUDE GROUPS LIKE 'sales%';
+
+// Vis_25112026_[251101030]_SELECT: QUALIFY after FROM table, GROUP BY ALL, SELECT INTO regression
+SELECT venuestate, venuename FROM venue QUALIFY ROW_NUMBER() OVER (PARTITION BY venuestate ORDER BY venuename) = 1;
+
+SELECT catgroup, SUM(qtysold) FROM category GROUP BY ALL;
+
+select * into newevent from event;
+
+// Vis_25112026_[251101031]_INSERT VALUES with :: cast, negative decimal, function call; INSERT ... SELECT regression
+INSERT INTO t1(col1) VALUES ('Incomplete'::char(3));
+
+INSERT INTO sales_history VALUES (1, -2.5, getdate(), DEFAULT, NULL);
+
+INSERT INTO spectrum.lineitem
+SELECT * FROM local_lineitem;
+
+// Vis_25112026_[251101032]_UPDATE schema-qualified table with alias
+UPDATE public.category AS c SET catgroup = 'Theatre' WHERE catid = 9;
+
+// Vis_25112026_[251101033]_MERGE with schema-qualified tables and source alias
+MERGE INTO public.target USING public.source AS s ON target.id = s.id REMOVE DUPLICATES;
+
+// Vis_25112026_[251101034]_COPY JOB forms, COPY ... JOB CREATE, FORMAT AS JSON 'auto' with comma-separated parameters
+COPY JOB RUN my_copy_job_name;
+
+COPY JOB DROP my_copy_job_name;
+
+COPY public.target_table
+FROM 's3://amzn-s3-demo-bucket/staging-folder'
+IAM_ROLE 'arn:aws:iam::123456789012:role/MyLoadRoleName'
+JOB CREATE my_copy_job_name
+AUTO ON;
+
+COPY category FROM 's3://amzn-s3-demo-bucket/category_object_auto.json' IAM_ROLE default FORMAT AS JSON 'auto', REGION 'us-east-1';
+
+// Vis_25112026_[251101035]_UNLOAD: FORMAT AS PARQUET, NULL AS, ADDQUOTES without argument
+UNLOAD ('select * from venue') TO 's3://amzn-s3-demo-bucket/unload/venue_' IAM_ROLE default FORMAT AS PARQUET PARTITION BY (venuestate) INCLUDE;
+
+UNLOAD ('select * from venue') TO 's3://amzn-s3-demo-bucket/unload/venue_' IAM_ROLE 'arn:aws:iam::0123456789012:role/MyRedshiftRole' CSV NULL AS 'N/A' ADDQUOTES ALLOWOVERWRITE;
+
+// Vis_25112026_[251101036]_CREATE [OR REPLACE] TEMPLATE FOR COPY
+CREATE TEMPLATE test_schema.demo_template
+FOR COPY
+AS
+FORMAT JSON 'auto'
+NULL AS 'N/A'
+MAXERROR 100;
+
+CREATE OR REPLACE TEMPLATE dev.test_schema.csv_template FOR COPY CSV IGNOREHEADER 1, DELIMITER ',';
+
+// Vis_25112026_[251101037]_ALTER TEMPLATE: RENAME TO, SET, ADD, DROP
+ALTER TEMPLATE test_template
+RENAME TO demo_template;
+
+ALTER TEMPLATE test_schema.demo_template SET MAXERROR TO 50, IGNOREHEADER TO 2;
+
+ALTER TEMPLATE test_schema.demo_template ADD TRUNCATECOLUMNS;
+
+ALTER TEMPLATE test_schema.demo_template DROP MAXERROR;
+
+// Vis_25112026_[251101038]_DROP TEMPLATE
+DROP TEMPLATE test_schema.test_template;
+
+// Vis_25112026_[251101039]_BEGIN / START TRANSACTION isolation levels READ UNCOMMITTED, REPEATABLE READ
+BEGIN TRANSACTION ISOLATION LEVEL READ UNCOMMITTED READ WRITE;
+
+START TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+// Vis_25112026_[251101040]_LOCK schema-qualified tables
+LOCK TABLE public.event, public.sales;
+
+// Vis_25112026_[251101041]_VACUUM schema-qualified table with FORCE
+VACUUM FULL public.sales TO 75 PERCENT BOOST FORCE;
+
+// Vis_25112026_[251101042]_EXECUTE with number and string parameters
+EXECUTE prep_insert_plan (2, 'Two');
+
+// Vis_25112026_[251101043]_COMMENT ON schema-qualified table and columns
+COMMENT ON TABLE public.sales IS 'This table stores tickets sales data';
+
+COMMENT ON COLUMN public.sales.qtysold IS 'Quantity sold';
+
+COMMENT ON COLUMN sales.pricepaid IS 'Price paid';
+
+// Vis_25112026_[251101044]_SET with value list and decimal value
+SET search_path TO '$user', public;
+
+SET seed TO 0.25;
+
+// Vis_25112026_[251101045]_SHOW EXTERNAL TABLE database.schema.table
+SHOW EXTERNAL TABLE spectrum_db.my_schema.alldatatypes_parquet_test_partitioned PARTITION;
+
+// Vis_25112026_[251101046]_USE database
+use pdb;
+
+// Vis_25112026_[251101047]_SHOW DATABASES: optional FROM DATA CATALOG, LIKE, IAM_ROLE, LIMIT
+SHOW DATABASES;
+
+SHOW DATABASES LIKE 'sample%' LIMIT 5;
+
+SHOW DATABASES FROM DATA CATALOG ACCOUNT '123456789012' IAM_ROLE default LIMIT 10;
+
+// Vis_25112026_[251101048]_SHOW USER LOCKOUT
+SHOW USER LOCKOUT;
+
+// Vis_25112026_[251101049]_SHOW COLUMN GRANTS
+SHOW COLUMN GRANTS ON TABLE demo_db.demo_schema.t100 FOR ROLE analyst LIMIT 10;
+
+// Vis_25112026_[251101050]_SHOW CONSTRAINTS PRIMARY KEYS / FOREIGN KEYS [EXPORTED]
+SHOW CONSTRAINTS PRIMARY KEYS FROM TABLE demo_db.demo_schema.pk1;
+
+SHOW CONSTRAINTS FOREIGN KEYS EXPORTED FROM TABLE demo_schema.pk1 LIMIT 5;
+
+// Vis_25112026_[251101051]_SHOW FUNCTIONS
+SHOW FUNCTIONS FROM SCHEMA demo_schema like '%discount';
+
+// Vis_25112026_[251101052]_SHOW PROCEDURES
+SHOW PROCEDURES FROM SCHEMA demo_db.demo_schema;
+
+// Vis_25112026_[251101053]_SHOW GRANTS ON database/function/table and FOR ROLE
+SHOW GRANTS on database demo_db;
+
+SHOW GRANTS ON FUNCTION demo_schema.f2(int, varchar) FOR PUBLIC;
+
+SHOW GRANTS ON TABLE demo_db.demo_schema.t100 FOR alice LIMIT 20;
+
+SHOW GRANTS FOR ROLE analyst FROM DATABASE demo_db;
+
+// Vis_25112026_[251101054]_SHOW PARAMETERS OF FUNCTION / PROCEDURE
+SHOW PARAMETERS OF FUNCTION demo_schema.f2(INT, VARCHAR, DECIMAL, DATE, TIMESTAMP, BOOLEAN);
+
+SHOW PARAMETERS OF PROCEDURE demo_db.demo_schema.p1(INT) LIKE 'a%';
+
+// Vis_25112026_[251101055]_SHOW RLS / MASKING POLICIES
+SHOW RLS POLICIES;
+
+SHOW MASKING POLICIES ON demo_schema.credit_cards FOR ROLE analyst LIMIT 10;
+
+SHOW RLS POLICIES FROM DATABASE demo_db;
+
+// Vis_25112026_[251101056]_SHOW TEMPLATE
+SHOW TEMPLATE test_template;
+
+// Vis_25112026_[251101057]_SHOW TEMPLATES
+SHOW TEMPLATES FROM SCHEMA s1 LIKE 'demo%' LIMIT 10;
+
+// Vis_26112026_[261101142]_CREATE EXTERNAL VIEW without PROTECTED; USING ICEBERG with LOCATION / PARTITIONED BY / TABLE PROPERTIES
+CREATE EXTERNAL VIEW sample_schema.glue_data_catalog_view2 IF NOT EXISTS
+AS SELECT * FROM sample_database.remote_table;
+
+CREATE EXTERNAL VIEW iceberg_view_loc USING ICEBERG LOCATION 's3://amzn-s3-demo-bucket/iceberg/view1/';
+
+CREATE EXTERNAL VIEW sample_schema.iceberg_view_part USING ICEBERG LOCATION 's3://amzn-s3-demo-bucket/iceberg/view2/' PARTITIONED BY (sale_date)
+AS SELECT sale_id, sale_date, amount FROM sales;
+
+CREATE EXTERNAL VIEW sample_schema.iceberg_view_props USING ICEBERG TABLE PROPERTIES ('format-version'='2', 'write.format.default'='parquet')
+AS SELECT * FROM sample_database.remote_table;
+
+CREATE EXTERNAL PROTECTED VIEW sample_schema.iceberg_view_full IF NOT EXISTS USING ICEBERG LOCATION 's3://amzn-s3-demo-bucket/iceberg/view3/' PARTITIONED BY (region, sale_date) TABLE PROPERTIES ('format-version'='2')
+AS SELECT region, sale_date, SUM(amount) FROM sales GROUP BY region, sale_date;

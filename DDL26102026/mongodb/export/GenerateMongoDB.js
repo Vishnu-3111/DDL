@@ -36,7 +36,7 @@ function main()
 		var i = 0;
 		var guid = ssproperties.get('Object' + i); // To get elements guid from the Generate ddl window
 		while (guid != undefined)
-		{	
+		{
 			ddl_Element = Repository.GetElementByGuid(guid); // Selected elements from Generate ddl file window
 			if(genOutputType == "1")
 			file=fileSystemObj.OpenTextFile(filepath + ddl_Element.Name + ".sql", 2, true);
@@ -83,6 +83,11 @@ function createDDldocument(Mongo_Element,file)
 				
 			}
 		}
+		//Vis_26112026_[261101050]_Added export routing for MongoDB::encryptedCollection
+		else if( Mongo_Element.FQStereotype=="MongoDB::encryptedCollection")
+		{
+			create_document+=createEncryptedCollection(Mongo_Element);
+		}
 		else if( Mongo_Element.FQStereotype=="MongoDB::view")
 		{
 			create_document+="db.createView(\""+Mongo_Element.Name+"\"";
@@ -109,7 +114,8 @@ function createDDldocument(Mongo_Element,file)
 			var functionbody as EA.TaggedValue
 			functionbody=Mongo_Element.TaggedValues.GetByName("procdef");
 			
-			if(functionbody!=null&&functionbody.Value!="")
+			//Vis_26112026_[261101055]_Checked procdef Notes instead of Value before emitting procedure body
+			if(functionbody!=null&&functionbody.Notes!="")
 				create_document+=",\n value :"+functionbody.Notes;
 			
 			create_document+="}\n);\n\n";
@@ -127,11 +133,12 @@ function createDDldocument(Mongo_Element,file)
 			}
 			create_document+= ") \n{\n "			
 			
-			var funcdrf as EA.TaggedValue
+			//Vis_26112026_[261101056]_Corrected funcdef variable name and read function body via tagText (Notes or Value)
+			var funcdef as EA.TaggedValue
 			funcdef=Mongo_Element.TaggedValues.GetByName("funcdef");
 			
-			if(funcdef!=null&&funcdef.Value!="")
-				create_document+=funcdef.Value;
+			if(tagText(funcdef)!="")
+				create_document+=tagText(funcdef);
 			
 		create_document+="};\n\n";
 		}	
@@ -245,8 +252,9 @@ function createCollection( Mongo_Element)
 			collectionOptions.push(collectionOptionSyntax);
 		}
 		
+		//Vis_26112026_[261101057]_Corrected collection tag name pipeline to Pipeline to match grammar
 		var pipeline as EA.TaggedValue
-		pipeline=Mongo_Element.TaggedValues.GetByName("pipeline");
+		pipeline=Mongo_Element.TaggedValues.GetByName("Pipeline");
 		if(pipeline!=null&&pipeline.Notes!="")
 		{
 			collectionOptionSyntax="pipeline :"+pipeline.Notes;
@@ -459,8 +467,9 @@ function createindex(Mongo_Element,operation)
 			{
 				indexquery+=keys.Notes+"\n";
 			}
-			IndexOptions=[];
-			IndexOptionSyntax="";
+			//Vis_26112026_[261101058]_Declared IndexOptions and IndexOptionSyntax as local variables
+			var IndexOptions=[];
+			var IndexOptionSyntax="";
 			var Unique as EA.TaggedValue
 				Unique=operation.TaggedValues.GetByName("Unique");
 			if(Unique !=null&&(Unique.Value==1 || Unique.Value == "True"))
@@ -527,11 +536,13 @@ function createindex(Mongo_Element,operation)
 				IndexOptionSyntax ="bits : "+bits.Value;
 				IndexOptions.push(IndexOptionSyntax);
 			}
+			//Vis_26112026_[261101059]_Pushed the min index option into IndexOptions
 			var min as EA.TaggedValue
 			min=operation.TaggedValues.GetByName("min");
 			if(min !=null&&min.Value!="")
 			{
 				IndexOptionSyntax ="min : "+min.Value;
+				IndexOptions.push(IndexOptionSyntax);
 			}
 
 			var max as EA.TaggedValue
@@ -543,11 +554,12 @@ function createindex(Mongo_Element,operation)
 			}
 
 
+			//Vis_26112026_[261101060]_Read index storageEngine tag (grammar spelling) from Notes
 			var StorageEngine as EA.TaggedValue
-			StorageEngine=operation.TaggedValues.GetByName("StorageEngine");
-			if(StorageEngine !=null&&StorageEngine.Value!="")
+			StorageEngine=operation.TaggedValues.GetByName("storageEngine");
+			if(StorageEngine !=null&&StorageEngine.Notes!="")
 			{
-				IndexOptionSyntax ="storageEngine : "+StorageEngine.Value;
+				IndexOptionSyntax ="storageEngine : "+StorageEngine.Notes;
 				IndexOptions.push(IndexOptionSyntax);
 			}
 
@@ -559,8 +571,9 @@ function createindex(Mongo_Element,operation)
 				IndexOptions.push(IndexOptionSyntax);
 			}
 
+			//Vis_26112026_[261101061]_Corrected index tag name ExpireAfterSeconds to expireAfterSeconds to match grammar
 			var expireAfterSeconds as EA.TaggedValue
-			expireAfterSeconds=operation.TaggedValues.GetByName("ExpireAfterSeconds");
+			expireAfterSeconds=operation.TaggedValues.GetByName("expireAfterSeconds");
 			if(expireAfterSeconds !=null&&expireAfterSeconds.Value!="")
 			{
 				IndexOptionSyntax ="expireAfterSeconds : " +expireAfterSeconds.Value;
@@ -590,8 +603,9 @@ function createindex(Mongo_Element,operation)
 				indexquery +="\n}";
 			}
 			
+			//Vis_26112026_[261101062]_Corrected index tag name commitquorum to commitQuorum to match grammar
 			var commitquorum as EA.TaggedValue
-			commitquorum=operation.TaggedValues.GetByName("commitquorum");
+			commitquorum=operation.TaggedValues.GetByName("commitQuorum");
 			if(commitquorum !=null&&commitquorum.Value!="")
 			{
 				indexquery +=  ","+commitquorum.Value ;
@@ -639,7 +653,11 @@ function insertmethod(Mongo_Element)
 				else
 				{
 					subfield = field.TaggedValues.GetByName("SubField");
-					insertquery += subfield.Notes ;
+					//Vis_26112026_[261101063]_Guarded missing SubField tag and emitted null instead
+					if(subfield !=null&&subfield.Notes!="")
+						insertquery += subfield.Notes ;
+					else
+						insertquery += "null" ;
 				}
 
 				if(Mongo_Element.Attributes.Count-1!=j)
@@ -661,8 +679,9 @@ function insertmethod(Mongo_Element)
 					var attribute as EA.Attribute
 					attribute=columns[k];
 					
+					//Vis_26112026_[261101064]_Corrected field tag name Fieldvalue to FieldValue to match grammar
 					var fieldvalue as EA.TaggedValue
-					fieldvalue=attribute.TaggedValues.GetByName("Fieldvalue");
+					fieldvalue=attribute.TaggedValues.GetByName("FieldValue");
 					
 					if(fieldvalue!=null&&fieldvalue.Value!="")
 						insertquery+=attribute.Name+" : "+fieldvalue.Value;
@@ -705,15 +724,88 @@ function createsearchindex(Mongo_Element,operation)
 		indexquery+="\""+operation.Name+"\" " ;
 		var index_def as EA.TaggedValue
 		index_def=operation.TaggedValues.GetByName("Index Definition");
-		if(index_def!=null&index_def.Notes!="")
+		//Vis_26112026_[261101065]_Fixed & to && in Index Definition check and always close createSearchIndex call
+		if(index_def!=null&&index_def.Notes!="")
 		{
-			indexquery+=" , \n { " +index_def.Notes+" } ) ;\n\n" ;
+			indexquery+=" , \n { " +index_def.Notes+" } " ;
 		}
+		indexquery+=") ;\n\n" ;
 	}
 	catch(e)
 	{
 		Session.Output("Message :"+ e.message+"\n")
-		Session.Output("Stack Trace : " +e.stack+" \n\n" );	
+		Session.Output("Stack Trace : " +e.stack+" \n\n" );
 	}
 		return indexquery;
+}
+
+//Vis_26112026_[261101056]_Added tagText helper returning Notes or Value of a tagged value
+// Returns the tag text: Notes for document/long values, otherwise Value. Empty string when the tag is missing.
+function tagText(tag)
+{
+	if(tag==null)
+		return "";
+	if(tag.Notes!=null&&tag.Notes!="")
+		return tag.Notes;
+	if(tag.Value!=null&&tag.Value!="<memo>")
+		return tag.Value;
+	return "";
+}
+
+//Vis_26112026_[261101050]_Added getTag helper to look up a tag under alternative name spellings
+// Returns the first tagged value found under any of the given names
+// (the grammar emits "Provider"/"masterkey", profile.xml defines "provider"/"masterKey").
+function getTag(taggedValues,names)
+{
+	for(var n=0;n<names.length;n++)
+	{
+		var tag=taggedValues.GetByName(names[n]);
+		if(tag!=null)
+			return tag;
+	}
+	return null;
+}
+
+//Vis_26112026_[261101050]_Added createEncryptedCollection export for MongoDB::encryptedCollection
+// db.createEncryptedCollection("name", { provider, createCollectionOptions, masterKey })
+function createEncryptedCollection(Mongo_Element)
+{
+	var create_document="";
+
+	try
+	{
+		var options=[];
+
+		var provider as EA.TaggedValue
+		provider=getTag(Mongo_Element.TaggedValues,["provider","Provider"]);
+		var providerValue=tagText(provider);
+		if(providerValue!="")
+		{
+			var first=providerValue.charAt(0);
+			if(first!="\""&&first!="'")
+				providerValue="\""+providerValue+"\"";
+			options.push("provider : "+providerValue);
+		}
+
+		var createCollectionOptions as EA.TaggedValue
+		createCollectionOptions=getTag(Mongo_Element.TaggedValues,["createCollectionOptions"]);
+		if(tagText(createCollectionOptions)!="")
+			options.push("createCollectionOptions : "+tagText(createCollectionOptions));
+
+		var masterKey as EA.TaggedValue
+		masterKey=getTag(Mongo_Element.TaggedValues,["masterKey","masterkey"]);
+		if(tagText(masterKey)!="")
+			options.push("masterKey : "+tagText(masterKey));
+
+		create_document+="db.createEncryptedCollection(\""+Mongo_Element.Name+"\",\n{\n";
+		create_document+=options.join(",\n");
+		create_document+="\n}\n);\n\n";
+	}
+	catch(e)
+	{
+		Session.Output("Message :"+ e.message+"\n")
+		Session.Output("Stack Trace : " +e.stack+" \n\n" );
+	}
+
+	return create_document;
 }

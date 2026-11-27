@@ -765,9 +765,10 @@ CREATE TABLE distributors (
 );
 
 	
+-- Vis_26112026_[261101019]_Test data: moved PRIMARY KEY from address to zipcode column in addresses table
 CREATE TABLE addresses (
-     address   varchar(40) PRIMARY KEY,
-	 zipcode integer
+     address   varchar(40) ,
+	 zipcode integer PRIMARY KEY
 );
 
 ALTER TABLE distributors RENAME COLUMN address TO city;
@@ -786,7 +787,8 @@ ALTER TABLE ONLY distributors DROP CONSTRAINT zipchk;
 
 ALTER TABLE distributors ADD CONSTRAINT distfk FOREIGN KEY (address) REFERENCES addresses (address);
 
-ALTER TABLE distributors ADD CONSTRAINT distfk FOREIGN KEY (address) REFERENCES addresses (address) NOT VALID;
+-- Vis_26112026_[261101019]_Test data: renamed duplicate FK distfk to distfks and pointed it at addresses (zipcode) with NOT VALID
+ALTER TABLE distributors ADD CONSTRAINT distfks FOREIGN KEY (address) REFERENCES addresses (zipcode) NOT VALID;
 
 ALTER TABLE distributors VALIDATE CONSTRAINT distfk;
 

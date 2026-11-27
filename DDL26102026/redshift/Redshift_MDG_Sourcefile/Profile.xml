@@ -166,9 +166,14 @@
 					<Tag name="Diststyle" type="" description="" unit="" values="" default=""/>
 					<Tag name="Encode Auto" type="" description="" unit="" values="" default=""/>
 					<Tag name="External view Properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="isIceberg" type="" description="" unit="" values="" default=""/>
+					<Tag name="isProtected" type="" description="" unit="" values="" default=""/>
 					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partitioned By" type="" description="" unit="" values="" default=""/>
 					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
 					<Tag name="Sortkey Auto" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Location" type="" description="" unit="" values="" default=""/>
 					<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
 					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
 				</TaggedValues>

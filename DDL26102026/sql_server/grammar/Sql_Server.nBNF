@@ -142,6 +142,7 @@ parse(<language>);
 								|<create_user>
 								|<create_workload>
 								|<create_xml_schema_coll>
+								|<create_statistics> //Vis_28102026_[281001001]_Added CREATE STATISTICS
 								;
 								
 
@@ -170,7 +171,8 @@ parse(<language>);
 								|<drop_synonym>
 								|<drop_table>
 								|<drop_trigger>
-								|<drop_xml_schema_coll>
+								|<drop_xml_schema_coll>								
+								|<drop_index> //Vis_28102026_[281001005]_Added DROP INDEX
 								;
 								
 <permissoin_commands>		::= <add_signature> 
@@ -181,7 +183,8 @@ parse(<language>);
 								|<open_symmetric_key>
 								|<revert>
 								|<revoke>
-								|<set_user>;
+								|<set_user>
+								|<execute_as_statement>; //Vis_28102026_[281001009]_Added EXECUTE AS statement
 								
 <service_broker_commands>	::=<begin_conversion_timer>
 								|<end_conversion>
@@ -206,6 +209,9 @@ parse(<language>);
 								|<update_statistics>
 								|<set_option_add>
 								|<SelectQuery>
+								|<readtext> //Vis_28102026_[281001006]_Added READTEXT
+								|<updatetext> //Vis_28102026_[281001007]_Added UPDATETEXT
+								|<writetext> //Vis_28102026_[281001008]_Added WRITETEXT
 								;			
 								
 <alter_commands>			::=<alter_application_role>
@@ -258,6 +264,8 @@ parse(<language>);
 								|<alter_view>
 								|<alter_workload>
 								|<alter_xml_schema_collection>
+								|<alter_column_encryption_key> //Vis_28102026_[281001002]_Added ALTER COLUMN ENCRYPTION KEY
+								|<alter_database_scoped_credential> //Vis_28102026_[281001003]_Added ALTER DATABASE SCOPED CREDENTIAL
 								;
 								
 <backup_restore>			::=<backup_common>
@@ -272,6 +280,7 @@ parse(<language>);
 <end_statement>						::= ";" | "go";
 
 
+//Vis_26112026_[261101143]_CREATE TABLE WITH clause now parses a comma list of withcommands (Table Option + optional system_version)
 <create_table>						::= node("ELEMENT", 
 											attributeEx("EATYPE", "Class")
 											attributeEx("EASTEREOTYPE", "SqlServer::table")		
@@ -290,17 +299,25 @@ parse(<language>);
 											[ "ON"  node("Partition Clause", attribute("VALUE" ,["["]<partition_clause> ["]"])) ]
 											[ "TEXTIMAGE_ON" node("Text Image Clause" , attribute("VALUE" ,  "["<text_image_clause>"]" )) ]
 											[ "FILESTREAM_ON" node("File Stream Clause" , attribute("VALUE" , <file_stream_clause>))  ]
-											[ "WITH" "(" ( <system_version> | node("Table Option" , attribute("VALUE" , ( <table_option> ("," <table_option>)*))))
+											[ "WITH" "("  <withCommands>("," <withcommands>)*
+											
 											   ")"]																				
 										)[<end_statement>*];
 
 							//Raji_08102026_081001000_Updated the grammar file to support system versioning as a connector.
-<system_version>			::= ("SYSTEM_VERSIONING" "=" "ON" node("CONNECTOR" , attributeEx("EATYPE", "Generalization") 
+//Vis_26112026_[261101144]_system_version now matches only the (HISTORY_TABLE = ...) connector part; removed leading SYSTEM_VERSIONING = ON and Table Option fallback; Schema and Database made optional
+<system_version>			::= (node("CONNECTOR" , attributeEx("EATYPE", "Generalization") 
 								attributeEx("EASTEREOTYPE", "SqlServer::systemversion")
-								 "(" "HISTORY_TABLE" "=" node("Schema and Database" , <shemas_name>)
+								 "(" "HISTORY_TABLE" "=" [node("Schema and Database" , <shemas_name>)]
 								(["["] node("TARGET", ((attribute("NAME" , <constraint_name>))|<StringAsName>) ) ["]"])
-								[ "," "DATA_CONSISTENCY_CHECK" "=" ( "ON" | "OFF" ) ] ")" [("," <table_option>)*]
-								)) | (node ("Table Option", attribute("VALUE", "SYSTEM_VERSIONING" "=" "ON" ("," <table_option>)*)));
+								[ "," "DATA_CONSISTENCY_CHECK" "=" ( "ON" | "OFF" ) ] ")" 
+								)) ;
+								
+//Vis_26112026_[261101143]_Helper rule for CREATE TABLE WITH clause: Table Option node followed by optional system_version connector
+<withcommands>				::=   node("Table Option" , attribute("VALUE" , ( <table_option> ("," <table_option>)*)))[<system_version> ];
+							
+								
+								
 
 <partition_clause>			::= (<clu_Name> "(" <clu_Name> ")") | (<filegroup>) | (<StringValue>) ;
 
@@ -467,6 +484,7 @@ parse(<language>);
 										 ("XML" "COLUMN_SET" "FOR" "ALL_SPARSE_COLUMNS" node("Set Definition" , attributeEx("VALUE" , "True")))
 									); 
 									
+//Vis_26112026_[261101145]_PK/UNIQUE table constraint WITH (index_option list) captured as Constrain Option tagged value
 <table_constraint>			::= node("OPERATION",
 									[ "CONSTRAINT" ((attribute("NAME",<constraint_name>))|<StringAsName>|( "[" attribute("NAME",  skipBalanced("[","]")) "]" )) ]
 									(
@@ -475,7 +493,7 @@ parse(<language>);
 											[<constraint_columns>]
 											[
 												("WITH" "FILLFACTOR" "=" <fillfactor>)
-											  | ("WITH" "(" <index_option>  ("," <index_option>)*  ")")
+											  | ("WITH"  node("Constrain Option",attribute("VALUE","(" <index_option>  ("," <index_option>)*  ")")))
 											]
 											[ "ON" ( (<schema_and_databases> "(" (["["] <clu_Name> ["]"]) ")") | (<filegroup>) | (<StringValue>) |(["["] "PRIMARY" ["]"] ))]
 
@@ -553,6 +571,7 @@ parse(<language>);
 								);
 								
 								
+//Vis_26112026_[261101146]_Replaced system_version reference with plain SYSTEM_VERSIONING = ON table option
 <table_option>				::= (
 									( "DATA_COMPRESSION" "=" ( "NONE" | "ROW" | "PAGE" )
 									  [ "ON" "PARTITIONS" "(" <partition_value> ("," <partition_value>)* ")" ] )
@@ -589,7 +608,7 @@ parse(<language>);
 									| 
 									( "MEMORY_OPTIMIZED" "=" "ON")
 									|
-									("DURABILITY" "=" "SCHEMA_AND_DATA")|<system_version>
+									("DURABILITY" "=" "SCHEMA_AND_DATA")|("SYSTEM_VERSIONING" "=" "ON")
 									
 								);
 								
@@ -898,10 +917,9 @@ parse(<language>);
 							  | ( "SCHEMABINDING" )
 							  | ( "RETURNS" "NULL" "ON" "NULL" "INPUT" )
 							  | ("CALLED" "ON" "NULL" "INPUT" )
-							  | ( "EXECUTE_AS_Clause" )
+							  | <execute_as_clause> //Vis_28102026_[281001010]_Fixed EXECUTE AS CLAUSE with proper rule
 							  | ( "INLINE" "=" ( "ON" | "OFF" ))
 							  | ("NATIVE_COMPILATION")
-							  | ("EXECUTE" "AS" "CALLER")
 							
 							);
 							
@@ -940,7 +958,7 @@ parse(<language>);
 
 <procedure_option>		::= ("ENCRYPTION")
 							| ("RECOMPILE")
-							| ("EXECUTE" "AS" "Clause")
+							| <execute_as_clause> //Vis_28102026_[281001010]_Fixed EXECUTE AS CLAUSE with proper rule
 							| ("NATIVE_COMPILATION")
 							| ("SCHEMABINDING ")
 							;	
@@ -1116,7 +1134,7 @@ parse(<language>);
 <dml_trigger_option>	::= ("ENCRYPTION")
 							| ("NATIVE_COMPILATION ")
 							| ("SCHEMABINDING ")
-							| ("EXECUTE" "AS" "Clause");
+							| <execute_as_clause>; //Vis_28102026_[281001010]_Fixed EXECUTE AS CLAUSE with proper rule
 							
 							
 <triggering_event>			::= ("INSERT" ("," "UPDATE" "," "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete"))) 
@@ -1798,7 +1816,8 @@ parse(<language>);
 
 <drop_contract>					::= "DROP" "CONTRACT" "[" ;
 
-<drop_database>					::= "DROP" "DATABASE"[(("AUDIT" "SPECIFICATION")|("ENCRYPTION" "KEY" ))] [ "IF" "EXISTS" ] [(<name>".")*] [( <name> (","<name>)*)] [";"] ;
+//Vis_28102026_[281001004]_Added SCOPED CREDENTIAL to drop_database for DROP DATABASE SCOPED CREDENTIAL; terminator changed to [<end_statement>*]
+<drop_database>					::= "DROP" "DATABASE"[(("AUDIT" "SPECIFICATION")|("ENCRYPTION" "KEY" )|("SCOPED" "CREDENTIAL"))] [ "IF" "EXISTS" ] [(<name>".")*] [( <name> (","<name>)*)] [ <end_statement>*];
 
 <drop_default>					::= "DROP" "DEFAULT" [ "IF" "EXISTS" ] 
 									(( <full_name> ) ( ","( <full_name> ) )*) [ <end_statement>*] ; 
@@ -2534,7 +2553,8 @@ parse(<language>);
 										
 <alter_function>				::= "ALTER" "FUNCTION" <full_name>   
 										"(" skipBalanced("(",")")")"  
-										"RETURNS" (("TABLE" [<function_option>])|
+										"RETURNS" (
+										("TABLE" [<function_option>])|
 										(<data_type>["(" (( <precision>  ["," <scale>] ) | ([ ( "CONTENT" | "DOCUMENT" ) ] <xml_schema_collection>)) ")" ])
 										| ("@"<IDENTIFIER> "TABLE" "("skipBalanced("(",")") ")" ) )
 											[ "WITH" [<function_option> ( ","<function_option> )* ]]  
@@ -2952,7 +2972,7 @@ parse(<language>);
 										"AS" ( <trigger_action>(","<trigger_action>)* )   
 										  [<end_statement>*]  ;
 										  
-<dml_trigger_option_alter> ::=   [ "ENCRYPTION" ]     [ <execute_statement> ]  ;
+<dml_trigger_option_alter> ::=   [ "ENCRYPTION" ]     [ <execute_as_clause> ]  ; //Vis_28102026_[281001010]_Fixed EXECUTE AS CLAUSE with proper rule
 
 
 <alter_user>				::= "ALTER" "USER" <full_name>
@@ -3268,4 +3288,78 @@ parse(<language>);
 							;							
 <constraint_columns_func>				::= "(" <constraint_column_func> ("," <constraint_column_func>)* ")";
 
-<constraint_column_func>					::=    ((["$"] (<clu_Name> ))|("[" skipBalanced("[","]") "]"))  ["ASC"|"DESC"];								
+<constraint_column_func>					::=    ((["$"] (<clu_Name> ))|("[" skipBalanced("[","]") "]"))  ["ASC"|"DESC"];
+
+//Vis_28102026_[281001001]_Added CREATE STATISTICS
+<create_statistics>				::= "CREATE" "STATISTICS" <name>
+									"ON" <queue_object> "(" <name> ("," <name>)* ")"
+									["WHERE" <search_conditions>]
+									["WITH"
+										[("FULLSCAN" [["," ] "PERSIST_SAMPLE_PERCENT" "=" ("ON"|"OFF")])
+										|("SAMPLE" <NUMBER> ("PERCENT"|"ROWS") [["," ] "PERSIST_SAMPLE_PERCENT" "=" ("ON"|"OFF")])
+										|(<update_stats_stream_option> ("," <update_stats_stream_option>)*)]
+										[["," ] "NORECOMPUTE"]
+										[["," ] "INCREMENTAL" "=" ("ON"|"OFF")]
+										[["," ] "MAXDOP" "=" <NUMBER>]
+										[["," ] "AUTO_DROP" "=" ("ON"|"OFF")]
+									]
+									[<end_statement>*];
+
+//Vis_28102026_[281001002]_Added ALTER COLUMN ENCRYPTION KEY
+<alter_column_encryption_key>	::= "ALTER" "COLUMN" "ENCRYPTION" "KEY" <name>
+									("ADD"|"DROP") "VALUE"
+									"(" "COLUMN_MASTER_KEY" "=" <name>
+										["," "ALGORITHM" "=" <StringValue> "," "ENCRYPTED_VALUE" "=" [("0".."9")] <IDENTIFIER>]
+									")"
+									[<end_statement>*];
+
+//Vis_28102026_[281001003]_Added ALTER DATABASE SCOPED CREDENTIAL
+<alter_database_scoped_credential>	::= "ALTER" "DATABASE" "SCOPED" "CREDENTIAL" <name>
+										"WITH" "IDENTITY" "=" <StringValue>
+										["," "SECRET" "=" <StringValue>]
+										[<end_statement>*];
+
+//Vis_28102026_[281001005]_Added DROP INDEX
+<drop_index>					::= "DROP" "INDEX" ["IF" "EXISTS"]
+									((<drop_index_relational> ("," <drop_index_relational>)*)
+									|(<drop_index_backward_compat> ("," <drop_index_backward_compat>)*))
+									[<end_statement>*];
+
+//Vis_28102026_[281001005]_Helper rules for DROP INDEX (drop_index_relational, drop_index_backward_compat, drop_clustered_index_option)
+<drop_index_relational>			::= <name> "ON" <queue_object>
+									["WITH" "(" <drop_clustered_index_option> ("," <drop_clustered_index_option>)* ")"];
+
+<drop_index_backward_compat>	::= <name> "." <name> ["." <name>];
+
+<drop_clustered_index_option>	::= ("MAXDOP" "=" <NUMBER>)
+									|("ONLINE" "=" ("ON"|"OFF"))
+									|("MOVE" "TO" ((<schema_and_databases> "(" <name> ")")|<name>|<StringValue>)
+										["FILESTREAM_ON" ((<schema_and_databases> "(" <name> ")")|<name>|<StringValue>)]);
+
+//Vis_28102026_[281001006]_Added READTEXT
+<readtext>						::= "READTEXT" <queue_object> "@" <IDENTIFIER> <NUMBER> <NUMBER>
+									["HOLDLOCK"]
+									[<end_statement>*];
+
+//Vis_28102026_[281001007]_Added UPDATETEXT
+<updatetext>					::= "UPDATETEXT" ["BULK"] <queue_object> "@" <IDENTIFIER>
+									("NULL"|<NUMBER>)
+									("NULL"|<NUMBER>)
+									["WITH" "LOG"]
+									[<StringValue> | (<queue_object> "@" <IDENTIFIER>)]
+									[<end_statement>*];
+
+//Vis_28102026_[281001008]_Added WRITETEXT
+<writetext>						::= "WRITETEXT" ["BULK"] <queue_object> "@" <IDENTIFIER>
+									["WITH" "LOG"] (<StringValue>|<IDENTIFIER>)
+									[<end_statement>*];
+
+//Vis_28102026_[281001009]_Added EXECUTE AS statement (standalone impersonation)
+<execute_as_statement>			::= ("EXEC"|"EXECUTE") "AS"
+									((("LOGIN"|"USER") "=" <StringValue>
+										["WITH" (("NO" "REVERT") | ("COOKIE" "INTO" "@" <IDENTIFIER>))])
+									| "CALLER")
+									[<end_statement>*];
+
+//Vis_28102026_[281001010]_Added EXECUTE AS CLAUSE (used within CREATE/ALTER PROCEDURE, FUNCTION, TRIGGER)
+<execute_as_clause>				::= ("EXECUTE_AS_Clause")|(("EXEC"|"EXECUTE") "AS" ("CALLER"|"SELF"|"OWNER"|<StringValue>));

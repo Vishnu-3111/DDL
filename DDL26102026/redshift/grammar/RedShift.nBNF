@@ -77,12 +77,14 @@ parse(<language>);
 									   | <CreateGroup>
 									   | <create_role>
 									   | <create_rls_policy>
+									   | <create_external_model>
 									   | <create_model>
 									   | <create_masking_policy>
 									   | <create_library>
 									   | <create_id_provider>
 									   | <create_datashare>
-									   | <create_user>									
+									   | <create_user>
+									   | <create_template>
 									   ;  
 
 <alter_commands> 					::= <Alter_procedure>
@@ -101,6 +103,8 @@ parse(<language>);
 									  | <alter_datashare>
 									  |<alter_function>
 									  |<alter_system>
+									  |<alter_external_schema>
+									  |<alter_template>
 									  ; 	
 
 <drop_commands> 					::= <droptable>
@@ -116,7 +120,8 @@ parse(<language>);
 									 | <drop_library>
 									 | <drop_identity_provider>
 									 | <drop_group>
-									 | <drop_function>									 
+									 | <drop_function>
+									 | <drop_template>
 									 ;  
 
 <other_commands>     	             ::= <Select>
@@ -152,6 +157,17 @@ parse(<language>);
 										 | <show_ext_table>
 										 | <show_columns>
 										 | <show_schemas>
+										 | <show_user_lockout>
+										 | <show_column_grants>
+										 | <show_constraints>
+										 | <show_functions>
+										 | <show_procedures>
+										 | <show_grants>
+										 | <show_parameters>
+										 | <show_policies>
+										 | <show_templates>
+										 | <show_template>
+										 | <use_database>
 										 | <show>
 										 | <set_session_auth>
 										 | <set>
@@ -177,47 +193,65 @@ parse(<language>);
 
 <column_name_as_string>				::=<IDENTIFIER>|<StringValue> ;										
 											
-<Alter_procedure>					::= "ALTER" "PROCEDURE" <sp_name> [ "(" [<arg_datas> ("," <arg_datas>)*] ")" ]
+//Vis_25112026_[251101018]_ALTER PROCEDURE accepts any [argname] [argmode] argtype list and schema-qualified names
+<Alter_procedure>					::= "ALTER" "PROCEDURE" [<schema_name>"."] <sp_name> [ "(" skipBalanced("(",")") ")" ]
 										["RENAME" "TO" <new_name>]
 										 ["OWNER" "TO" (  "CURRENT_USER" | "SESSION_USER"|<new_owner> )]";" ;	
 									
 											
+//Vis_25112026_[251101014]_Updated ALTER MATERIALIZED VIEW: AUTO REFRESH YES INTERVAL, ALTER DISTKEY/DISTSTYLE/SORTKEY
 <Alter_mat_View>					::= "ALTER" ("MATERIALIZED"|"EXTERNAL") "VIEW" [<schema_name>"."]<mv_name>
 										[<external_view_pro>]
-										[ "AUTO" "REFRESH" ( "YES" | "NO" ) ]
+										[ "AUTO" "REFRESH" ( ("YES" ["INTERVAL" <NUMBER>]) | "NO" ) ]
+										[ <mv_alter_dist_sort> ]
 										[ "ROW" "LEVEL" "SECURITY" ( "ON" | "OFF" )[ "CONJUNCTION" "TYPE" ( "AND" | "OR" ) ] ["FOR" "DATASHARES"] ]
 										[["FORCE"] ( ("AS" "("<SelectQuery>")") | ("REMOVE" "DEFINITION" ))][";"] ;
+
+<mv_alter_dist_sort>				::= "ALTER" (	("DISTKEY" <column_name_as_string>)
+												| ("DISTSTYLE" ( "ALL" | "EVEN" | "AUTO" | ("KEY" "DISTKEY" <column_name_as_string>) ))
+												| ("SORTKEY" ( "AUTO" | "NONE" ))
+												| (["COMPOUND"] "SORTKEY" "(" <column_name_as_string> ("," <column_name_as_string>)* ")")
+											) ;
 											
+//Vis_25112026_[251101002]_Updated ALTER DATABASE: combinable options, COLLATE CS/CI, INTEGRATION REFRESH REMEDIABLE and INTEGRATION SET options
 <Alter_Database>					::= "ALTER" "DATABASE" <database_name>
-										[ (("RENAME" "TO" <new_name>)
-										| ("OWNER" "TO" <new_owner>)
-										| ("CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ))
-										| ("COLLATE" ( "CASE_SENSITIVE" | "CASE_INSENSITIVE" ) )
-										|("ISOLATION" "LEVEL" ( "SERIALIZABLE" | "SNAPSHOT" ))
-										|("INTEGRATION" "REFRESH" ((( "ALL" | "INERROR" ) "TABLES" 
-										["IN" "SCHEMA" <schema_name> ("," <schema_name>)*]) 
-										|("TABLE" [<schema_name>"."]<table_name_as_string> ("," [<schema_name>"."]<table_name_as_string>)*))))] [";"]
-										;
+										[ ( ("RENAME" "TO" <new_name>)
+										  | ("OWNER" "TO" <new_owner>)
+										  | ("CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ))
+										  | ("COLLATE" <collate_value>)
+										  | ("ISOLATION" "LEVEL" ( "SERIALIZABLE" | "SNAPSHOT" ))
+										  | ("INTEGRATION" ( ("REFRESH" ( (( "ALL" | "INERROR" | "REMEDIABLE" ) "TABLES" ["IN" "SCHEMA" <schema_name> ("," <schema_name>)*])
+																		| ("TABLE" [<schema_name>"."]<table_name_as_string> ("," [<schema_name>"."]<table_name_as_string>)*) ))
+															| ("SET" (<integration_option>)+) ))
+										  )+ ] [";"] ;
 
 											
+//Vis_25112026_[251101005]_Updated CREATE EXTERNAL SCHEMA: FROM KAFKA, optional source, AUTHENTICATION MTLS, AUTHENTICATION_ARN, clauses in any order
 <Create_Ex_Schema>					::=	"CREATE" "EXTERNAL" "SCHEMA" [ ["["] "IF" "NOT" "EXISTS" ["]"] ] <schema_name>
-										"FROM" (  "DATA" "CATALOG"  | "HIVE" "METASTORE" | "POSTGRES" | "MYSQL" | "KINESIS" | "MSK" | "REDSHIFT" )
-										[ "DATABASE" <StringValue> ]
-										[ "SCHEMA" <StringValue> ]
-										[ "REGION" <StringValue> ]
-										[ "URI" <StringValue> [ "PORT"  <port_number> ] ]
-										["IAM_ROLE" ( "DEFAULT"| <StringValue> )]
-										[ "SECRET_ARN" <StringValue> ]
-										[ "AUTHENTICATION" ( "NONE" | "IAM" ) ]
-										[ "CLUSTER_ARN" <StringValue> ]
-										[ "CATALOG_ROLE" ( <StringValue> ) ]
-										[ "CREATE" "EXTERNAL" "DATABASE" "IF" "NOT" "EXISTS" ]
-										[ "CATALOG_ID" <StringValue> ] ";"
+										"FROM" [ ("DATA" "CATALOG") | ("HIVE" "METASTORE") | "POSTGRES" | "MYSQL" | "KINESIS" | "MSK" | "REDSHIFT" | "KAFKA" ]
+										(
+											  ( "DATABASE" <StringValue> )
+											| ( "SCHEMA" <StringValue> )
+											| ( "REGION" <StringValue> )
+											| ( "URI" <StringValue> [ "PORT" <port_number> ] )
+											| ( "IAM_ROLE" ( "DEFAULT" | <StringValue> ) )
+											| ( "SECRET_ARN" <StringValue> )
+											| ( "AUTHENTICATION_ARN" <StringValue> )
+											| ( "AUTHENTICATION" ( "NONE" | "IAM" | "MTLS" ) )
+											| ( "CLUSTER_ARN" <StringValue> )
+											| ( "CATALOG_ROLE" <StringValue> )
+											| ( "CREATE" "EXTERNAL" "DATABASE" "IF" "NOT" "EXISTS" )
+											| ( "CATALOG_ID" <StringValue> )
+										)* ";"
 										;
 										
 <port_number>						::= <NUMBER> ;
 
-<Create_Schema>						::= "CREATE" "SCHEMA" [ "IF" "NOT" "EXISTS" ] <schema_name> [ "AUTHORIZATION" <username> ]
+//Vis_25112026_[251101004]_Added CREATE SCHEMA AUTHORIZATION username form
+<Create_Schema>						::= "CREATE" "SCHEMA"
+										(	("AUTHORIZATION" <username>)
+										  | ([ "IF" "NOT" "EXISTS" ] <schema_name> [ "AUTHORIZATION" <username> ])
+										)
 										[ "QUOTA" (<quota> ["MB" | "GB" | "TB"] | "UNLIMITED") ] [ <schema_element> ("," <schema_element>)* ]	";" ;	
 
 <schema_element>					::= <IDENTIFIER> ;										
@@ -304,7 +338,8 @@ parse(<language>);
 <sp_procedure_name>					::= <IDENTIFIER> ;
 <procedure_body>					::= (<StringValue>|("$_$" skip("$_$")"$_$" )|("$__$" skip("$__$") "$__$")|("$$" skip("$$")"$$")) ;
 <configuration_parameter>			::= <IDENTIFIER> ;
-<value>								::= <IDENTIFIER> ;										
+//Vis_25112026_[251101019]_CREATE PROCEDURE SET configuration value accepts strings and numbers
+<value>								::= <IDENTIFIER> | <StringValue> | <NUMBER> ;										
 
 <f_function_name>					::= <IDENTIFIER> ;
 <py_arg_name>						::= <IDENTIFIER>;
@@ -314,16 +349,20 @@ parse(<language>);
 
 <function_definition>				::= (<StringValue>|("$_$" skip("$_$")"$_$" )|("$__$" skip("$__$") "$__$")|("$$" skip("$$")"$$")) ;
 											
-<create_database>					::= "CREATE" "DATABASE" 
-										 <database_name> [ "WITH" ]
+//Vis_25112026_[251101001]_Updated CREATE DATABASE: FROM INTEGRATION options, IAM_ROLE, COLLATE CS/CI, optional OF clause, fixed "UNLIMITED " token
+<create_database>					::= "CREATE" "DATABASE" <database_name>
+										[ <db_integration> ]
+										[ "WITH" ]
 										[ "OWNER" ["="] <db_owner> ]
-										[ "CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED ") ]
-										[ "COLLATE" ( "CASE_SENSITIVE" | "CASE_INSENSITIVE" ) ]
+										[ "CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ) ]
+										[ "COLLATE" <collate_value> ]
 										[ "ISOLATION" "LEVEL" ( "SERIALIZABLE" | "SNAPSHOT" ) ]
-										[["WITH" "PERMISSIONS"]"FROM" [ ("DATASHARE" <datashare_name>) | ("ARN" <StringValue>) ] "OF" [ "ACCOUNT" <account_id_db> ] ["NAMESPACE" <namespace_guid>]]
-										[ "WITH" "DATA" "CATALOG" "SCHEMA" <StringValue> | "WITH" "NO" "DATA" "CATALOG" "SCHEMA" ] 
-										
+										[ [["WITH"] "PERMISSIONS"] "FROM" [ ("DATASHARE" <datashare_name>) | ("ARN" <StringValue>) ] [ "OF" [ "ACCOUNT" <account_id_db> ] ["NAMESPACE" <namespace_guid>] ] ]
+										[ ("WITH" "DATA" "CATALOG" "SCHEMA" <StringValue>) | ("WITH" "NO" "DATA" "CATALOG" "SCHEMA") ]
+										[ "IAM_ROLE" ( "DEFAULT" | <StringValue> ) ]
 										[";"] ;
+
+<db_integration>					::= "FROM" "INTEGRATION" <StringValue> [ "DATABASE" <StringValue> ] [ "SET" ] (<integration_option>)* ;
 											
 <create_external_table>				::= node("ELEMENT", 
 											attributeEx("EATYPE", "Class")
@@ -354,7 +393,8 @@ parse(<language>);
 <external_table_name>				::= <table_name> ;
 									
 <db_owner>							::= <IDENTIFIER> ;
-<account_id_db>						::= <IDENTIFIER>;
+//Vis_25112026_[251101001]_account_id_db accepts quoted or numeric account IDs
+<account_id_db>						::= <IDENTIFIER> | <StringValue> | <NUMBER> ;
 										
 <partion_values>					::=  node("ATTRIBUTE", attributeEx("EASTEREOTYPE", "Redshift::column")
 											 ((attribute("NAME", <column_name> ))|<StringAsName>) [<column_Vlaue>] [<column_constraints>] [<column_attributes>]
@@ -366,12 +406,14 @@ parse(<language>);
 										
 <property_condtions>				::=  <property_name> "=" <property_value> ;										
 									
+//Vis_25112026_[251101010]_Added STORED AS RCFILE for CREATE EXTERNAL TABLE
 <file_format>						::= (
-											node("Stored AS",attributeEx("VALUE","Format Options")) 
+											node("Stored AS",attributeEx("VALUE","Format Options"))
 											"INPUTFORMAT" node("Input Format",attribute("VALUE",<StringValue>))
-											"OUTPUTFORMAT" node("Output Format",attribute("VALUE",<StringValue>)) 
+											"OUTPUTFORMAT" node("Output Format",attribute("VALUE",<StringValue>))
 										 )
 										|("PARQUET" node("Stored AS",attributeEX("VALUE","PARQUET")))
+										|("RCFILE" node("Stored AS",attributeEX("VALUE","RCFILE")))
 										|("SEQUENCEFILE" node("Stored AS",attributeEX("VALUE","SEQUENCEFILE")))
 										|("TEXTFILE" node("Stored AS",attributeEX("VALUE","TEXTFILE")))
 										|("ORC" node("Stored AS",attributeEX("VALUE","ORC")))
@@ -388,13 +430,14 @@ parse(<language>);
 
 
 										
+//Vis_25112026_[251101011]_Updated ALTER TABLE: comma-separated clauses, ROW LEVEL SECURITY CONJUNCTION TYPE, MASKING FOR DATASHARES, multi-column PARTITION, multiple TABLE PROPERTIES
 <alter_table>						::=   mapRight("ALTER" "TABLE" [(<IDENTIFIER>|<StringValue>)"."]
 										node("OWNER",((attribute("NAME", <table_name>))|<StringAsName>)),
-												(	
-														<alter_add_table>  	| 	<alter_ex_table>						
-													
+												(
+														(<alter_add_table> ("," <alter_add_table>)*)  	| 	<alter_ex_table>
 												))[";"];
 										
+//Vis_25112026_[251101011]_ALTER TABLE clauses: ROW LEVEL SECURITY CONJUNCTION TYPE, MASKING ON|OFF FOR DATASHARES, multiple SET TABLE PROPERTIES
 <alter_add_table> 					::= 	"ADD" [["IF" "NOT" "EXISTS"] (<add_if_not_exist> ( [","] <add_if_not_exist>)*)]   			[(((node("OPERATION",(<table_constraints>)))|(node("FOREIGNKEY",<foreign_key>)))| 
 ([ "COLUMN" ] <column_name_as_string> <col_type>[ "DEFAULT" "NULL" |<default_expr> ]))]
 											| ("DROP" "CONSTRAINT" <constraint_name> [ "RESTRICT" | "CASCADE" ])
@@ -420,10 +463,11 @@ parse(<language>);
 											[ "NOT" "NULL" | "NULL" ] 
 											[ "COLLATE"  <IDENTIFIER>   ] 
 											| "DROP" [ "COLUMN" ] [<partition>] [<column_name_as_string> [ "RESTRICT" | "CASCADE" ] ]
-											| "ROW" "LEVEL" "SECURITY" ( "ON" | "OFF" ) [ "FOR" "DATASHARES" ]	
+											| "ROW" "LEVEL" "SECURITY" ( "ON" | "OFF" ) [ "CONJUNCTION" "TYPE" ( "AND" | "OR" ) ] [ "FOR" "DATASHARES" ]
+											| "MASKING" ( "ON" | "OFF" ) "FOR" "DATASHARES"	
 											| "SET" "LOCATION" ( <StringValue> )
 											| "SET" "FILE" "FORMAT" <format>
-											| "SET" "TABLE" "PROPERTIES" "(" (<StringValue> "=" <StringValue>)  ")"
+											| "SET" "TABLE" "PROPERTIES" "(" <StringValue> "=" <StringValue> ("," <StringValue> "=" <StringValue>)* ")"
 											| <partition>
 												"SET" "LOCATION" <StringValue>
 											| "ADD" ["IF" "NOT" "EXISTS"]
@@ -433,9 +477,10 @@ parse(<language>);
 										;
 											
 											
+//Vis_25112026_[251101011]_External ALTER TABLE SET TABLE PROPERTIES accepts multiple property pairs
 <alter_ex_table>					::=  "SET" "LOCATION" ( <StringValue> )
 										| "SET" "FILE" "FORMAT" <format>
-										| "SET" "TABLE" "PROPERTIES" "(" (<StringValue> "=" <StringValue>)  ")"
+										| "SET" "TABLE" "PROPERTIES" "(" <StringValue> "=" <StringValue> ("," <StringValue> "=" <StringValue>)* ")"
 										| <partition>
 										  "SET" "LOCATION" <StringValue>
 										| "ADD" ["IF" "NOT" "EXISTS"] (<add_if_not_exist> ( [","] <add_if_not_exist>)*)										
@@ -445,7 +490,9 @@ parse(<language>);
 <add_if_not_exist>					::= 		<partition>
 												"LOCATION" <StringValue> 	;
 										
-<partition>							::= "PARTITION" "(" <IDENTIFIER>["=" <StringValue>]  ")" ;
+//Vis_25112026_[251101011]_PARTITION accepts multiple partition_column=value pairs
+<partition>							::= "PARTITION" "(" <partition_spec> ("," <partition_spec>)* ")" ;
+<partition_spec>					::= <IDENTIFIER> ["=" (<StringValue> | <NUMBER>)] ;
 											
 
 <format>							::= <IDENTIFIER> ;										
@@ -455,13 +502,14 @@ parse(<language>);
 <new_owner>							::= (<IDENTIFIER>|<StringValue>) ;
 
 
+//Vis_26112026_[261101142]_CREATE EXTERNAL [PROTECTED] VIEW: PROTECTED optional (isProtected tag) and USING ICEBERG clause
 <create_view> 						::= node("ELEMENT", 
 											attributeEx("EATYPE", "Class")
 											attributeEx("EASTEREOTYPE", "Redshift::view")	
 											"CREATE" 
 											[(("MATERIALIZED" node("View Type", attributeEx("VALUE" , "Materialized"))) 
 											| ("OR" "REPLACE" node("View Type" , attributeEx("VALUE", "Replace")))	
-											|("EXTERNAL" "PROTECTED" node("View Type" , attributeEx("VALUE", "External"))))]	
+											|("EXTERNAL" node("View Type" , attributeEx("VALUE", "External")) ["PROTECTED" node("isProtected",attributeEx("VALUE","True"))] ))]	
 											
 											"VIEW" 
 											[node("Schema and Database" , ((attribute("VALUE" ,<IDENTIFIER>))|<StringAsValue>) ".")]
@@ -474,7 +522,7 @@ parse(<language>);
 												]	
 											
 											[ <table_attributes> ]
-
+											[<icebergView>]
 											(("AUTO" "REFRESH" 
 													(("YES" node("AUTO REFRESH" , attributeEx("VALUE","Yes")))
 													|("NO" node("AUTO REFRESH", attributeEx("VALUE", "No"))))
@@ -489,7 +537,14 @@ parse(<language>);
 										
 <external_view_pro>					::= <catalog_name>"."[<schema_name>"."](<view_name>|<StringValue>)	;
 
-<catalog_name>						::=(<view_name>|<StringValue>) ;							
+<catalog_name>						::=(<view_name>|<StringValue>) ;	
+
+//Vis_26112026_[261101142]_USING ICEBERG [LOCATION] [PARTITIONED BY] [TABLE PROPERTIES] for external views (isIceberg, View Location, Partitioned By, Table properties tags)
+<icebergView>						::=	"USING" "ICEBERG" node("isIceberg",attributeEx("VALUE","True"))
+										["LOCATION" node("View Location",attribute("VALUE", <StringValue>))]
+										["PARTITIONED" "BY" node("Partitioned By",attribute("VALUE", "(" skipBalanced( "(",")" ) ")"))]
+										["TABLE" "PROPERTIES" node("Table properties",attribute("VALUE", "(" skipBalanced( "(",")" ) ")")) ]  ;
+														
 										
 										
 <create_table_as> 					::= node("ELEMENT", 
@@ -510,6 +565,7 @@ parse(<language>);
 										
 <Select>							::=  <SelectQuery> ";"  ;				
 
+//Vis_25112026_[251101030]_Added QUALIFY clause to SELECT
 <SelectQuery> 						::= ["("]  [<with_table_expression>	 ("," <with_table_expression>)*]
 										"SELECT"  								
 										skip("FROM")										
@@ -518,6 +574,7 @@ parse(<language>);
 										[<groupBy>]
 										[<where_condition>] 
 										[<having>]
+										["QUALIFY" <qualify_expr>]
 										[<union_condition>] 
 										["ORDER" "BY" (<order_expr> ("," <order_expr>)*)] 
 										[ "NULLS" "FIRST" | "NULLS" "LAST" ]
@@ -538,7 +595,8 @@ parse(<language>);
 
 <column_with_expression>			::= ["SUM" | "MAX" |"COUNT" |"LENGTH" |<table_name_as_string> "." | <SelectQuery>] ["("] (<column_name_as_string> ["/" <column_name_as_string>] | <NUMBER> | <StringValue> | <DELIMITER>) [")"] ["AS" <IDENTIFIER>] ;
 
-<groupBy>							::= "GROUP" "BY" <group_condition>;
+//Vis_25112026_[251101030]_Added GROUP BY ALL
+<groupBy>							::= "GROUP" "BY" ( "ALL" | <group_condition> );
 
 
 <group_condition>					::= ( (<IDENTIFIER> | <NUMBER>)  ( "," (<IDENTIFIER> | <NUMBER>))*) ;
@@ -555,7 +613,8 @@ parse(<language>);
 <Join_value> 						::= <join_type> <table_name_as_string>[ (("ON" <join_con>) | "USING" "(" <column_name_as_string>  ("," <column_name_as_string>)* ")")|["."] <IDENTIFIER>]
 										[ ("ON" <join_con>) | "USING" "(" <column_name_as_string>  ("," <column_name_as_string>)* ")" ] ;
 										
-<from_table> 						::= [<IDENTIFIER> "."]*<table_name_as_string> [ <Join_value> |<groupBy>| <where_condition> | <union_condition> | "WITH" "NO" "SCHEMA" "BINDING"| "ORDER" "BY" (<order_expr> ("," <order_expr>)*)| "LIMIT" ( <NUMBER> | "ALL" ) | <having>|(<IDENTIFIER>)]  ;
+//Vis_25112026_[251101030]_QUALIFY directly after a FROM table (checked before the bare table alias)
+<from_table>						::= [<IDENTIFIER> "."]*<table_name_as_string> [ <Join_value> |<groupBy>| <where_condition> | <union_condition> | "WITH" "NO" "SCHEMA" "BINDING"| "ORDER" "BY" (<order_expr> ("," <order_expr>)*)| "LIMIT" ( <NUMBER> | "ALL" ) | <having> | ("QUALIFY" <qualify_expr>) |(<IDENTIFIER>)]  ;
 
 										
 <from_tables>						::= [<SelectQuery>]<from_table> ("," <from_table>)*;
@@ -580,14 +639,17 @@ parse(<language>);
 <condition>							::= <join_con> ;	
 
 										
-<attach_rls_policy> 				::= "ATTACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <table_name_as_string> ("," <table_name_as_string>)*
-										"TO"  <detach_parameter> ("," <detach_parameter> )* ";" ;
+//Vis_25112026_[251101028]_ATTACH RLS POLICY accepts database.schema.table names
+<attach_rls_policy> 				::= "ATTACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <rls_table> ("," <rls_table>)*
+										"TO"  <detach_parameter> ("," <detach_parameter> )* [";"] ;
 										
+//Vis_25112026_[251101029]_ATTACH MASKING POLICY: qualified relation, output paths, USING (input columns)
 <attach_masking_policy>				::= "ATTACH" "MASKING" "POLICY" <policy_name>
-									   "ON"  <table_name_as_string> 
-									   "(" skipBalanced("(",")") ")" [ "USING" ( <column_name_as_string> ("," <column_name_as_string>)* ) ]
+									   "ON"  <rls_table>
+									   "(" skipBalanced("(",")") ")"
+									   [ "USING" ( ("(" skipBalanced("(",")") ")") | ( <column_name_as_string> ("," <column_name_as_string>)* ) ) ]
 									   "TO" ( <detach_parameter> )
-									   [ "PRIORITY" <priority> ] ";" ;
+									   [ "PRIORITY" <priority> ] [";"] ;
 <priority>							::= <NUMBER> ;
 										
 <create_role> 						::= "CREATE" "ROLE" <role_name>
@@ -597,26 +659,30 @@ parse(<language>);
 <deallocate>						::= "DEALLOCATE" ["PREPARE"] <plan_name> ";" ;										
 										
 <desc_datashare>					::= "DESC" "DATASHARE" <datashare_name> [ "OF" [ "ACCOUNT" <account_id> ] "NAMESPACE" <namespace_guid> ]  [";"] ;	
-<account_id>						::= <StringValue> ;							
+//Vis_25112026_[251101007]_DESC DATASHARE account_id accepts quoted, numeric or identifier values
+<account_id>						::= <StringValue> | <NUMBER> | <IDENTIFIER> ;							
 <namespace_guid>						::= <StringValue> ;							
 										
 <desc_identity_provider> 			::= "DESC" "IDENTITY" "PROVIDER" <identity_provider_name> [";"] ;
 <identity_provider_name> 			::= <IDENTIFIER>|<StringValue>;
 										
+//Vis_25112026_[251101029]_DETACH MASKING POLICY: qualified relation and output paths
 <detach_masking> 					::= "DETACH" "MASKING" "POLICY" <policy_name>
-										   "ON" ( <table_name_as_string> )
-										   "(" <column_name_as_string> ("," <column_name_as_string>)* ")"
+										   "ON" <rls_table>
+										   "(" skipBalanced("(",")") ")"
 										   "FROM" ( <detach_parameter>  ) [";"] ;		
 										   
 										
-<detach_rls_policy> 				::= "DETACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <table_name_as_string> ("," <table_name_as_string>)*
-										"FROM"  <detach_parameter> ("," <detach_parameter> )* ";" ;
+//Vis_25112026_[251101028]_DETACH RLS POLICY accepts database.schema.table names
+<detach_rls_policy> 				::= "DETACH" "RLS" "POLICY" <policy_name> "ON" ["TABLE"] <rls_table> ("," <rls_table>)*
+										"FROM"  <detach_parameter> ("," <detach_parameter> )* [";"] ;
 <detach_parameter> 					::=  "ROLE" <role_name> | <user> | "PUBLIC" ;
 <user> 								::= <IDENTIFIER> ;
 
 										
-<drop_function> 					::= "DROP" "FUNCTION" <name>
-										"(" <Input_argument>  ")"
+//Vis_25112026_[251101017]_DROP FUNCTION accepts any argument list ([arg_name] arg_type [, ...]) and schema-qualified names
+<drop_function> 					::= "DROP" "FUNCTION" [<schema_name>"."] <name>
+										"(" skipBalanced("(",")") ")"
 										[ "CASCADE" | "RESTRICT" ] [";"] ; 
 										
 <drop_group> 						::= "DROP" "GROUP" <name> [";"] ;									
@@ -631,14 +697,19 @@ parse(<language>);
 <dropmodel>							::= "DROP" "MODEL" [ "IF" "EXISTS" ] <model_name> ["." <variable_name>] [";"] ;										
 
 										 
+//Vis_25112026_[251101015]_DROP MATERIALIZED VIEW accepts a list of views and CASCADE|RESTRICT
 <drop_mat_view>						::= "DROP" ("MATERIALIZED"|"EXTERNAL") "VIEW" [ "IF" "EXISTS" ] [<schema_name>"."] <mv_name> [ "IF" "EXISTS" ]
-											[<external_view_pro>][";"] ;
+											[<external_view_pro>]
+											("," [<schema_name>"."] <mv_name>)*
+											[ "CASCADE" | "RESTRICT" ] [";"] ;
 <mv_name> 							::= <IDENTIFIER> ;
 										
-<drop_procedure>					::= "DROP" "PROCEDURE" <sp_name> "("  <Input_argument> ("," <Input_argument>)* ")" [";"] ;										
+//Vis_25112026_[251101018]_DROP PROCEDURE accepts any [argname] [argmode] argtype list and schema-qualified names
+<drop_procedure>					::= "DROP" "PROCEDURE" [<schema_name>"."] <sp_name> "(" skipBalanced("(",")") ")" [";"] ;										
 										
 <drop_rls_policy>					::= "DROP" "RLS" "POLICY" [ "IF" "EXISTS" ] <policy_name> [ "CASCADE" | "RESTRICT" ] [";"] ;
-<policy_name> 						::= <IDENTIFIER> |<StringValue>;
+//Vis_25112026_[251101028]_Policy names accept database_name.policy_name (RLS and masking policies)
+<policy_name> 						::= (<IDENTIFIER> | <StringValue>) ["." (<IDENTIFIER> | <StringValue>)] ;
 										
 <dropRole> 							::= "DROP" "ROLE" <role_name> [ "FORCE" | "RESTRICT" ] [";"] ; 
 <role_name>							::= <IDENTIFIER>|<StringValue> ;
@@ -651,12 +722,15 @@ parse(<language>);
 
 <execute>							::= "EXECUTE" <plan_name> [ "(" <parameter> ("," <parameter>)*  ")" ][";"] ;
 <plan_name> 						::= <StringValue> | <IDENTIFIER> ;
-<parameter>							::= <IDENTIFIER> ;
+//Vis_25112026_[251101042]_EXECUTE parameters accept numbers and strings
+<parameter>							::= <IDENTIFIER> | <NUMBER> | <StringValue> ;
 
 
-<lock> 								::= "LOCK" [ "TABLE" ] (<table_name_as_string> ("," <table_name_as_string>)*) [";"] ;							
+//Vis_25112026_[251101040]_LOCK accepts schema-qualified tables
+<lock> 								::= "LOCK" [ "TABLE" ] ([<schema_name>"."] <table_name_as_string> ("," [<schema_name>"."] <table_name_as_string>)*) [";"] ;							
 										
-<refresh_mat_view>					::= "REFRESH" "MATERIALIZED" "VIEW" <mv_name> [";"] ;
+//Vis_25112026_[251101016]_REFRESH MATERIALIZED VIEW accepts schema-qualified name and RESTRICT|CASCADE
+<refresh_mat_view>					::= "REFRESH" "MATERIALIZED" "VIEW" [<schema_name>"."] <mv_name> [ "RESTRICT" | "CASCADE" ] [";"] ;
 
 
 <reset> 		 					::= "RESET" ( "ALL"|(<parameter_name> ["." <variable_name>])) [";"] ;						
@@ -664,12 +738,14 @@ parse(<language>);
 										
 <roll_back> 						::= "ROLLBACK" [ "WORK" | "TRANSACTION" ] [";"] ;
 										
+//Vis_25112026_[251101044]_SET accepts decimal values and comma-separated value lists
 <set>								::= "SET"  [ "SESSION" | "LOCAL" ] ["AUTHORIZATION"]
 										<parameter_name> ["." <variable_name>] [( "TO" | "=" )]
-										[(<type_of_value> |<seedto>)]
+										[( (<type_of_value> ("," <type_of_value>)*) | <seedto> )]
 										 ";" ;	
 										
-<type_of_value> 					::=  <NUMBER> |<IDENTIFIER> | <StringValue> | "DEFAULT"  ; 
+//Vis_25112026_[251101044]_SET value accepts decimals and negative numbers
+<type_of_value> 					::=  (["-"] <NUMBER> "." <NUMBER>) | (["-"] <NUMBER>) | <IDENTIFIER> | <StringValue> | "DEFAULT"  ; 
 <seedto> 							::=  "SEED" "TO" (<IDENTIFIER> | <NUMBER> | <StringValue>)  ; 
 										
 <set_session_auth>					::= "SET" [ "LOCAL" ] "SESSION" "AUTHORIZATION" ( <user_name> | "DEFAULT" ) [";"] ;
@@ -679,17 +755,23 @@ parse(<language>);
 <parameter_name>					::= <IDENTIFIER> ;
 <variable_name>						::= <IDENTIFIER> ;
 										
-<show_ext_table> 					::= "SHOW" "EXTERNAL" "TABLE" <external_schema>"."<table_name_as_string> [ "PARTITION" ] [";"] ;			
+//Vis_25112026_[251101045]_SHOW EXTERNAL TABLE accepts [external_database.]external_schema.table
+<show_ext_table> 					::= "SHOW" "EXTERNAL" "TABLE"
+										( (<IDENTIFIER> "." <external_schema> "." <table_name_as_string>) | (<external_schema> "." <table_name_as_string>) )
+										[ "PARTITION" ] [";"] ;			
 						
 										
-<show_database>						::= "SHOW" "DATABASES" "FROM"
-											"DATA" "CATALOG" [ "ACCOUNT"  <StringValue> ("," <StringValue>)* ]
-											[ "LIKE" <StringValue> ] [";"] ;
+//Vis_25112026_[251101047]_SHOW DATABASES: FROM DATA CATALOG optional, added IAM_ROLE and LIMIT
+<show_database>						::= "SHOW" "DATABASES" [ "FROM" "DATA" "CATALOG" [ "ACCOUNT"  <StringValue> ("," <StringValue>)* ] ]
+										[ "LIKE" <StringValue> ]
+										[ "IAM_ROLE" ( "DEFAULT" | <StringValue> ) ]
+										[ <show_limit> ] [";"] ;
 										
 <show_model> 						::= "SHOW" "MODEL" ( "ALL" | <model_name>["." <variable_name>] ) [";"] ;	
 <model_name> 						::= <IDENTIFIER> |<StringValue>;									
 									
-<show_procedure>					::= "SHOW" "PROCEDURE" <sp_name> "("  <Input_argument> ("," <Input_argument>)* ")" ";" ;
+//Vis_25112026_[251101018]_SHOW PROCEDURE argument list is optional and accepts any argument form
+<show_procedure>					::= "SHOW" "PROCEDURE" [<schema_name>"."] <sp_name> [ "(" skipBalanced("(",")") ")" ] [";"] ;
 <Input_argument> 					::= (<StringBinaryType> | <NumericType>	) | <agrwithmodetype>	;
 <agrwithmodetype>					::= [ <argmode> | <argname>| (<StringBinaryType> | <NumericType>) ] 
 										[ <argmode> | <argname>| (<StringBinaryType> | <NumericType>) ] 
@@ -710,7 +792,8 @@ parse(<language>);
 
 <view_name> 						::= <IDENTIFIER> ;
 											
-<dropDatabase> 						::= "DROP" "DATABASE" <database_name>	";"	;		
+//Vis_25112026_[251101003]_Added FORCE option to DROP DATABASE
+<dropDatabase> 						::= "DROP" "DATABASE" <database_name> [ "FORCE" ] ";" ;		
 <database_name>						::= <IDENTIFIER> |<StringValue> ;	
 
 <dropDatashare>						::= "DROP" "DATASHARE" <datashare_name> ";" ;	
@@ -725,13 +808,14 @@ parse(<language>);
 											
 <commit>							::= "COMMIT" [ "WORK" | "TRANSACTION" ] ";" ;
 	
+//Vis_25112026_[251101043]_COMMENT ON accepts schema-qualified objects
 <comment_query>  					::= "COMMENT" "ON"
 										(
-										"TABLE" <object_name> |
-										"COLUMN" <object_name>"."<column_name_as_string> |
-										"CONSTRAINT" <constraint_name> "ON" <table_name_as_string> |
-										"DATABASE" <object_name> |
-										"VIEW" <object_name>
+										("TABLE" [<schema_name>"."] <object_name>) |
+										("COLUMN" ( (<schema_name> "." <object_name> "." <column_name_as_string>) | (<object_name> "." <column_name_as_string>) )) |
+										("CONSTRAINT" <constraint_name> "ON" [<schema_name>"."] <table_name_as_string>) |
+										("DATABASE" <object_name>) |
+										("VIEW" [<schema_name>"."] <object_name>)
 										)
 										"IS" (<StringValue> | "NULL")  ";" ;
 										
@@ -745,7 +829,8 @@ parse(<language>);
 <cancel> 							::= "CANCEL" <process_id> [ <StringValue> ] ";" ;
 <process_id> 						::= <IDENTIFIER> | <NUMBER>;
 											
-<call> 								::=  "CALL" <sp_name> "(" <argument> ("," <argument>)* ")" ";" ;
+//Vis_25112026_[251101020]_CALL accepts any argument expressions (including none) and schema-qualified names
+<call> 								::=  "CALL" [<schema_name>"."] <sp_name> "(" skipBalanced("(",")") ")" ";" ;
 
 <sp_name> 							::= <IDENTIFIER>|<StringValue>;
 
@@ -754,7 +839,8 @@ parse(<language>);
 											
 <beign>								::=  "BEGIN" [ "WORK" | "TRANSACTION" ] [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
 
-<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+//Vis_25112026_[251101039]_Fixed READ UNCOMMITTED (two tokens) for BEGIN / START TRANSACTION isolation level
+<option>							::= "SERIALIZABLE" | ("READ" "UNCOMMITTED") | ("READ" "COMMITTED") | ("REPEATABLE" "READ") ;
 
 <start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
 											
@@ -773,7 +859,8 @@ parse(<language>);
 
 <dropView> 							::= "DROP" "VIEW" [ "IF" "EXISTS" ] <column_name_as_string> ("," <column_name_as_string>)* [ "CASCADE" | "RESTRICT" ] ";" ;
 
-<truncate> 							::= "TRUNCATE"  ["TABLE"] <table_name_as_string>  ";" ;
+//Vis_25112026_[251101013]_TRUNCATE accepts a schema-qualified table or materialized view
+<truncate> 							::= "TRUNCATE"  ["TABLE"] [<schema_name> "."] <table_name_as_string>  ";" ;
 											
 <dropUser>							::= "DROP" "USER" [ "IF" "EXISTS" ] <column_name_as_string> ("," <column_name_as_string>)* ";" ;
 											
@@ -784,7 +871,13 @@ parse(<language>);
 <Insert_Value> 						::= "(" <insert_column>	 ( "," <insert_column>)* ")" ;												
 											
 
-<insert_column>						::= <StringValue> | <NUMBER> | "DEFAULT" | <IDENTIFIER> ["." <IDENTIFIER>] ["[" <NUMBER>"]"] ;
+//Vis_25112026_[251101031]_INSERT VALUES accepts decimals, negative numbers, function calls, parenthesised expressions and :: casts
+<insert_column>						::= ( <StringValue>
+										| (["-"] <NUMBER> ["." <NUMBER>])
+										| "DEFAULT"
+										| ("(" skipBalanced("(",")") ")")
+										| (<IDENTIFIER> ["." <IDENTIFIER>] ["(" skipBalanced("(",")") ")"] ["[" <NUMBER>"]"]) )
+										[":" ":" <data_type>] ;
 											
 <fetch>								::= "FETCH" [ "NEXT" | "ALL" | ( "FORWARD" [ <NUMBER> | "ALL" ] ) ] "FROM" <table_name_as_string> ";" ;
 										  
@@ -805,18 +898,23 @@ parse(<language>);
 
 <StringBinaryDataType>				::= <StringBinaryType> ["("[ <NUMBER>]  [<IDENTIFIER>] ")"]; 
 
-<StringBinaryType>					::= "VARCHAR" | "CHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | "BINARY" | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ; 
+//Vis_25112026_[251101009]_Added NCHAR and BINARY VARYING data types
+<StringBinaryType>					::= "VARCHAR" | "CHAR" | "NCHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | ("BINARY" ["VARYING"]) | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ; 
 
-<LogicalDataType>					::= "BOOLEAN" ; 
+//Vis_25112026_[251101009]_Added BOOL alias
+<LogicalDataType>					::= "BOOLEAN" | "BOOL" ; 
 
-<DateTimeDataType>					::= "DATE" | "DATETIME" 
-										| ("TIME"["WITHOUT" "TIME" "ZONE"])
-										| ("TIMETZ"["WITH" "TIME" "ZONE"])
-										|("TIMESTAMP" ["WITHOUT" "TIME" "ZONE"])
-										| "TIMESTAMP_LTZ" | "TIMESTAMP_NTZ" 
-										| ("TIMESTAMPTZ"["WITH" "TIME" "ZONE"]) ;  
+//Vis_25112026_[251101009]_Added INTERVAL YEAR TO MONTH / DAY TO SECOND and TIME/TIMESTAMP WITH TIME ZONE aliases
+<DateTimeDataType>					::= "DATE" | "DATETIME"
+										| ("TIME" [("WITHOUT" | "WITH") "TIME" "ZONE"])
+										| ("TIMETZ" ["WITH" "TIME" "ZONE"])
+										| ("TIMESTAMP" [("WITHOUT" | "WITH") "TIME" "ZONE"])
+										| "TIMESTAMP_LTZ" | "TIMESTAMP_NTZ"
+										| ("TIMESTAMPTZ" ["WITH" "TIME" "ZONE"])
+										| ("INTERVAL" [("YEAR" "TO" "MONTH") | ("DAY" "TO" "SECOND")]) ;  
 
-<SemiStructuredDataType>			::= "VARIANT" | "OBJECT" | "ARRAY"|"HLLSKETCH" ;  
+//Vis_25112026_[251101009]_Added SUPER data type
+<SemiStructuredDataType>			::= "VARIANT" | "OBJECT" | "ARRAY" | "HLLSKETCH" | "SUPER" ;  
 
 <GeospatialDataType>				::= "GEOGRAPHY" | "GEOMETRY" ;  
 
@@ -902,13 +1000,14 @@ parse(<language>);
 
 <constraint_name>					::=  <IDENTIFIER> ;
 						  
+//Vis_25112026_[251101008]_Added COLLATE CS and CI abbreviations to column attributes
 <column_attributes> 				::= ["DEFAULT"   attribute("DEFAULT" ,<default_expr> )]
 										  ["IDENTITY" node("IDENTITY" ,  [attribute("VALUE" , ("(" <seed> "," <step> ")") )] )]
 										  ["GENERATED" "BY" "DEFAULT" "AS" "IDENTITY" node("Default identity" , [attribute("VALUE" , ("(" <seed> "," <step> ")") )] )]
 										  ["ENCODE" node("ENCODE" ,  attribute("VALUE" ,<encoding> ))]
 										  [ "DISTKEY" node("DISTKEY" , attributeEx("VALUE", "True")) ]
 										  [ "SORTKEY" node("SORTKEY" , attributeEx("VALUE", "True"))]										  
-										  ["COLLATE" node("COLLATE" , attribute("VALUE" ,("Case_Sensitive" | "Case_InSensitive")  ))];
+										  ["COLLATE" node("COLLATE" , attribute("VALUE" ,("Case_Sensitive" | "Case_InSensitive" | "CS" | "CI")  ))];
 							
 <column_constraints> 				::= [ (  "NOT" "NULL" (attributeEx("NOTNULL" , "true")) | "NULL" ) ]
 										[  ("UNIQUE" node("CONSTRAINT", attributeEx("EASTEREOTYPE", "Redshift::unique"))  
@@ -948,13 +1047,15 @@ parse(<language>);
 
 <type>				::= 	<NUMBER> |<column_name> ;						
 						  
+//Vis_25112026_[251101041]_Added VACUUM FORCE option and schema-qualified table
 <vacuum>			::= "VACUUM" [ "FULL" | "SORT" "ONLY" | "DELETE" "ONLY" | "REINDEX" | "RECLUSTER" ]
-						[ [ <table_name_as_string> ] [ "TO" <threshold> "PERCENT" ] [ "BOOST" ] ] ";" ;
+						[ [ [<schema_name>"."] <table_name_as_string> ] [ "TO" <threshold> "PERCENT" ] [ "BOOST" ] [ "FORCE" ] ] ";" ;
 
 <threshold>			::= <NUMBER> ;
 
+//Vis_25112026_[251101032]_UPDATE accepts schema-qualified table and any table alias (was literal "alias")
 <update>			::= [ "WITH" ["RECURSIVE"] <column_with_expression> ("," <column_with_expression>)*]
-						"UPDATE" <table_name_as_string> [ [ "AS" ] "alias" ] "SET" <set_value> ("," <set_value>)*
+						"UPDATE" [<schema_name>"."] <table_name_as_string> [ [ "AS" ] except(<IDENTIFIER>, "SET") ] "SET" <set_value> ("," <set_value>)*
 						[<from> ]
 						[ <where_condition>	 ] ";"  ;
 						
@@ -970,72 +1071,91 @@ parse(<language>);
 							
 <authorization>		::= <IDENTIFIER> ( "default" | <StringValue> )  ;
 
-<unload_option>		::=  [ "FORMAT" [ "AS" ] ] "CSV"
-						| "PARQUET" 
+//Vis_25112026_[251101035]_UNLOAD: FORMAT AS PARQUET|JSON, ADDQUOTES without argument, NULL AS
+<unload_option>		::=  ( [ "FORMAT" [ "AS" ] ] ( "CSV" | "PARQUET" | "JSON" ) )
+						| "PARQUET"
 						| "JSON"
-						| "PARTITION" "BY" "(" <column_name_as_string> ("," <column_name_as_string>)* ")" [ "INCLUDE" ]
-						| "MANIFEST" [ "VERBOSE" ]
+						| ("PARTITION" "BY" "(" <column_name_as_string> ("," <column_name_as_string>)* ")" [ "INCLUDE" ])
+						| ("MANIFEST" [ "VERBOSE" ])
 						| "HEADER"
-						| "DELIMITER" [ "AS" ] <StringValue>
-						| "FIXEDWIDTH" [ "AS" ] <StringValue>
-						| "ENCRYPTED" [ "AUTO" ]
+						| ("DELIMITER" [ "AS" ] <StringValue>)
+						| ("FIXEDWIDTH" [ "AS" ] <StringValue>)
+						| ("ENCRYPTED" [ "AUTO" ])
 						| "BZIP2"
 						| "GZIP"
 						| "ZSTD"
-						| "ADDQUOTES" <StringValue>
+						| ("ADDQUOTES" [<StringValue>])
+						| ("NULL" [ "AS" ] <StringValue>)
 						| "ESCAPE"
 						| "ALLOWOVERWRITE"
 						| "CLEANPATH"
-						| "PARALLEL" [ ( "ON" | "TRUE" ) | ( "OFF" | "FALSE" ) ]
-						| "MAXFILESIZE" ["AS"] <size> [ "MB" | "GB" ]
-						| "ROWGROUPSIZE" ["AS"] <size> [ "MB" | "GB" ]
-						| "REGION" ["AS"] <StringValue> 
-						| "EXTENSION" <StringValue> ;
+						| ("PARALLEL" [ ( "ON" | "TRUE" ) | ( "OFF" | "FALSE" ) ])
+						| ("MAXFILESIZE" ["AS"] <size> [ "MB" | "GB" ])
+						| ("ROWGROUPSIZE" ["AS"] <size> [ "MB" | "GB" ])
+						| ("REGION" ["AS"] <StringValue>)
+						| ("EXTENSION" <StringValue>) ;
 						
-<revoke_or_grant>			::= ("REVOKE" | "GRANT") [ "GRANT" "OPTION" "FOR" ]
-							( <revoke_ddl_commands> ("," <revoke_ddl_commands>)*							 
-							| <revoke_other_commands> ("," <revoke_other_commands>)*
-							)
-							
-							["ON" ( 
-									 ["ALL" ("TABLES" |"FUNCTION")  "IN"] "SCHEMA" <schema_name> ("," <schema_name>)* 
-									|"DATABASE" <db_name> ("," <db_name>)* 
-									| "FUNCTION" <f_function_name> ( [ <arg_value> ("," <arg_value>)*] )
-									| "LANGUAGE" <language_name> (","<language_name>)*
-									| (<StringValue> ("," <StringValue>)*  
-									| "default" 
-									| "ALL")
-									| "EXTERNAL" "TABLE" <schema_name>"."<table_name_as_string>									
-									| "DATASHARE" <datashare_name>									
-									|[ "TABLE" ] [<schema_name>"."]<table_name_as_string>  ("," [<schema_name>"."]<table_name_as_string>)* 
-								)]
-							
-							
-							[("FROM" | "TO") ( 
-									<revoke_from_value> ("," <revoke_from_value>)* 							
+//Vis_25112026_[251101025]_Updated GRANT/REVOKE: mixed privilege lists, GRANT OPTION [FOR], ADMIN OPTION FOR prefix, scoped FOR ... IN, new ON objects
+<revoke_or_grant>			::= ("REVOKE" | "GRANT") [ ("GRANT" "OPTION" ["FOR"]) | ("ADMIN" "OPTION" "FOR") ]
+							<grant_privilege> ("," <grant_privilege>)*
+							[ ("ON" <grant_on_object>) | ("FOR" <grant_scope>) ]
+							[("FROM" | "TO") (
+									<revoke_from_value> ("," <revoke_from_value>)*
 							) ]
-							
-							["FOR" ( "ALL" | "COPY" | "UNLOAD" | "EXTERNAL" "FUNCTION" | "CREATE" "MODEL" )]
-							[ "RESTRICT" ] 	
+							["FOR" <assumerole_for> ("," <assumerole_for>)*]
+							[ "RESTRICT" ]
 							[ "WITH" "GRANT" "OPTION" ]
 							[";"]
 							;
+
+<grant_privilege>			::= <revoke_ddl_commands> | <revoke_other_commands> ;
+
+<assumerole_for>			::= "ALL" | "COPY" | "UNLOAD" | ("EXTERNAL" "FUNCTION") | ("CREATE" "MODEL") ;
+
+//Vis_25112026_[251101024]_ON TABLES / FUNCTIONS / PROCEDURES for ALTER DEFAULT PRIVILEGES
+<grant_on_object>			::= ( ["ALL" ("TABLES" | "FUNCTION" | "FUNCTIONS" | "PROCEDURES") "IN"] "SCHEMA" <schema_name> ("," <schema_name>)* )
+								| ( "DATABASE" <db_name> ("," <db_name>)* )
+								| ( "FUNCTION" <grant_routine> ("," <grant_routine>)* )
+								| ( "PROCEDURE" <grant_routine> ("," <grant_routine>)* )
+								| ( "LANGUAGE" <language_name> ("," <language_name>)* )
+								| ( "COPY" "JOB" <job_name> ("," <job_name>)* )
+								| ( "TEMPLATE" <qualified_name> ("," <qualified_name>)* )
+								| ( "MODEL" <model_name> ("," <model_name>)* )
+								| "WORKGROUP"
+								| "TABLES" | "FUNCTIONS" | "PROCEDURES"
+								| ( <StringValue> ("," <StringValue>)* )
+								| "default"
+								| "ALL"
+								| ( "EXTERNAL" "TABLE" <schema_name>"."<table_name_as_string> ("," <schema_name>"."<table_name_as_string>)* )
+								| ( "EXTERNAL" "SCHEMA" <schema_name> ("," <schema_name>)* )
+								| ( "DATASHARE" <datashare_name> )
+								| ( [ "TABLE" ] [<schema_name>"."]<table_name_as_string>  ("," [<schema_name>"."]<table_name_as_string>)* ) ;
+
+<grant_routine>				::= [<schema_name>"."] <f_function_name> [ ("(" skipBalanced("(",")") ")") | (<arg_value> ("," <arg_value>)*) ] ;
+
+<grant_scope>				::= ( "SCHEMAS" | "TABLES" | "FUNCTIONS" | "PROCEDURES" | "LANGUAGES" | "TEMPLATES" | ("COPY" "JOBS") )
+								"IN" ( ("SCHEMA" <schema_name> ["DATABASE" <db_name>]) | ("DATABASE" <db_name>) ) ;
 							
-<revoke_ddl_commands>	::= ( "SELECT" | "INSERT" | "UPDATE" 
-								| ("ALTER" (["USER" | "DEFAULT" "PRIVILEGES"| "TABLE" | "DATASHARE" ])) 
-								| "DELETE" 
+//Vis_25112026_[251101025]_Added ACCESS CATALOG/SYSTEM TABLE, CONNECT, DEBUG privileges, TRUNCATE without TABLE, fixed "TABLE " token
+<revoke_ddl_commands>	::= ( "SELECT" | "INSERT" | "UPDATE"
+								| ("ALTER" (["USER" | "DEFAULT" "PRIVILEGES"| "TABLE" | "DATASHARE" ]))
+								| "DELETE"
 								| ("DROP" (["USER" | "SCHEMA" |"TABLE" |"FUNCTION" |"PROCEDURE"|"VIEW" |"MODEL"|"LIBRARY" |"ROLE" |"DATASHARE"  ]) )
-								| "REFERENCES" 
-								| ("CREATE" (["MODEL" |"USER"| "SCHEMA"| "TABLE "| "OR" "REPLACE" (["EXTERNAL"] "FUNCTION" |"PROCEDURE" |"VIEW" ) | "DATASHARE" | "LIBRARY" |"ROLE"]))
-								| "TEMPORARY" | "TEMP" 								
-								| "USAGE" | "EXECUTE" |"SHARE" | "ASSUMEROLE"  | "TRUNCATE" "TABLE" | "VACUUM" | "ANALYZE" | "CANCEL") 
+								| "REFERENCES"
+								| ("CREATE" (["MODEL" |"USER"| "SCHEMA"| "TABLE"| "OR" "REPLACE" (["EXTERNAL"] "FUNCTION" |"PROCEDURE" |"VIEW" ) | "DATASHARE" | "LIBRARY" |"ROLE"]))
+								| "TEMPORARY" | "TEMP"
+								| "USAGE" | "EXECUTE" |"SHARE" | "ASSUMEROLE"  | ("TRUNCATE" ["TABLE"]) | "VACUUM" | "ANALYZE" | "CANCEL"
+								| ("ACCESS" ( "CATALOG" | ("SYSTEM" "TABLE") ))
+								| "CONNECT" | "DEBUG" )
 								["(" <column_name_as_string> ("," <column_name_as_string>)* ")"] ;	
 
+//Vis_25112026_[251101025]_Added EXPLAIN MASKING privilege
 <revoke_other_commands>	::= (("ROLE" <role_name> [":" <database_name>])
 							|("ADMIN" "OPTION" "FOR" )
-							| "EXECUTE" 
-							| (("EXPLAIN" | "IGNORE") "RLS") 
-							| ("ALL" [ "PRIVILEGES" ])) 
+							| "EXECUTE"
+							| ("EXPLAIN" ("RLS" | "MASKING"))
+							| ("IGNORE" "RLS")
+							| ("ALL" [ "PRIVILEGES" ]))
 							["(" <column_name_as_string> ("," <column_name_as_string>)* ")"] ;								
 							
 <account_value> 			::= <StringValue> [ "VIA" "DATA" "CATALOG" ] ;
@@ -1043,22 +1163,26 @@ parse(<language>);
 <db_name> 					::= <IDENTIFIER> |<StringValue>;
 <language_name> 			::= <IDENTIFIER>;
 
-<revoke_from_value>			::= "ROLE" <role_name> 
-									 | "GROUP" <group_name> 
-									 | "PUBLIC" 
-									| "IAM_ROLE" <StringValue> 
-									| "NAMESPACE" <StringValue> ("," <StringValue>)*
-									| "ACCOUNT" <account_value> 
-									| "RLS" "POLICY" <policy_name>
-									|<username> [ "WITH" ("GRANT" | "ADMIN") "OPTION"] 		;
+//Vis_25112026_[251101025]_Added MASKING POLICY, DATASHARE, ADMINS OF ACCOUNT and prefixed ROLE grantees
+<revoke_from_value>			::= ("ROLE" <role_name> [":" <IDENTIFIER>])
+									 | ("GROUP" <group_name>)
+									 | "PUBLIC"
+									| ("IAM_ROLE" <StringValue>)
+									| ("NAMESPACE" <StringValue> ("," <StringValue>)*)
+									| ("ACCOUNT" <account_value>)
+									| (("RLS" | "MASKING") "POLICY" <policy_name>)
+									| ("DATASHARE" <datashare_name>)
+									| ("ADMINS" "OF" "ACCOUNT" <StringValue>)
+									|(<username> [ "WITH" ("GRANT" | "ADMIN") "OPTION"]) 		;
 									
 <prepare>					::= "PREPARE" <plan_name> [ "(" <data_type> ("," <data_type>)* ")" ] "AS" <statements>  [";"] ;
 
-<merge>						::= "MERGE" "INTO" <target_table_name>
-								"USING" <table_name_as_string> [ [ "AS" ] "alias" ] "ON" <condition>
+//Vis_25112026_[251101033]_MERGE accepts schema-qualified tables and any source alias (was literal "alias")
+<merge>						::= "MERGE" "INTO" [<schema_name>"."] <target_table_name>
+								"USING" [<schema_name>"."] <table_name_as_string> [ [ "AS" ] except(<IDENTIFIER>, "ON") ] "ON" <condition>
 								[(("WHEN" "MATCHED" "THEN" ( "UPDATE"  "SET" <set_value> ("," <set_value>)* | "DELETE" )
 								"WHEN" "NOT" "MATCHED" "THEN" "INSERT" [ "(" <column_name_as_string> ("," <column_name_as_string>)* ")" ] "VALUES"
-								<Insert_Value>)|("REMOVE" "DUPLICATES")) ]	 ";" 
+								<Insert_Value>)|("REMOVE" "DUPLICATES")) ]	 ";"
 								;								
 
 <target_table_name>			::= (<view_name>|<StringValue>) ;
@@ -1076,24 +1200,29 @@ parse(<language>);
 <declare>					::=  "DECLARE" <cursor_name> "CURSOR" "FOR" <SelectQuery> ";"  ;
 <cursor_name>				::= <IDENTIFIER> |<StringValue> ;
 
-<copy>						::= "COPY" 
-								[<copy_command>]
-								["JOB" ("CREATE" | "ALTER" | "RUN" | "LIST" | "SHOW" | "DROP"  )  [<job_name>]]
-								["AUTO" ("ON" | "OFF")]
+//Vis_25112026_[251101034]_COPY JOB ALTER/RUN/LIST/SHOW/DROP parsed before the table form
+<copy>						::= "COPY"
+								(
+									( "JOB" ("CREATE" | "ALTER" | "RUN" | "LIST" | "SHOW" | "DROP") [<job_name>] ["AUTO" ("ON" | "OFF")] )
+									| ( [<copy_command>]
+										["JOB" ("CREATE" | "ALTER" | "RUN" | "LIST" | "SHOW" | "DROP"  )  [<job_name>]]
+										["AUTO" ("ON" | "OFF")] )
+								)
 								[";"]
 								;
 								
 <job_name>					::= <IDENTIFIER>;
 								
-<copy_command>				::= [<schema_name>"."]<table_name_as_string> 
+//Vis_25112026_[251101034]_COPY parameters may be comma-separated; FORMAT [AS] data_format accepts an argument (e.g. JSON 'auto')
+<copy_command>				::= [<schema_name>"."]<table_name_as_string>
 								//[ <column_name> ("," <column_name>)* ]
 								skip("FROM")
 								"FROM" <data_source>
-								[ "FORMAT"  ["AS"] <data_format> ] 
-								[ <copy_value>*  ] 
+								[ "FORMAT"  ["AS"] <data_format> [<StringValue>] ]
+								[ <copy_value> ([","] <copy_value>)* ]
 								[<authorization>]
-								[ "FORMAT"  ["AS"] <data_format> ] 
-								[ <copy_value>*  ] ;
+								[ "FORMAT"  ["AS"] <data_format> [<StringValue>] ]
+								[ <copy_value> ([","] <copy_value>)* ] ;
 								
 <data_source>				::= <StringValue> ;
 <data_format>				::= <IDENTIFIER>;
@@ -1138,6 +1267,7 @@ parse(<language>);
 								[ <user_option>*] 
 								";" ;
 
+//Vis_25112026_[251101023]_Added NOLOGIN and LOGIN PASSWORD user options
 <user_option> 				::= ("CREATEDB" | "NOCREATEDB"
 								| "CREATEUSER" | "NOCREATEUSER"
 								| ("SYSLOG" "ACCESS" ( "RESTRICTED" | "UNRESTRICTED" ))
@@ -1146,22 +1276,28 @@ parse(<language>);
 								| ("IN" "GROUP" <group_name> ("," <group_name>)*)
 								| ("CONNECTION" "LIMIT" ( <NUMBER> | "UNLIMITED" ))
 								| ("SESSION" "TIMEOUT" [<NUMBER>])
-								| ("EXTERNALID" <external_id>)	
+								| ("EXTERNALID" <external_id>)
 								| ("RENAME" "TO" <new_name> )
 								| ("SET" <parameter> ( "TO" | "=" ) ( <user_value> | "DEFAULT" ))
-								| ("RESET" [<user_option> | <parameter>]))
+								| ("RESET" [<user_option> | <parameter>])
+								| "NOLOGIN"
+								| ("LOGIN" "PASSWORD" <StringValue>))
 								;
 
-<user_value>				::= <StringValue> ;
+//Vis_25112026_[251101023]_ALTER USER SET value accepts numbers and identifiers
+<user_value>				::= <StringValue> | <NUMBER> | <IDENTIFIER> ;
 								
+//Vis_25112026_[251101028]_CREATE RLS POLICY: WITH accepts one or more columns, unquoted relation alias, trailing semicolon
 <create_rls_policy>			::= "CREATE" "RLS" "POLICY" <policy_name>
-								[ "WITH" "(" <column_name_as_string> <data_type> ("," <column_name_as_string> <data_type>) ")" [ ["AS"] <relation_alias> ] ]
-								"USING" "(" <using_predicate_exp> ")";
+								[ "WITH" "(" <column_name_as_string> <data_type> ("," <column_name_as_string> <data_type>)* ")" [ ["AS"] <relation_alias> ] ]
+								"USING" "(" <using_predicate_exp> ")" [";"] ;
 								
-<relation_alias>			::= <StringValue> ;
+//Vis_25112026_[251101028]_Relation alias accepts an unquoted identifier
+<relation_alias>			::= <StringValue> | except(<IDENTIFIER>, "USING") ;
 <using_predicate_exp>		::= skipBalanced("(",")");
 
-<create_model>				::= "CREATE"   [ "OR" "REPLACE" ]  "MODEL" <model_name>
+//Vis_25112026_[251101021]_CREATE MODEL accepts a schema-qualified model name
+<create_model>				::= "CREATE"   [ "OR" "REPLACE" ]  "MODEL" <model_name> ["." <variable_name>]
 								"FROM" ( <table_name_as_string> | ( <SelectQuery> )  | <StringValue> )
 								[ "TARGET" (<column_name_as_string> | <StringValue>) ]
 								"FUNCTION" <f_function_name> ["(" <data_type> ("," <data_type>)* ")"] 
@@ -1200,9 +1336,17 @@ parse(<language>);
 								)  ";" 
 								;	
 								
+//Vis_25112026_[251101026]_Updated CREATE IDENTITY PROVIDER: optional PARAMETERS, APPLICATION_ARN, IAM_ROLE, AUTO_CREATE_ROLES
 <create_id_provider>		::= "CREATE" "IDENTITY" "PROVIDER" <identity_provider_name> "TYPE" <type_name>
 								"NAMESPACE" <namespace_name>
-								 "PARAMETERS" <parameter_string> ";" ;
+								 (<idp_option>)* [";"] ;
+
+<idp_option>				::= ("PARAMETERS" <parameter_string>)
+								| ("APPLICATION_ARN" <StringValue>)
+								| ("IAM_ROLE" <iam_role>)
+								| <idp_auto_create_roles> ;
+
+<idp_auto_create_roles>		::= "AUTO_CREATE_ROLES" [ ("TRUE" [ ("INCLUDE" | "EXCLUDE") "GROUPS" "LIKE" <StringValue> ]) | "FALSE" ] ;
 								 
 <type_name>					::= <IDENTIFIER> |<StringValue> ;
 <namespace_name>			::= <IDENTIFIER>|<StringValue> ;
@@ -1213,10 +1357,12 @@ parse(<language>);
 								 ["," <IDENTIFIER> <IDENTIFIER>]";" 
 								;
 								
-<alter_user>				::= "ALTER" "USER" <username> [ "WITH" ] [ <user_option>*]  ";" ;
+//Vis_25112026_[251101023]_ALTER USER accepts comma-separated options
+<alter_user>				::= "ALTER" "USER" <username> [ "WITH" ] [ <user_option> ([","] <user_option>)* ]  ";" ;
 								
-<alter_table_append>		::= "ALTER" "TABLE" <target_table_name> "APPEND" "FROM" [<schema_name>"."] [(<view_name>|<StringValue>) ]
-								[ "IGNOREEXTRA" | "FILLTARGET" ] ";" 
+//Vis_25112026_[251101012]_ALTER TABLE APPEND accepts a schema-qualified target table
+<alter_table_append>		::= "ALTER" "TABLE" [<schema_name>"."] <target_table_name> "APPEND" "FROM" [<schema_name>"."] [(<view_name>|<StringValue>) ]
+								[ "IGNOREEXTRA" | "FILLTARGET" ] ";"
 								;
 								
 <alter_role>				::= "ALTER" "ROLE" <role_name> [ "WITH" ]
@@ -1233,13 +1379,15 @@ parse(<language>);
 									
 <masking_expression>		::= skipBalanced("(" ,")") ;
 
+//Vis_25112026_[251101027]_Updated ALTER IDENTITY PROVIDER: multiple clauses and AUTO_CREATE_ROLES
 <alter_id_provider>			::= "ALTER" "IDENTITY" "PROVIDER" <identity_provider_name>
 								(
-									 ("PARAMETERS" <StringValue>)
+									 ("PARAMETERS" <parameter_string>)
 									|("NAMESPACE" <namespace_name>)
 									|("IAM_ROLE" <iam_role>)
+									|<idp_auto_create_roles>
 									|("DISABLE" | "ENABLE")
-								) [";"] ;
+								)+ [";"] ;
 								
 <iam_role>					::=<StringValue>|<IDENTIFIER>;								
 								
@@ -1257,7 +1405,8 @@ parse(<language>);
 								
 <target_user>				::= <IDENTIFIER> |<StringValue> ;		
 
-<alter_datashare>			::= "ALTER" "DATASHARE" <datashare_name> [( "ADD" | "REMOVE" )] 
+//Vis_25112026_[251101006]_Updated ALTER DATASHARE: SET INCLUDENEW TRUE|FALSE [FOR SCHEMA], functions with empty argument list
+<alter_datashare>			::= "ALTER" "DATASHARE" <datashare_name> [( "ADD" | "REMOVE" )]
 								(
 									[(("TABLE" ([<schema_name>"."]<table_name_as_string>) ("," ([<schema_name>"."]<table_name_as_string>) )*)
 									| ("SCHEMA" <schema_name> ("," <schema_name>)*)
@@ -1265,11 +1414,12 @@ parse(<language>);
 									| ("ALL" "TABLES" "IN" "SCHEMA" <schema_name> ("," <schema_name>)*)
 									| ("ALL" "FUNCTIONS" "IN" "SCHEMA" <schema_name> ("," <schema_name>)* ))]
 									[ "SET" "PUBLICACCESSIBLE" ["="] ("TRUE" | "FALSE") ]
-									[ "SET" "INCLUDENEW" ["="] ("TRUE" | ("FALSE" "FOR" "SCHEMA" <schema_name>)) ] 
-								) 
+									[ "SET" "INCLUDENEW" ["="] ("TRUE" | "FALSE") ["FOR" "SCHEMA" <schema_name>] ]
+								)
 								[";"] ; 
 								
-<function_value>			::= <schema_name>"."<sql_udf> "(" <data_type> ("," <data_type>)* ")" ; 
+//Vis_25112026_[251101006]_function_value accepts an empty argument list
+<function_value>			::= <schema_name>"."<sql_udf> "(" [<data_type> ("," <data_type>)*] ")" ; 
 
 <sql_udf> 					::= <IDENTIFIER> ;
 
@@ -1301,4 +1451,115 @@ parse(<language>);
 
 <StringBinaryDataTypes>				::= <StringBinaryType>["(" <IDENTIFIER> ")"]; 
 
-<StringBinaryType>					::= "VARCHAR" | "CHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | "BINARY" | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ; 
+//Vis_25112026_[251101009]_Added NCHAR and BINARY VARYING data types
+<StringBinaryType>					::= "VARCHAR" | "CHAR" | "NCHAR" | ("CHARACTER" ["VARYING"]) | "STRING" | "TEXT" | ("BINARY" ["VARYING"]) | "VARBINARY"|"NVARCHAR"|"BPCHAR"|"VARBYTE" ;
+
+//Vis_25112026_Shared helper rules used by the 25112026 Redshift syntax updates
+<qualified_name>					::= (<IDENTIFIER> | <StringValue>) ("." (<IDENTIFIER> | <StringValue>))* ;
+<collate_value>						::= "CASE_SENSITIVE" | "CS" | "CASE_INSENSITIVE" | "CI" ;
+<bool_value>						::= "TRUE" | "FALSE" ;
+<integration_tables>				::= ("ALL" "TABLES" ["IN" "SCHEMA" <schema_name> ("," <schema_name>)*])
+										| ("TABLE" [<schema_name>"."]<table_name_as_string> ("," [<schema_name>"."]<table_name_as_string>)*) ;
+<integration_option>				::= (("ACCEPTINVCHARS" | "QUERY_ALL_STATES" | "TRUNCATECOLUMNS" | "AUTO_REMEDIATION") ["="] <bool_value>)
+										| ("HISTORY_MODE" ["="] <bool_value> ["FOR" <integration_tables>])
+										| ("REFRESH_INTERVAL" <NUMBER>) ;
+<show_for>							::= "FOR" ( ("ROLE" <role_name>) | "PUBLIC" | <user_name> ) ;
+<show_like>							::= "LIKE" <StringValue> ;
+<show_limit>						::= "LIMIT" <NUMBER> ;
+<rls_table>							::= [(<IDENTIFIER> ".")*] <table_name_as_string> ;
+
+//Vis_25112026_[251101000]_Added ALTER EXTERNAL SCHEMA command
+<alter_external_schema>				::= "ALTER" "EXTERNAL" "SCHEMA" <schema_name>
+										(
+											  ( "IAM_ROLE" ( "DEFAULT" | <StringValue> ) )
+											| ( "AUTHENTICATION_ARN" <StringValue> )
+											| ( "AUTHENTICATION" ( "NONE" | "IAM" | "MTLS" ) )
+											| ( "SECRET_ARN" <StringValue> )
+											| ( "URI" <StringValue> )
+										)* [";"] ;
+
+//Vis_25112026_[251101022]_Added CREATE EXTERNAL MODEL (Amazon Bedrock) command
+<create_external_model>				::= "CREATE" "EXTERNAL" "MODEL" <model_name> ["." <variable_name>]
+										"FUNCTION" <f_function_name>
+										"IAM_ROLE" ( "DEFAULT" | <StringValue> )
+										"MODEL_TYPE" "BEDROCK"
+										"SETTINGS" "(" <ext_model_setting> ("," <ext_model_setting>)* ")"
+										[";"] ;
+<ext_model_setting>					::= <IDENTIFIER> <ext_model_value> ;
+<ext_model_value>					::= <StringValue> | ( (<IDENTIFIER> | <NUMBER>) (("." | "-" | ":") (<IDENTIFIER> | <NUMBER>))* ) ;
+
+//Vis_25112026_[251101030]_QUALIFY expression (token soup that stops before the next SELECT clause keyword)
+<qualify_expr>						::= (<qualify_term>)+ ;
+<qualify_term>						::= ("(" skipBalanced("(",")") ")")
+										| <StringValue> | <NUMBER>
+										| "=" | "<" | ">" | "!" | "." | "+" | "-" | "*" | "/"
+										| except(<IDENTIFIER>, ("ORDER" | "LIMIT" | "OFFSET" | "UNION" | "INTERSECT" | "EXCEPT" | "MINUS" | "GROUP" | "START" | "CONNECT" | "NULLS")) ;
+
+//Vis_25112026_[251101036]_Added CREATE TEMPLATE command
+<create_template>					::= "CREATE" [ "OR" "REPLACE" ] "TEMPLATE" <qualified_name>
+										"FOR" "COPY" [ "AS" ]
+										[ "FORMAT" [ "AS" ] <data_format> [<StringValue>] ]
+										[ <copy_value> ([","] <copy_value>)* ]
+										[";"] ;
+
+//Vis_25112026_[251101037]_Added ALTER TEMPLATE command
+<alter_template>					::= "ALTER" "TEMPLATE" <qualified_name>
+										(
+											  ( "RENAME" "TO" <new_name> )
+											| ( "OWNER" "TO" <new_owner> )
+											| ( "ADD" <template_param> [ "AS" ] [ <template_value> ] )
+											| ( "DROP" <template_param> )
+											| ( "SET" <template_param> "TO" <template_value> ("," <template_param> "TO" <template_value>)* )
+										) [";"] ;
+<template_param>					::= <IDENTIFIER> ;
+<template_value>					::= <StringValue> | <NUMBER> | <IDENTIFIER> ;
+
+//Vis_25112026_[251101038]_Added DROP TEMPLATE command
+<drop_template>						::= "DROP" "TEMPLATE" <qualified_name> [";"] ;
+
+//Vis_25112026_[251101046]_Added USE command
+<use_database>						::= "USE" <database_name> [";"] ;
+
+//Vis_25112026_[251101048]_Added SHOW USER LOCKOUT command
+<show_user_lockout>					::= "SHOW" "USER" "LOCKOUT" [";"] ;
+
+//Vis_25112026_[251101049]_Added SHOW COLUMN GRANTS command
+<show_column_grants>				::= "SHOW" "COLUMN" "GRANTS" "ON" "TABLE" <qualified_name> [<show_for>] [<show_limit>] [";"] ;
+
+//Vis_25112026_[251101050]_Added SHOW CONSTRAINTS command
+<show_constraints>					::= "SHOW" "CONSTRAINTS" ( ("PRIMARY" "KEYS") | ("FOREIGN" "KEYS" ["EXPORTED"]) )
+										"FROM" "TABLE" <qualified_name> [<show_limit>] [";"] ;
+
+//Vis_25112026_[251101051]_Added SHOW FUNCTIONS command
+<show_functions>					::= "SHOW" "FUNCTIONS" "FROM" "SCHEMA" <qualified_name> [<show_like>] [<show_limit>] [";"] ;
+
+//Vis_25112026_[251101052]_Added SHOW PROCEDURES command
+<show_procedures>					::= "SHOW" "PROCEDURES" "FROM" "SCHEMA" <qualified_name> [<show_like>] [<show_limit>] [";"] ;
+
+//Vis_25112026_[251101053]_Added SHOW GRANTS command
+<show_grants>						::= "SHOW" "GRANTS"
+										(
+											( "ON" (
+													  ( "DATABASE" <database_name> )
+													| ( "FUNCTION" <qualified_name> [ "(" skipBalanced("(",")") ")" ] )
+													| ( "SCHEMA" <qualified_name> )
+													| ( "TEMPLATE" <qualified_name> )
+													| ( ["TABLE"] <qualified_name> )
+												   ) [<show_for>] )
+											| ( "FOR" ( ("ROLE" <role_name>) | <user_name> ) [ "FROM" "DATABASE" <database_name> ] )
+										)
+										[<show_limit>] [";"] ;
+
+//Vis_25112026_[251101054]_Added SHOW PARAMETERS command
+<show_parameters>					::= "SHOW" "PARAMETERS" "OF" ( "FUNCTION" | "PROCEDURE" ) <qualified_name> "(" skipBalanced("(",")") ")" [<show_like>] [";"] ;
+
+//Vis_25112026_[251101055]_Added SHOW RLS POLICIES / SHOW MASKING POLICIES command
+<show_policies>						::= "SHOW" ( "RLS" | "MASKING" ) "POLICIES"
+										[ ( "ON" <qualified_name> [<show_for>] ) | ( "FROM" "DATABASE" <database_name> ) ]
+										[<show_limit>] [";"] ;
+
+//Vis_25112026_[251101056]_Added SHOW TEMPLATE command
+<show_template>						::= "SHOW" "TEMPLATE" <qualified_name> [";"] ;
+
+//Vis_25112026_[251101057]_Added SHOW TEMPLATES command
+<show_templates>					::= "SHOW" "TEMPLATES" "FROM" "SCHEMA" <qualified_name> [<show_like>] [<show_limit>] [";"] ;

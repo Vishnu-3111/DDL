@@ -17,9 +17,9 @@
 			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="varchar">
 				<AppliesTo>
 					<Apply type="Attribute">
+						<Property name="_tagGroupings" value="Column Index=Common Properties;Collate=Common Properties;Identity=Common Properties;Sparse=Common Properties;Computed Column Expression=Computed Column Definition;Persisted=Computed Column Definition;Set Definition=Column Set Definition;Temporal Data=SQL Server Column Properties;Filestream=SQL Server Column Properties;Masked Function=SQL Server Column Properties;Not For Replication=SQL Server Column Properties;Generate As=SQL Server Column Properties;RowGuidCol=SQL Server Column Properties;Encrypted With=SQL Server Column Properties;"/>
 						<Property name="_tagGroups" value="Common Properties,Computed Column Definition,Column Set Definition,SQL Server Column Properties"/>
 						<Property name="_tagGroupStates" value="Computed Column Definition=closed;Column Set Definition=closed;Common Properties=open;SQL Server Column Properties=closed;"/>
-						<Property name="_tagGroupings" value="Column Index=Common Properties;Collate=Common Properties;Identity=Common Properties;Sparse=Common Properties;Computed Column Expression=Computed Column Definition;Persisted=Computed Column Definition;Set Definition=Column Set Definition;Temporal Data=SQL Server Column Properties;Filestream=SQL Server Column Properties;Masked Function=SQL Server Column Properties;Not For Replication=SQL Server Column Properties;Generate As=SQL Server Column Properties;RowGuidCol=SQL Server Column Properties;Encrypted With=SQL Server Column Properties;"/>
 					</Apply>
 				</AppliesTo>
 				<TaggedValues>
@@ -68,14 +68,14 @@
 			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
 				<AppliesTo>
 					<Apply type="Operation">
+						<Property name="_tagGroupings" value="XML Index Name=XML Index Properties;Is Primary=XML Index Properties;Is Selective=XML Index Properties;Index For=XML Index Properties;Tessellation Type=Spatial Index property;Table Index=Common Properties;Clustered=Common Properties;Unique=Common Properties;property=Common Properties;Index Option=Common Properties;Index Type=Common Properties;Is Columnstore=SQl Server Index Propeties;Include=SQl Server Index Propeties;Where Condition=SQl Server Index Propeties;On Value=SQl Server Index Propeties;Filestream On=SQl Server Index Propeties;Order By=SQl Server Index Propeties;"/>
+						<Property name="_tagGroups" value="Common Properties,XML Index Properties,Spatial Index property,SQl Server Index Propeties"/>
+						<Property name="_tagGroupStates" value="XML Index Properties=closed;Spatial Index property=closed;Common Properties=open;SQl Server Index Propeties=closed;"/>
 						<Property name="isOrdered" value=""/>
 						<Property name="isQuery" value="false"/>
 						<Property name="isUnique" value=""/>
 						<Property name="lower" value=""/>
 						<Property name="upper" value=""/>
-						<Property name="_tagGroups" value="Common Properties,XML Index Properties,Spatial Index property,SQl Server Index Propeties"/>
-						<Property name="_tagGroupings" value="XML Index Name=XML Index Properties;Is Primary=XML Index Properties;Is Selective=XML Index Properties;Index For=XML Index Properties;Tessellation Type=Spatial Index property;Table Index=Common Properties;Clustered=Common Properties;Unique=Common Properties;property=Common Properties;Index Option=Common Properties;Index Type=Common Properties;Is Columnstore=SQl Server Index Propeties;Include=SQl Server Index Propeties;Where Condition=SQl Server Index Propeties;On Value=SQl Server Index Propeties;Filestream On=SQl Server Index Propeties;Order By=SQl Server Index Propeties;"/>
-						<Property name="_tagGroupStates" value="XML Index Properties=closed;Spatial Index property=closed;Common Properties=open;SQl Server Index Propeties=closed;"/>
 					</Apply>
 				</AppliesTo>
 				<TaggedValues>
@@ -108,6 +108,9 @@
 						<Property name="upper" value=""/>
 					</Apply>
 				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Constrain Option" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
 			</Stereotype>
 			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
 				<AppliesTo>
@@ -129,10 +132,10 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="SQL Server 2012"/>
-						<Property name="isActive" value=""/>
+						<Property name="_tagGroupings" value="Data Type Specification=Common Properties;Start With=Common Properties;Increment By=Common Properties;Circular Sequence=Common Properties;Caching=Common Properties;Cache Value=Common Properties;Schema and Database=Common Properties;MinValue Specification=Range Specification;MinValue=Range Specification;MaxValue Specification=Range Specification;MaxValue=Range Specification;"/>
 						<Property name="_tagGroups" value="Common Properties,Range Specification"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Range Specification=closed;"/>
-						<Property name="_tagGroupings" value="Data Type Specification=Common Properties;Start With=Common Properties;Increment By=Common Properties;Circular Sequence=Common Properties;Caching=Common Properties;Cache Value=Common Properties;Schema and Database=Common Properties;MinValue Specification=Range Specification;MinValue=Range Specification;MaxValue Specification=Range Specification;MaxValue=Range Specification;"/>
+						<Property name="isActive" value=""/>
 					</Apply>
 				</AppliesTo>
 				<TaggedValues>
@@ -167,10 +170,10 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="SQL Server 2012"/>
-						<Property name="isActive" value=""/>
+						<Property name="_tagGroupings" value="Schema and Database=Common Properties;Is Filetable=Common Properties;Table Option=Common Properties;Is External=Common Properties;Select Query=Table As;Temporal Data=Period for System Time;Partition Clause=Table Structure Specification;Text Image Clause=Table Structure Specification;File Stream Clause=Table Structure Specification;Graph Type=SQL Grap Table Property;"/>
 						<Property name="_tagGroups" value="Common Properties,Table As,Period for System Time,Table Structure Specification,SQL Grap Table Property"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Table Structure Specification=closed;SQL Grap Table Property=closed;Period for System Time=closed;"/>
-						<Property name="_tagGroupings" value="Schema and Database=Common Properties;Is Filetable=Common Properties;Table Option=Common Properties;Is External=Common Properties;Select Query=Table As;Temporal Data=Period for System Time;Partition Clause=Table Structure Specification;Text Image Clause=Table Structure Specification;File Stream Clause=Table Structure Specification;Graph Type=SQL Grap Table Property;"/>
+						<Property name="isActive" value=""/>
 					</Apply>
 				</AppliesTo>
 				<TaggedValues>
@@ -217,6 +220,9 @@
 						<Property name="upper" value=""/>
 					</Apply>
 				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Constrain Option" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
 			</Stereotype>
 			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
 				<AppliesTo>

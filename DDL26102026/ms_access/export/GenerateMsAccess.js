@@ -47,12 +47,12 @@ function main()
 			ddl_Element = Repository.GetElementByGuid(guid); // Selected elements from Generate ddl file window
 			if(genOutputType == "1")
 				source_Filepath = fileSystemObj.OpenTextFile(ddl_FilePath + ddl_Element.Name + ".sql", 2, true);
-			elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);		
+			elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);
 			if(genOutputType == "1")
 				source_Filepath.Close();
 			i++;
 			guid = ssproperties.get('Object' + i);
-		}		
+		}
 	}
 	catch(e)
 	{
@@ -417,4 +417,3 @@ function getProcedureElements(ddl_Element)
 	return source_commands;	
 	
 }
-

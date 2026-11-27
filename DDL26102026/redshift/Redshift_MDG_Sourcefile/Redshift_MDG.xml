@@ -1,414 +1,242 @@
 <?xml  version='1.0' encoding='windows-1252' ?>
-<MDG.Technology version="1.0">
-	<Documentation id="DW_Rs" name="Redshift" version="1.0" notes="Artifacts for Redshift"/>
-	<UMLProfiles>
-		<UMLProfile profiletype="uml2">
-			<Documentation id="572B0FEA9B" name="Redshift" version="1.0" notes="Redshift"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
-						<AppliesTo>
-							<Apply type="Operation">
-								<Property name="_Tag" value="1"/>
-								<Property name="isOrdered" value=""/>
-								<Property name="isQuery" value="false"/>
-								<Property name="isUnique" value=""/>
-								<Property name="lower" value=""/>
-								<Property name="upper" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
-							<Tag name="Sortkey Type" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
-						<AppliesTo>
-							<Apply type="Operation">
-								<Property name="isOrdered" value=""/>
-								<Property name="isQuery" value="false"/>
-								<Property name="isUnique" value=""/>
-								<Property name="lower" value=""/>
-								<Property name="upper" value=""/>
-							</Apply>
-						</AppliesTo>
-					</Stereotype>
-					<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
-						<AppliesTo>
-							<Apply type="Association"/>
-						</AppliesTo>
-					</Stereotype>
-					<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
-						<AppliesTo>
-							<Apply type="Operation">
-								<Property name="isOrdered" value=""/>
-								<Property name="isQuery" value="false"/>
-								<Property name="isUnique" value=""/>
-								<Property name="lower" value=""/>
-								<Property name="upper" value=""/>
-							</Apply>
-						</AppliesTo>
-					</Stereotype>
-					<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
-						<AppliesTo>
-							<Apply type="Attribute"/>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Collate" type="Collate" description="" unit="" values="" default=""/>
-							<Tag name="Default identity" type="" description="" unit="" values="" default=""/>
-							<Tag name="Distkey" type="" description="" unit="" values="" default=""/>
-							<Tag name="Encode" type="" description="" unit="" values="" default=""/>
-							<Tag name="Identity" type="" description="" unit="" values="" default=""/>
-							<Tag name="Sortkey" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="Redshift"/>
-								<Property name="_tagGroupings" value="Replace=Common Properties;NonAtomic=Common Properties;Security=Common Properties;Set Configuration=Common Properties;Schema and Database=Common Properties;Arguments=Procedure Definition;procdef=Procedure Definition;"/>
-								<Property name="_tagGroups" value="Common Properties,Procedure Definition"/>
-								<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed;"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
-							<Tag name="NonAtomic" type="" description="" unit="" values="" default=""/>
-							<Tag name="procdef" type="" description="" unit="" values="" default=""/>
-							<Tag name="Replace" type="" description="" unit="" values="" default=""/>
-							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
-							<Tag name="Security" type="" description="" unit="" values="" default=""/>
-							<Tag name="Set Configuration" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="Redshift"/>
-								<Property name="_tagGroupings" value="Volatility Category=Common Properties;Replace=Common Properties;External=Common Properties;Schema and Database=Common Properties;Lambda=External Function Properties;Sagemaker=External Function Properties;Iam Role=External Function Properties;Retry Timeout=External Function Properties;Max Batch Rows=External Function Properties;Max Batch Size=External Function Properties;Arguments=Function Definition;Return=Function Definition;Function Language=Function Definition;funcdef=Function Definition;"/>
-								<Property name="_tagGroups" value="Common Properties,External Function Properties,Function Definition"/>
-								<Property name="_tagGroupStates" value="Common Properties=open;External Function Properties=closed;Function Definition=closed;"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
-							<Tag name="External" type="External" description="" unit="" values="" default=""/>
-							<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
-							<Tag name="Function Language" type="" description="" unit="" values="" default=""/>
-							<Tag name="Iam Role" type="" description="" unit="" values="" default=""/>
-							<Tag name="Lambda" type="" description="" unit="" values="" default=""/>
-							<Tag name="Max Batch Rows" type="" description="" unit="" values="" default=""/>
-							<Tag name="Max Batch Size" type="" description="" unit="" values="" default=""/>
-							<Tag name="Replace" type="" description="" unit="" values="" default=""/>
-							<Tag name="Retry Timeout" type="" description="" unit="" values="" default=""/>
-							<Tag name="Return" type="" description="" unit="" values="" default=""/>
-							<Tag name="Sagemaker" type="" description="" unit="" values="" default=""/>
-							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
-							<Tag name="Volatility Category" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="Redshift"/>
-								<Property name="_tagGroupings" value="viewdef=View Definition;Backup=View Properties;Diststyle=View Properties;Columns=View Properties;Sortkey Auto=View Properties;Encode Auto=View Properties;Auto Refresh=View Properties;View Type=View Properties;External view Properties=View Properties;Not Exists=View Properties;Schema and Database=View Properties;"/>
-								<Property name="_tagGroups" value="View Definition,View Properties"/>
-								<Property name="_tagGroupStates" value="View Definition=open;View Properties=closed;"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Auto Refresh" type="Auto Refresh" description="" unit="" values="" default=""/>
-							<Tag name="Backup" type="" description="" unit="" values="" default=""/>
-							<Tag name="Columns" type="" description="" unit="" values="" default=""/>
-							<Tag name="Diststyle" type="" description="" unit="" values="" default=""/>
-							<Tag name="Encode Auto" type="" description="" unit="" values="" default=""/>
-							<Tag name="External view Properties" type="" description="" unit="" values="" default=""/>
-							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
-							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
-							<Tag name="Sortkey Auto" type="" description="" unit="" values="" default=""/>
-							<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
-							<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="Generalization">
-								<Property name="isSubstitutable" value="true"/>
-							</Apply>
-						</AppliesTo>
-					</Stereotype>
-					<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
-						<stereotypedrelationships>
-							<stereotypedrelationship stereotype="Redshift::FK" constraint="Redshift::table"/>
-							<stereotypedrelationship stereotype="Redshift::Like" constraint="Redshift::table"/>
-						</stereotypedrelationships>
-						<AppliesTo>
-							<Apply type="Class">
-								<Property name="_dbtype" value="Redshift"/>
-								<Property name="_tagGroupings" value="Not Exists=Common Properties;Partitioned By=Common Properties;Schema and Database=Common Properties;isLocal=Common Properties;isTemporary=Common Properties;Select Query=Table As;Diststyle=Table Distribution Properties;Encode Auto=Table Distribution Properties;Location=External Table Properties;Row Format Serde=External Table Properties;Stored As=External Table Properties;Row Format Delimited=External Table Properties;With SerdeProperties=External Table Properties;Input Format=External Table Properties;Output Format=External Table Properties;Is External=External Table Properties;Table Properties=Redshift Table Properties;Backup=Redshift Table Properties;Sortkey Auto=Redshift Table Properties;"/>
-								<Property name="_tagGroups" value="Common Properties,Table As,Table Distribution Properties,External Table Properties,Redshift Table Properties"/>
-								<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Table Distribution Properties=closed;External Table Properties=closed;Redshift Table Properties=closed;"/>
-								<Property name="isActive" value=""/>
-							</Apply>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Backup" type="" description="" unit="" values="" default=""/>
-							<Tag name="Diststyle" type="" description="" unit="" values="" default=""/>
-							<Tag name="Encode Auto" type="" description="" unit="" values="" default=""/>
-							<Tag name="Is External" type="External" description="" unit="" values="" default=""/>
-							<Tag name="isLocal" type="" description="" unit="" values="" default=""/>
-							<Tag name="isTemporary" type="" description="" unit="" values="" default=""/>
-							<Tag name="Location" type="" description="" unit="" values="" default=""/>
-							<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
-							<Tag name="Partitioned By" type="" description="" unit="" values="" default=""/>
-							<Tag name="Row Format Delimited" type="" description="" unit="" values="" default=""/>
-							<Tag name="Row Format Serde" type="" description="" unit="" values="" default=""/>
-							<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
-							<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
-							<Tag name="Sortkey Auto" type="" description="" unit="" values="" default=""/>
-							<Tag name="Stored As" type="" description="" unit="" values="" default=""/>
-							<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
-							<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
-							<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
-							<Tag name="With SerdeProperties" type="" description="" unit="" values="" default=""/>
-						</TaggedValues>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes>
-					<TaggedValueType property="Auto Refresh" description="" notes="Type=Enum;&#xA;Values=Yes,No;"/>
-					<TaggedValueType property="Collate" description="" notes="Type=Enum;&#xA;Values=Case_Sensitive,Case_InSensitive;"/>
-					<TaggedValueType property="External" description="" notes="Type=Boolean;&#xA;Default=False;"/>
-					<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=Sortkey,Distkey;&#xA;Default=Sortkey;"/>
-					<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=Materialized,External,Replace,&lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
-				</TaggedValueTypes>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</UMLProfiles>
-	<TaggedValueTypes>
-		<RefData version="1.0" exporter="EA.25">
-			<DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'">
-				<DataRow>
-					<Column name="Property" value="Backup"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=Yes,No;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Not Exists"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Row Format Delimited"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Row Format Serde"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="With SerdeProperties"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Location"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Select Query"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Diststyle"/>
-					<Column name="Notes" value="Type=Enum;&#xA;&#xA;Values=Auto,Even,Key,All;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Encode Auto"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;&#xA;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Replace"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Materialized"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="viewdef"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Arguments"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="NonAtomic"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="procdef"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Security"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=Invoker,Definer;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Set Configuration"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Return"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Volatile"/>
-					<Column name="Notes" value="Type=Boolean;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Stable"/>
-					<Column name="Notes" value="Type=Boolean"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Immutable"/>
-					<Column name="Notes" value="Type=Boolean;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="funcdef"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Lambda"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Sagemaker"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Iam Role"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Retry Timeout"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Max Batch Rows"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Max Batch Size"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Sortkey Auto"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Identity"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Default identity"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Distkey"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Columns"/>
-					<Column name="Notes" value="Type=Memo;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Function Language"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=PLPYTHONU,SQL;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Volatility Category"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=Volatile,Stable,Immutable;&#xA;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Function Type"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=Replace,External;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Sortkey"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Schema and Database"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Sortkey Type"/>
-					<Column name="Notes" value="Type=Enum;&#xA;Values=Compound,Interleaved;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Input Format"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="Output Format"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="External view Properties"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="isLocal"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-				<DataRow>
-					<Column name="Property" value="isTemporary"/>
-					<Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/>
-				</DataRow>
-			</DataSet>
-		</RefData>
-	</TaggedValueTypes>
-	<DiagramProfile>
-		<UMLProfile profiletype="uml2">
-			<Documentation id="C6985B54C7" name="Redshift" version="1.0" notes="Redshift"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="Redshift" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="Diagram_Logical">
-								<Property name="alias" value="Redshift"/>
-								<Property name="toolbox" value="Redshift"/>
-							</Apply>
-						</AppliesTo>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes/>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</DiagramProfile>
-	<UIToolboxes>
-		<UMLProfile profiletype="uml2">
-			<Documentation id="55B18E487F" name="Redshift" version="1.0" notes="Redshift"/>
-			<Content>
-				<Stereotypes>
-					<Stereotype name="Redshift " notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="ToolboxPage"/>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Redshift::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
-							<Tag name="Redshift::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
-							<Tag name="Redshift::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
-							<Tag name="Redshift::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
-							<Tag name="Redshift::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
-							<Tag name="Redshift::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
-							<Tag name="Redshift::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
-							<Tag name="Redshift::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
-						</TaggedValues>
-					</Stereotype>
-					<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
-						<AppliesTo>
-							<Apply type="ToolboxPage"/>
-						</AppliesTo>
-						<TaggedValues>
-							<Tag name="Redshift::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
-							<Tag name="Redshift::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
-						</TaggedValues>
-					</Stereotype>
-				</Stereotypes>
-				<TaggedValueTypes/>
-				<ViewDefinitions/>
-				<Metamodel/>
-			</Content>
-		</UMLProfile>
-	</UIToolboxes>
-</MDG.Technology>
+<MDG.Technology version="1.0"><Documentation id="DW_Rs" name="Redshift" version="1.0" notes="Artifacts for Redshift"/><UMLProfiles><UMLProfile profiletype="uml2">
+	<Documentation id="572B0FEA9B" name="Redshift" version="1.0" notes="Redshift"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="column" metatype="column" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="VARCHAR">
+				<AppliesTo>
+					<Apply type="Attribute"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Collate" type="Collate" description="" unit="" values="" default=""/>
+					<Tag name="Default identity" type="" description="" unit="" values="" default=""/>
+					<Tag name="Distkey" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encode" type="" description="" unit="" values="" default=""/>
+					<Tag name="Identity" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sortkey" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="FK" metatype="FK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::FK" baseStereotypes="EAUML::FK">
+				<AppliesTo>
+					<Apply type="Association"/>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="function" metatype="function" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::function" baseStereotypes="EAUML::function">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Redshift"/>
+						<Property name="_tagGroupings" value="Volatility Category=Common Properties;Replace=Common Properties;External=Common Properties;Schema and Database=Common Properties;Lambda=External Function Properties;Sagemaker=External Function Properties;Iam Role=External Function Properties;Retry Timeout=External Function Properties;Max Batch Rows=External Function Properties;Max Batch Size=External Function Properties;Arguments=Function Definition;Return=Function Definition;Function Language=Function Definition;funcdef=Function Definition;"/>
+						<Property name="_tagGroups" value="Common Properties,External Function Properties,Function Definition"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;External Function Properties=closed;Function Definition=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="External" type="External" description="" unit="" values="" default=""/>
+					<Tag name="funcdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Function Language" type="" description="" unit="" values="" default=""/>
+					<Tag name="Iam Role" type="" description="" unit="" values="" default=""/>
+					<Tag name="Lambda" type="" description="" unit="" values="" default=""/>
+					<Tag name="Max Batch Rows" type="" description="" unit="" values="" default=""/>
+					<Tag name="Max Batch Size" type="" description="" unit="" values="" default=""/>
+					<Tag name="Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Retry Timeout" type="" description="" unit="" values="" default=""/>
+					<Tag name="Return" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sagemaker" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Volatility Category" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="_Tag" value="1"/>
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
+					<Tag name="Sortkey Type" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="like" metatype="like" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Generalization">
+						<Property name="isSubstitutable" value="true"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="PK" metatype="PK" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::PK" baseStereotypes="EAUML::PK">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="procedure" metatype="procedure" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::procedure" baseStereotypes="EAUML::procedure">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Redshift"/>
+						<Property name="_tagGroupings" value="Replace=Common Properties;NonAtomic=Common Properties;Security=Common Properties;Set Configuration=Common Properties;Schema and Database=Common Properties;Arguments=Procedure Definition;procdef=Procedure Definition;"/>
+						<Property name="_tagGroups" value="Common Properties,Procedure Definition"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Arguments" type="" description="" unit="" values="" default=""/>
+					<Tag name="NonAtomic" type="" description="" unit="" values="" default=""/>
+					<Tag name="procdef" type="" description="" unit="" values="" default=""/>
+					<Tag name="Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Security" type="" description="" unit="" values="" default=""/>
+					<Tag name="Set Configuration" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="table" metatype="table" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<stereotypedrelationships>
+					<stereotypedrelationship stereotype="Redshift::FK" constraint="Redshift::table"/>
+					<stereotypedrelationship stereotype="Redshift::Like" constraint="Redshift::table"/>
+				</stereotypedrelationships>
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Redshift"/>
+						<Property name="_tagGroupings" value="Not Exists=Common Properties;Partitioned By=Common Properties;Schema and Database=Common Properties;isLocal=Common Properties;isTemporary=Common Properties;Select Query=Table As;Diststyle=Table Distribution Properties;Encode Auto=Table Distribution Properties;Location=External Table Properties;Row Format Serde=External Table Properties;Stored As=External Table Properties;Row Format Delimited=External Table Properties;With SerdeProperties=External Table Properties;Input Format=External Table Properties;Output Format=External Table Properties;Is External=External Table Properties;Table Properties=Redshift Table Properties;Backup=Redshift Table Properties;Sortkey Auto=Redshift Table Properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Table As,Table Distribution Properties,External Table Properties,Redshift Table Properties"/>
+						<Property name="_tagGroupStates" value="Common Properties=open;Table As=closed;Table Distribution Properties=closed;External Table Properties=closed;Redshift Table Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Backup" type="" description="" unit="" values="" default=""/>
+					<Tag name="Diststyle" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encode Auto" type="" description="" unit="" values="" default=""/>
+					<Tag name="Input Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Is External" type="External" description="" unit="" values="" default=""/>
+					<Tag name="isLocal" type="" description="" unit="" values="" default=""/>
+					<Tag name="isTemporary" type="" description="" unit="" values="" default=""/>
+					<Tag name="Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Output Format" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partitioned By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Row Format Delimited" type="" description="" unit="" values="" default=""/>
+					<Tag name="Row Format Serde" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Select Query" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sortkey Auto" type="" description="" unit="" values="" default=""/>
+					<Tag name="Stored As" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table Properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="With SerdeProperties" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="unique" metatype="unique" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::unique" baseStereotypes="EAUML::unique">
+				<AppliesTo>
+					<Apply type="Operation">
+						<Property name="isOrdered" value=""/>
+						<Property name="isQuery" value="false"/>
+						<Property name="isUnique" value=""/>
+						<Property name="lower" value=""/>
+						<Property name="upper" value=""/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+			<Stereotype name="view" metatype="view" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::view" baseStereotypes="EAUML::view">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="Redshift"/>
+						<Property name="_tagGroupings" value="viewdef=View Definition;Backup=View Properties;Diststyle=View Properties;Columns=View Properties;Sortkey Auto=View Properties;Encode Auto=View Properties;Auto Refresh=View Properties;View Type=View Properties;External view Properties=View Properties;Not Exists=View Properties;Schema and Database=View Properties;"/>
+						<Property name="_tagGroups" value="View Definition,View Properties"/>
+						<Property name="_tagGroupStates" value="View Definition=open;View Properties=closed;"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Auto Refresh" type="Auto Refresh" description="" unit="" values="" default=""/>
+					<Tag name="Backup" type="" description="" unit="" values="" default=""/>
+					<Tag name="Columns" type="" description="" unit="" values="" default=""/>
+					<Tag name="Diststyle" type="" description="" unit="" values="" default=""/>
+					<Tag name="Encode Auto" type="" description="" unit="" values="" default=""/>
+					<Tag name="External view Properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="isIceberg" type="" description="" unit="" values="" default=""/>
+					<Tag name="isProtected" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
+					<Tag name="Partitioned By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Schema and Database" type="" description="" unit="" values="" default=""/>
+					<Tag name="Sortkey Auto" type="" description="" unit="" values="" default=""/>
+					<Tag name="Table properties" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Location" type="" description="" unit="" values="" default=""/>
+					<Tag name="View Type" type="View Type" description="" unit="" values="" default=""/>
+					<Tag name="viewdef" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes>
+			<TaggedValueType property="Auto Refresh" description="" notes="Type=Enum;&#xA;Values=Yes,No;"/>
+			<TaggedValueType property="Collate" description="" notes="Type=Enum;&#xA;Values=Case_Sensitive,Case_InSensitive;"/>
+			<TaggedValueType property="External" description="" notes="Type=Boolean;&#xA;Default=False;"/>
+			<TaggedValueType property="Index Type" description="" notes="Type=Enum;&#xA;Values=Sortkey,Distkey;&#xA;Default=Sortkey;"/>
+			<TaggedValueType property="View Type" description="" notes="Type=Enum;&#xA;Values=Materialized,External,Replace,&lt;none&gt;;&#xA;Default=&lt;none&gt;;"/>
+		</TaggedValueTypes>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UMLProfiles><TaggedValueTypes><RefData version="1.0" exporter="EA.25"><DataSet name="Property Types" table="t_propertytypes" filter="Property='#Property#'"><DataRow><Column name="Property" value="Backup"/><Column name="Notes" value="Type=Enum;&#xA;Values=Yes,No;"/></DataRow><DataRow><Column name="Property" value="Not Exists"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Row Format Delimited"/></DataRow><DataRow><Column name="Property" value="Row Format Serde"/></DataRow><DataRow><Column name="Property" value="With SerdeProperties"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Location"/></DataRow><DataRow><Column name="Property" value="Select Query"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Diststyle"/><Column name="Notes" value="Type=Enum;&#xA;&#xA;Values=Auto,Even,Key,All;"/></DataRow><DataRow><Column name="Property" value="Encode Auto"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;&#xA;"/></DataRow><DataRow><Column name="Property" value="Replace"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Materialized"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="viewdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Arguments"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="NonAtomic"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="procdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Security"/><Column name="Notes" value="Type=Enum;&#xA;Values=Invoker,Definer;"/></DataRow><DataRow><Column name="Property" value="Set Configuration"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Return"/></DataRow><DataRow><Column name="Property" value="Volatile"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="Stable"/><Column name="Notes" value="Type=Boolean"/></DataRow><DataRow><Column name="Property" value="Immutable"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="funcdef"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Lambda"/></DataRow><DataRow><Column name="Property" value="Sagemaker"/></DataRow><DataRow><Column name="Property" value="Iam Role"/></DataRow><DataRow><Column name="Property" value="Retry Timeout"/></DataRow><DataRow><Column name="Property" value="Max Batch Rows"/></DataRow><DataRow><Column name="Property" value="Max Batch Size"/></DataRow><DataRow><Column name="Property" value="Sortkey Auto"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Identity"/></DataRow><DataRow><Column name="Property" value="Default identity"/></DataRow><DataRow><Column name="Property" value="Distkey"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Columns"/><Column name="Notes" value="Type=Memo;"/></DataRow><DataRow><Column name="Property" value="Function Language"/><Column name="Notes" value="Type=Enum;&#xA;Values=PLPYTHONU,SQL;"/></DataRow><DataRow><Column name="Property" value="Volatility Category"/><Column name="Notes" value="Type=Enum;&#xA;Values=Volatile,Stable,Immutable;&#xA;"/></DataRow><DataRow><Column name="Property" value="Function Type"/><Column name="Notes" value="Type=Enum;&#xA;Values=Replace,External;"/></DataRow><DataRow><Column name="Property" value="Sortkey"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="Schema and Database"/></DataRow><DataRow><Column name="Property" value="Sortkey Type"/><Column name="Notes" value="Type=Enum;&#xA;Values=Compound,Interleaved;"/></DataRow><DataRow><Column name="Property" value="Input Format"/></DataRow><DataRow><Column name="Property" value="Output Format"/></DataRow><DataRow><Column name="Property" value="External view Properties"/></DataRow><DataRow><Column name="Property" value="isLocal"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="isTemporary"/><Column name="Notes" value="Type=Boolean;&#xA;Default=False;"/></DataRow><DataRow><Column name="Property" value="isProtected"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="isIceberg"/><Column name="Notes" value="Type=Boolean;"/></DataRow><DataRow><Column name="Property" value="View Location"/></DataRow><DataRow><Column name="Property" value="Partitioned By"/></DataRow><DataRow><Column name="Property" value="Table properties"/></DataRow></DataSet></RefData></TaggedValueTypes><DiagramProfile><UMLProfile profiletype="uml2">
+	<Documentation id="C6985B54C7" name="Redshift" version="1.0" notes="Redshift"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Redshift" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="Diagram_Logical">
+						<Property name="alias" value="Redshift"/>
+						<Property name="toolbox" value="Redshift"/>
+					</Apply>
+				</AppliesTo>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></DiagramProfile><UIToolboxes><UMLProfile profiletype="uml2">
+	<Documentation id="55B18E487F" name="Redshift" version="1.0" notes="Redshift"/>
+	<Content>
+		<Stereotypes>
+			<Stereotype name="Redshift " notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Redshift::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="Redshift::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+					<Tag name="Redshift::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="Redshift::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
+					<Tag name="Redshift::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="Redshift::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>					
+					<Tag name="Redshift::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
+					<Tag name="Redshift::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+				<AppliesTo>
+					<Apply type="ToolboxPage"/>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="Redshift::FK(UML::Association)" type="" description="" unit="" values="" default="FK"/>
+					<Tag name="Redshift::like(UML::Generalization)" type="" description="" unit="" values="" default="Like"/>
+				</TaggedValues>
+			</Stereotype>
+		</Stereotypes>
+		<TaggedValueTypes/>
+		<ViewDefinitions/>
+		<Metamodel/>
+	</Content>
+</UMLProfile></UIToolboxes></MDG.Technology>

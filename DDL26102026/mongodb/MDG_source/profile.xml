@@ -22,6 +22,7 @@
 					<Tag name="ClusteredIndexName" type="" description="" unit="" values="" default=""/>
 					<Tag name="ClusteredIndexUnique" type="" description="" unit="" values="" default=""/>
 					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
+					<Tag name="EncryptedFields" type="" description="" unit="" values="" default=""/>
 					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
 					<Tag name="granularity" type="" description="" unit="" values="" default=""/>
 					<Tag name="indexOptionDefaults" type="" description="" unit="" values="" default=""/>
@@ -36,6 +37,19 @@
 					<Tag name="validator" type="" description="" unit="" values="" default=""/>
 					<Tag name="viewOn" type="" description="" unit="" values="" default=""/>
 					<Tag name="writeConcern" type="" description="" unit="" values="" default=""/>
+				</TaggedValues>
+			</Stereotype>
+			<Stereotype name="encryptedCollection" metatype="EncryptedCollection" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::table" baseStereotypes="EAUML::table">
+				<AppliesTo>
+					<Apply type="Class">
+						<Property name="_dbtype" value="MongoDB"/>
+						<Property name="isActive" value=""/>
+					</Apply>
+				</AppliesTo>
+				<TaggedValues>
+					<Tag name="createCollectionOptions" type="" description="" unit="" values="" default=""/>
+					<Tag name="masterKey" type="" description="" unit="" values="" default=""/>
+					<Tag name="provider" type="" description="" unit="" values="" default=""/>
 				</TaggedValues>
 			</Stereotype>
 			<Stereotype name="field" metatype="field" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::column" baseStereotypes="EAUML::column" defaultAttributeType="string">
@@ -75,10 +89,12 @@
 				<TaggedValues>
 					<Tag name="2dsphereIndexVersion" type="" description="" unit="" values="" default=""/>
 					<Tag name="bits" type="" description="" unit="" values="" default=""/>
+					<Tag name="Borough" type="" description="" unit="" values="" default=""/>
 					<Tag name="Collation" type="Collation" description="" unit="" values="" default=""/>
 					<Tag name="commitQuorum" type="" description="" unit="" values="" default=""/>
 					<Tag name="defaultLanguage" type="" description="" unit="" values="" default=""/>
 					<Tag name="expireAfterSeconds" type="" description="" unit="" values="" default=""/>
+					<Tag name="Hidden Index" type="" description="" unit="" values="" default=""/>
 					<Tag name="Index Definition" type="" description="" unit="" values="" default=""/>
 					<Tag name="IndexValue" type="" description="" unit="" values="" default=""/>
 					<Tag name="isSearchIndex" type="" description="" unit="" values="" default=""/>
@@ -87,7 +103,7 @@
 					<Tag name="max" type="" description="" unit="" values="" default=""/>
 					<Tag name="min" type="" description="" unit="" values="" default=""/>
 					<Tag name="PartialFilterExpression" type="" description="" unit="" values="" default=""/>
-					<Tag name="StorageEngine" type="" description="" unit="" values="" default=""/>
+					<Tag name="storageEngine" type="" description="" unit="" values="" default=""/>
 					<Tag name="textIndexVersion" type="" description="" unit="" values="" default=""/>
 					<Tag name="Unique" type="" description="" unit="" values="" default=""/>
 					<Tag name="weights" type="" description="" unit="" values="" default=""/>

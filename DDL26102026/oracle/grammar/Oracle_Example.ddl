@@ -2163,3 +2163,997 @@ CHECK (weight_grams IS NULL OR weight_grams >= 0);
 ALTER TABLE test_weight_not_null
 ADD CONSTRAINT chk_weight_not_null
 CHECK (weight_grams >= 0);
+
+-- CREATE DOMAIN (single-column, multi-column, enum, flexible)
+-- Vis_26112026_[261101092]_CREATE DOMAIN single-column, multi-column, enum and flexible forms
+CREATE DOMAIN day_of_week AS CHAR(3 CHAR)
+   CONSTRAINT day_of_week_c
+     CHECK (day_of_week IN ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'))
+   INITIALLY DEFERRED
+   ORDER CASE day_of_week
+      WHEN 'MON' THEN 0
+      WHEN 'TUE' THEN 1
+      WHEN 'WED' THEN 2
+      WHEN 'THU' THEN 3
+      WHEN 'FRI' THEN 4
+      WHEN 'SAT' THEN 5
+      WHEN 'SUN' THEN 6
+      ELSE 7
+  END;
+
+CREATE DOMAIN dept_codes AS NUMBER(3) STRICT
+      CONSTRAINT dept_chk CHECK (dept_codes > 99 AND dept_codes != 200)
+      ANNOTATIONS (Title 'Domain Annotation');
+
+CREATE DOMAIN IF NOT EXISTS hr.email_dom AS VARCHAR2(100)
+      DEFAULT ON NULL 'unknown@example.com'
+      NOT NULL
+      CONSTRAINT email_chk CHECK (REGEXP_LIKE (email_dom, '^(\S+)\@(\S+)\.(\S+)$'))
+      COLLATE BINARY_CI
+      DISPLAY LOWER(email_dom)
+      ORDER UPPER(email_dom);
+
+CREATE USECASE DOMAIN year_of_birth AS NUMBER(4)
+      DEFAULT 2000
+      CONSTRAINT yob_chk CHECK (year_of_birth BETWEEN 1900 AND 2100) ENABLE VALIDATE;
+
+CREATE DOMAIN US_city AS
+  (
+    name  AS VARCHAR2(30) ANNOTATIONS (Address),
+    state AS VARCHAR2(2) ANNOTATIONS (Address),
+    zip AS NUMBER ANNOTATIONS (Address)
+  )
+  CONSTRAINT City_CK CHECK(state in ('CA','AZ','TX') and zip < 100000)
+  DISPLAY name||', '|| state ||', '||TO_CHAR(zip)
+  ORDER state||', '||TO_CHAR(zip)||', '||name
+  ANNOTATIONS (Title 'Domain Annotation');
+
+CREATE DOMAIN order_status AS
+  ENUM (
+    New ,
+    Open ,
+    Shipped ,
+    Closed ,
+    Cancelled
+  );
+
+CREATE DOMAIN order_status_codes AS
+  ENUM (
+    New = N = 'N',
+    Open = O = 'O',
+    Shipped = S = 'S',
+    Closed = C = 'C',
+    Cancelled = X = 'X'
+  );
+
+CREATE DOMAIN celsius AS NUMBER CONSTRAINT abs_zero_c CHECK (celsius >= -273.15) DISPLAY celsius || ' C';
+CREATE DOMAIN fahrenheit AS NUMBER CONSTRAINT abs_zero_f CHECK (fahrenheit >= -459.67) DISPLAY fahrenheit || ' F';
+
+CREATE FLEXIBLE DOMAIN temperature (temp)
+  CHOOSE DOMAIN USING (units CHAR(1))
+  FROM CASE units
+    WHEN 'C' THEN celsius(temp)
+    WHEN 'F' THEN fahrenheit(temp)
+  END;
+
+CREATE FLEXIBLE DOMAIN IF NOT EXISTS temperature_d (temp)
+  CHOOSE DOMAIN USING (units CHAR(1))
+  FROM DECODE (units, 'C', celsius(temp), 'F', fahrenheit(temp));
+
+
+-- CREATE END USER
+-- Vis_26112026_[261101096]_CREATE END USER
+CREATE END USER app_user1
+  ADD FACTOR PASSWORD AS 'app_user1@example.com';
+
+CREATE END USER IF NOT EXISTS app_user2
+  IDENTIFIED BY "Welcome#123"
+  ADD FACTOR OCI_TOKEN AS 'ocid1.user.oc1..aaaa'
+  PROFILE app_profile
+  PASSWORD EXPIRE
+  ACCOUNT LOCK
+  SCHEMA hr
+  START TIME TIMESTAMP '2026-01-01 00:00:00'
+  END TIME TIMESTAMP '2026-12-31 23:59:59';
+
+-- CREATE END USER CONTEXT
+-- Vis_26112026_[261101097]_CREATE END USER CONTEXT
+CREATE END USER CONTEXT emp_ctx
+  USING JSON SCHEMA '{"type":"object","properties":{"emp_id":{"type":"number"}}}';
+
+CREATE OR REPLACE END USER CONTEXT IF NOT EXISTS hr.dept_ctx
+  USING JSON SCHEMA '{
+    "type" : "object",
+    "properties" : {
+      "dept_id"   : { "type" : "number" },
+      "dept_name" : { "type" : "string" }
+    }
+  }';
+
+
+-- CREATE HYBRID VECTOR INDEX
+-- Vis_26112026_[261101098]_CREATE HYBRID VECTOR INDEX (parenthesized and bare column)
+CREATE HYBRID VECTOR INDEX my_hybrid_idx ON doc_table(text_column)
+  PARAMETERS('MODEL my_doc_model');
+
+CREATE HYBRID VECTOR INDEX hr.emp_hybrid_idx ON hr.emp_docs doc_text
+  PARAMETERS ('MODEL my_doc_model VECTOR_IDXTYPE IVF FILTER CTXSYS.NULL_FILTER');
+
+
+
+
+
+-- ===== Oracle 26ai: DROP statements, IF EXISTS where supported =====
+-- Vis_26112026_[261101090]_DROP ... IF EXISTS on dedicated DROP rules and <drop_object> types
+DROP TABLE IF EXISTS hr.employees_old CASCADE CONSTRAINTS PURGE;
+DROP TABLE employees_tmp;
+DROP VIEW IF EXISTS hr.emp_view CASCADE CONSTRAINTS;
+DROP INDEX IF EXISTS hr.emp_idx ONLINE FORCE;
+DROP SEQUENCE IF EXISTS hr.emp_seq;
+DROP CLUSTER IF EXISTS hr.personnel INCLUDING TABLES CASCADE CONSTRAINTS;
+DROP PUBLIC DATABASE LINK IF EXISTS remote_db;
+DROP JAVA IF EXISTS SOURCE hr."Welcome";
+DROP MATERIALIZED VIEW IF EXISTS sales_mv PRESERVE TABLE;
+DROP MATERIALIZED VIEW LOG IF EXISTS ON hr.employees;
+DROP MATERIALIZED VIEW LOG ON hr.departments;
+DROP PUBLIC SYNONYM IF EXISTS customers FORCE;
+DROP TABLESPACE IF EXISTS tbs_01 INCLUDING CONTENTS AND DATAFILES CASCADE CONSTRAINTS;
+DROP TABLESPACE SET ts_set_1 INCLUDING CONTENTS;
+DROP TYPE IF EXISTS person_t FORCE;
+DROP TYPE BODY IF EXISTS hr.person_t;
+DROP ANALYTIC VIEW IF EXISTS sales_av;
+DROP ATTRIBUTE DIMENSION IF EXISTS time_attr_dim;
+DROP DIRECTORY IF EXISTS bfile_dir;
+-- Vis_26112026_[261101091]_DROP EDITION name IF EXISTS
+DROP EDITION e2 IF EXISTS CASCADE;
+DROP EDITION e3;
+-- Vis_26112026_[261101090]_DROP ... IF EXISTS via <drop_object>, including PACKAGE [IF EXISTS] BODY
+DROP FUNCTION IF EXISTS hr.get_bal;
+DROP HIERARCHY IF EXISTS time_hier;
+DROP INDEXTYPE IF EXISTS position_indextype FORCE;
+DROP INMEMORY JOIN GROUP IF EXISTS prod_id1;
+DROP LIBRARY IF EXISTS ext_lib;
+DROP OPERATOR IF EXISTS eq_op FORCE;
+DROP PACKAGE IF EXISTS BODY hr.emp_mgmt;
+DROP PACKAGE IF EXISTS hr.emp_mgmt;
+DROP PACKAGE BODY emp_mgmt;
+DROP PROCEDURE IF EXISTS hr.remove_emp;
+DROP ROLE IF EXISTS dw_manager;
+DROP TRIGGER IF EXISTS hr.salary_check;
+DROP USER IF EXISTS sidney CASCADE;
+DROP AUDIT POLICY table_pol;
+-- Vis_26112026_[261101092]_DROP [USECASE] DOMAIN
+DROP DOMAIN email;
+DROP DOMAIN day_of_week FORCE PRESERVE;
+DROP DOMAIN USECASE IF EXISTS hr.year_of_birth FORCE;
+-- Vis_26112026_[261101090]_DROP END USER [CONTEXT]
+DROP END USER marvin;
+DROP END USER IF EXISTS marvin2;
+DROP END USER CONTEXT hr.hcm;
+DROP END USER CONTEXT IF EXISTS hr.hcm2;
+-- Vis_26112026_[261101093]_DROP ICEBERG TABLE
+DROP ICEBERG TABLE sales.orders_ice WITHIN CATALOG glue_catalog PURGE;
+-- Vis_26112026_[261101090]_DROP of 26ai object types via <drop_object>
+DROP MLE ENV IF EXISTS scott.myenv;
+DROP MLE MODULE IF EXISTS scott.hello_js;
+DROP PROPERTY GRAPH IF EXISTS hr.my_graph;
+DROP DATA GRANT IF EXISTS app_admin.ManagerDirectReports;
+DROP DATA ROLE manager_role;
+DROP APPLICATION IDENTITY IF EXISTS hcm_app;
+DROP ASSERTION IF EXISTS company_must_have_a_president;
+DROP ASSERTION hr.salary_within_job_limit;
+DROP DIRECTIVE scott.emp_ndrtv;
+DROP MACRO adjusted_salary;
+DROP MACRO IF EXISTS adjusted_salary;
+
+
+-- ===== Oracle 26ai: IF [NOT] EXISTS on CREATE / ALTER (verified per statement) =====
+-- Vis_26112026_[261101069]_IF NOT EXISTS on CREATE statements
+CREATE SEQUENCE IF NOT EXISTS customers_seq
+ START WITH     1000
+ INCREMENT BY   1
+ NOCACHE
+ NOCYCLE;
+
+CREATE TYPE IF NOT EXISTS customer_typ_demo AS OBJECT
+    ( customer_id        NUMBER(6)
+    , cust_first_name    VARCHAR2(20)
+    , cust_last_name     VARCHAR2(20)
+    , cust_address       CUST_ADDRESS_TYP
+    , phone_numbers      PHONE_LIST_TYP
+    , nls_language       VARCHAR2(3)
+    , nls_territory      VARCHAR2(30)
+    , credit_limit       NUMBER(9,2)
+    , cust_email         VARCHAR2(30)
+    , cust_orders        ORDER_LIST_TYP
+    );
+
+CREATE PUBLIC SYNONYM IF NOT EXISTS emp_table 
+   FOR hr.employees@remote.us.example.com;
+
+CREATE JAVA IF NOT EXISTS RESOURCE NAMED "appText" 
+   USING BFILE (java_dir, 'textBundle.dat')   
+   
+   
+CREATE LIBRARY app_lib as '${ORACLE_HOME}/lib/app_lib.so'
+   AGENT 'sales.hq.example.com';
+
+CREATE OR REPLACE LIBRARY IF NOT EXISTS ext_lib AS 'ddl_1' IN ddl_dir CREDENTIAL ddl_cred;
+
+CREATE OPERATOR IF NOT EXISTS eq_op
+   BINDING (VARCHAR2, VARCHAR2) 
+   RETURN NUMBER 
+   USING eq_f;
+
+CREATE MATERIALIZED ZONEMAP IF NOT EXISTS sales_zmap
+  ON sales(cust_id, prod_id);
+
+CREATE INMEMORY JOIN GROUP IF NOT EXISTS prod_id1
+  (inventories(product_id), order_items(product_id));
+
+CREATE OR REPLACE ATTRIBUTE DIMENSION IF NOT EXISTS time_attr_dim
+DIMENSION TYPE TIME
+USING time_dim
+ATTRIBUTES
+ (year_id
+   CLASSIFICATION caption VALUE 'YEAR_ID'
+   CLASSIFICATION description VALUE 'YEAR ID',
+  year_name
+    CLASSIFICATION caption VALUE 'YEAR_NAME'
+    CLASSIFICATION description VALUE 'Year',
+  year_end_date
+    CLASSIFICATION caption VALUE 'YEAR_END_DATE'
+    CLASSIFICATION description VALUE 'Year End Date',
+  quarter_id
+    CLASSIFICATION caption VALUE 'QUARTER_ID'
+    CLASSIFICATION description VALUE 'QUARTER ID',
+  quarter_name
+    CLASSIFICATION caption VALUE 'QUARTER_NAME'
+    CLASSIFICATION description VALUE 'Quarter',
+  quarter_end_date
+    CLASSIFICATION caption VALUE 'QUARTER_END_DATE'
+    CLASSIFICATION description VALUE 'Quarter End Date',
+  quarter_of_year
+    CLASSIFICATION caption VALUE 'QUARTER_OF_YEAR'
+    CLASSIFICATION description VALUE 'Quarter of Year',    
+  month_id
+    CLASSIFICATION caption VALUE 'MONTH_ID'
+    CLASSIFICATION description VALUE 'MONTH ID',
+  month_name
+    CLASSIFICATION caption VALUE 'MONTH_NAME'
+    CLASSIFICATION description VALUE 'Month',
+  month_long_name
+    CLASSIFICATION caption VALUE 'MONTH_LONG_NAME'
+    CLASSIFICATION description VALUE 'Month Long Name',
+  month_end_date
+    CLASSIFICATION caption VALUE 'MONTH_END_DATE'
+    CLASSIFICATION description VALUE 'Month End Date',
+  month_of_quarter
+    CLASSIFICATION caption VALUE 'MONTH_OF_QUARTER'
+    CLASSIFICATION description VALUE 'Month of Quarter',
+  month_of_year
+    CLASSIFICATION caption VALUE 'MONTH_OF_YEAR'
+    CLASSIFICATION description VALUE 'Month of Year',
+  season
+    CLASSIFICATION caption VALUE 'SEASON'
+    CLASSIFICATION description VALUE 'Season',
+  season_order
+    CLASSIFICATION caption VALUE 'SEASON_ORDER'
+    CLASSIFICATION description VALUE 'Season Order')
+LEVEL month
+  LEVEL TYPE MONTHS
+  CLASSIFICATION caption VALUE 'MONTH'
+  CLASSIFICATION description VALUE 'Month'
+  KEY month_id
+  MEMBER NAME month_name
+  MEMBER CAPTION month_name
+  MEMBER DESCRIPTION month_long_name
+  ORDER BY month_end_date
+  DETERMINES (month_end_date,
+    quarter_id,
+    season,
+    season_order,
+    month_of_year,
+    month_of_quarter)
+LEVEL quarter
+  LEVEL TYPE QUARTERS
+  CLASSIFICATION caption VALUE 'QUARTER'
+  CLASSIFICATION description VALUE 'Quarter'
+  KEY quarter_id
+  MEMBER NAME quarter_name
+  MEMBER CAPTION quarter_name
+  MEMBER DESCRIPTION quarter_name
+  ORDER BY quarter_end_date
+  DETERMINES (quarter_end_date,
+    quarter_of_year,
+    year_id)
+LEVEL year
+  LEVEL TYPE YEARS
+  CLASSIFICATION caption VALUE 'YEAR'
+  CLASSIFICATION description VALUE 'Year'
+  KEY year_id
+  MEMBER NAME year_name
+  MEMBER CAPTION year_name
+  MEMBER DESCRIPTION year_name
+  ORDER BY year_end_date
+  DETERMINES (year_end_date)
+LEVEL season
+  LEVEL TYPE QUARTERS
+  CLASSIFICATION caption VALUE 'SEASON'
+  CLASSIFICATION description VALUE 'Season'
+  KEY season
+  MEMBER NAME season
+  MEMBER CAPTION season
+  MEMBER DESCRIPTION season
+LEVEL month_of_quarter
+  LEVEL TYPE MONTHS
+  CLASSIFICATION caption VALUE 'MONTH_OF_QUARTER'
+  CLASSIFICATION description VALUE 'Month of Quarter'
+  KEY month_of_quarter;
+
+CREATE ROLE IF NOT EXISTS dw_manager
+   IDENTIFIED BY warehouse;
+
+CREATE USER IF NOT EXISTS sidney 
+    IDENTIFIED BY out_standing1 
+    DEFAULT TABLESPACE example 
+    QUOTA 10M ON example 
+    TEMPORARY TABLESPACE temp
+    QUOTA 5M ON system 
+    PROFILE app_user 
+    PASSWORD EXPIRE;
+
+CREATE TABLESPACE IF NOT EXISTS lmt1 DATAFILE 'lmt_file2.dbf' SIZE 100m REUSE
+  EXTENT MANAGEMENT LOCAL UNIFORM SIZE 1M;
+
+-- Vis_26112026_[261101084]_IF EXISTS on ALTER statements
+ALTER FUNCTION IF EXISTS oe.get_bal COMPILE;
+
+ALTER HIERARCHY IF EXISTS product_hier RENAME TO myproduct_hier;
+
+ALTER INDEXTYPE IF EXISTS position_indextype COMPILE;
+
+ALTER INMEMORY JOIN GROUP IF EXISTS prod_id1
+  ADD(product_descriptions(product_id));
+
+ALTER JAVA IF EXISTS CLASS "Agent"
+   RESOLVER (("/usr/bin/bfile_dir/*" pm)(* public))
+   RESOLVE;
+
+
+-- Vis_26112026_[261101069]_IF NOT EXISTS on CREATE PROCEDURE/TRIGGER/PACKAGE/TYPE BODY/PACKAGE BODY
+CREATE OR REPLACE PROCEDURE IF NOT EXISTS hr.remove_emp (employee_id NUMBER) AS
+   tot_emps NUMBER;
+   BEGIN
+      DELETE FROM employees
+      WHERE employees.employee_id = remove_emp.employee_id;
+   tot_emps := tot_emps - 1;
+   END;
+
+CREATE OR REPLACE TRIGGER IF NOT EXISTS hr.emp_audit_trg
+  BEFORE INSERT ON hr.employees
+BEGIN
+  NULL;
+END;
+
+CREATE OR REPLACE PACKAGE IF NOT EXISTS hr.emp_pkg AS
+   FUNCTION get_count RETURN NUMBER;
+END emp_pkg;
+
+
+CREATE OR REPLACE TYPE BODY IF NOT EXISTS demo_typ2 IS
+   MEMBER FUNCTION get_square
+   RETURN NUMBER
+   IS x NUMBER;
+   BEGIN
+      SELECT c.a2*c.a2 INTO x
+      FROM demo_tab2 c;
+      RETURN (x);
+   END;
+END;
+
+CREATE OR REPLACE PACKAGE BODY IF NOT EXISTS emp_mgmt AS 
+   tot_emps NUMBER; 
+   tot_depts NUMBER; 
+FUNCTION hire 
+   (last_name VARCHAR2, job_id VARCHAR2, 
+    manager_id NUMBER, salary NUMBER, 
+    commission_pct NUMBER, department_id NUMBER) 
+   RETURN NUMBER IS new_empno NUMBER; 
+BEGIN 
+   SELECT employees_seq.NEXTVAL 
+      INTO new_empno 
+      FROM DUAL; 
+   INSERT INTO employees 
+      VALUES (new_empno, 'First', 'Last','first.example@example.com',
+              '(415)555-0100',
+              TO_DATE('18-JUN-2002','DD-MON-YYYY'),
+              'IT_PROG',90000000,00, 100,110);
+      tot_emps := tot_emps + 1; 
+   RETURN(new_empno); 
+END; 
+FUNCTION create_dept(department_id NUMBER, location_id NUMBER) 
+   RETURN NUMBER IS 
+      new_deptno NUMBER; 
+   BEGIN 
+      SELECT departments_seq.NEXTVAL 
+         INTO new_deptno 
+         FROM dual; 
+      INSERT INTO departments 
+         VALUES (new_deptno, 'department name', 100, 1700); 
+      tot_depts := tot_depts + 1; 
+      RETURN(new_deptno); 
+   END; 
+
+PROCEDURE increase_sal(employee_id NUMBER, salary_incr NUMBER) IS 
+   curr_sal NUMBER; 
+   BEGIN 
+      SELECT salary INTO curr_sal FROM employees 
+      WHERE employees.employee_id = increase_sal.employee_id; 
+      IF curr_sal IS NULL 
+         THEN RAISE no_sal; 
+      ELSE 
+         UPDATE employees 
+         SET salary = salary + salary_incr 
+         WHERE employee_id = employee_id; 
+      END IF; 
+   END; 
+PROCEDURE increase_comm(employee_id NUMBER, comm_incr NUMBER) IS 
+   curr_comm NUMBER; 
+   BEGIN 
+      SELECT commission_pct 
+      INTO curr_comm 
+      FROM employees 
+      WHERE employees.employee_id = increase_comm.employee_id; 
+      IF curr_comm IS NULL 
+         THEN RAISE no_comm; 
+      ELSE 
+         UPDATE employees 
+         SET commission_pct = commission_pct + comm_incr; 
+      END IF; 
+   END; 
+END emp_mgmt; 
+
+
+-- ===== Oracle 26ai: DIRECTIVE (NOTIFY / VALIDATE), DATA GRANT, DATA ROLE, APPLICATION IDENTITY, ASSERTION, ALTER MLE MODULE, ALTER DOMAIN =====
+-- Vis_26112026_[261101095]_CREATE/ALTER DIRECTIVE (NOTIFY and VALIDATE)
+CREATE DIRECTIVE scott.emp_ndrtv FOR scott.emp
+  NOTIFY ON INSERT UPDATE DELETE
+  USING NOTIFICATION TABLE emp_ntable
+    TABLESPACE tbsp1
+    NOTIFICATION VIEW emp_nview
+  WITH LOGGED COLUMNS (empno, ename, sal)
+    KEY (empno)
+    INCLUDING OLD VALUES
+  CONTEXT NAMESPACE userenv
+    ATTRIBUTES current_user(10)
+  ENABLE
+  RETENTION 1 DAYS;
+CREATE DIRECTIVE orders_dv_ndrtv FOR orders_dv
+  NOTIFY
+  USING NOTIFICATION TABLE orders_ntable NOTIFICATION VIEW orders_nview
+  RETENTION NONE;
+ALTER DIRECTIVE scott.emp_ndrtv ON INSERT UPDATE;
+ALTER DIRECTIVE scott.emp_ndrtv
+  WITH LOGGED COLUMNS (empno, ename) KEY (empno);
+ALTER DIRECTIVE scott.emp_ndrtv EXCLUDING OLD VALUES;
+ALTER DIRECTIVE scott.emp_ndrtv RETENTION 5 DAYS;
+ALTER DIRECTIVE scott.emp_ndrtv DISABLE;
+ALTER DIRECTIVE scott.emp_ndrtv
+  CONTEXT NAMESPACE userenv ATTRIBUTES current_user(10)
+  CONTEXT NAMESPACE userenv ATTRIBUTES host(10);
+CREATE OR REPLACE DIRECTIVE hr.emp_dv_validate FOR hr.emp_dv
+  VALIDATE ON INSERT UPDATE
+  BEFORE OBJECT
+  VALIDATE ENABLE
+  USING hr.check_emp_doc;
+CREATE DIRECTIVE emp_dv_commit_chk FOR emp_dv
+  VALIDATE ON UPDATE SELECT
+  ON COMMIT
+  USING BEGIN
+    IF 1 = 0 THEN
+      NULL;
+    END IF;
+  END;
+ALTER DIRECTIVE hr.emp_dv_validate DISABLE;
+-- Vis_26112026_[261101102]_CREATE DATA GRANT and CREATE DATA ROLE
+CREATE OR REPLACE DATA GRANT
+  app_admin.ManagerDirectReports AS
+  SELECT (ALL COLUMNS EXCEPT ssn)
+  ON hr.employees
+  WHERE manager = ORA_APP_USER.username
+  TO app_manager_role;
+CREATE DATA GRANT employee_read_access AS SELECT
+  ON hr.employees
+  WHERE employee_access(80, 10000)
+  TO analyst_data_role;
+CREATE OR REPLACE DATA GRANT
+  app_admin.EmployeesViewGrant AS
+  SELECT (name, phone_number, email), UPDATE (phone_number)
+  ON hr.employees_view
+  WHERE name = ORA_END_USER_CONTEXT.username
+  TO app_employee_role, marvin
+  START TIME TIMESTAMP '2026-01-01 00:00:00';
+CREATE DATA ROLE employee_role
+  MAPPED TO 'AZURE_ROLE=employee';
+CREATE DATA ROLE it_support_role;
+CREATE OR REPLACE DATA ROLE IF NOT EXISTS audit_role DISABLED;
+-- Vis_26112026_[261101110]_CREATE APPLICATION IDENTITY
+CREATE APPLICATION IDENTITY hcm_app MAPPED TO
+
+'AZURE_CLIENT_ID = f1fab37e-7aa2-4ff8-849c-7e731fea3b48';
+-- Vis_26112026_[261101094]_CREATE ASSERTION with constraint states
+CREATE ASSERTION IF NOT EXISTS company_must_have_a_president
+CHECK (
+  EXISTS (
+    SELECT 'a president'
+    FROM employees
+    WHERE job_id = 'AD_PRES'
+   )
+);
+CREATE ASSERTION staff_earn_less_than_manager
+CHECK (
+  ALL (
+    SELECT staff.salary staff_salary,
+           mgr.salary manager_salary
+    FROM hr.employees staff,
+         hr.employees mgr
+    WHERE staff.manager_id = mgr.employee_id
+    AND staff.manager_id IS NOT NULL
+  ) staff
+  SATISFY (
+    staff_salary < manager_salary
+  )
+) NOVALIDATE;
+CREATE ASSERTION hr.salary_within_job_limit
+CHECK (
+  ALL (
+    SELECT job_id, salary
+    FROM hr.employees
+  ) emp
+  SATISFY (
+    EXISTS (
+      SELECT 'salary within pay band'
+      FROM hr.jobs job
+      WHERE emp.job_id = job.job_id
+      AND emp.salary BETWEEN job.min_salary AND job.max_salary
+     )
+  )
+)
+DISABLE;
+CREATE ASSERTION employee_in_every_dept
+CHECK (
+  ALL (
+    SELECT d.department_id
+    FROM departments d
+  ) d
+  SATISFY (
+    EXISTS (
+      SELECT 'an employee' FROM employees e
+      WHERE e.department_id = d.department_id
+      AND e.department_id IS NOT NULL
+    )
+  )
+)
+DEFERRABLE INITIALLY DEFERRED;
+-- Vis_26112026_[261101105]_ALTER MLE MODULE ... SET METADATA
+ALTER MLE MODULE myMLEModule
+SET METADATA USING CLOB (
+SELECT JSON(
+  '{
+       "name": "value",
+       "version": "1.2.0",
+       "commitHash": "23fas4h",
+       "projectName": "Database Backend"
+  }')
+);
+-- Vis_26112026_[261101092]_ALTER DOMAIN DISPLAY/ORDER/ANNOTATIONS
+ALTER DOMAIN day_of_week
+      MODIFY DISPLAY LOWER(day_of_week);
+ALTER DOMAIN day_of_week
+      DROP DISPLAY;
+ALTER DOMAIN day_of_week
+      ADD DISPLAY INITCAP(day_of_week);
+ALTER DOMAIN year_of_birth
+      MODIFY ORDER MOD(year_of_birth,100);
+ALTER DOMAIN year_of_birth
+      DROP ORDER;
+ALTER DOMAIN year_of_birth
+      ADD ORDER FLOOR(year_of_birth/100);
+ALTER DOMAIN day_of_week
+      ANNOTATIONS(Display 'Day of week');
+
+
+-- ===== Oracle 26ai: JSON DUALITY VIEW, PROPERTY GRAPH, MLE ENV/MODULE, VECTOR INDEX, ICEBERG TABLE, LOGICAL PARTITION TRACKING, MACRO, TRUE CACHE =====
+-- Vis_26112026_[261101103]_CREATE/ALTER JSON [RELATIONAL] DUALITY VIEW
+CREATE JSON RELATIONAL DUALITY VIEW team_dv AS
+  SELECT JSON {'_id'   : t.team_id,
+               'name'   : t.name,
+               'points' : t.points,
+               'driver' :
+                 [ SELECT JSON {'driverId' : d.driver_id,
+                                'name'     : d.name,
+                                'points'   : d.points WITH NOCHECK}
+                     FROM driver d WITH INSERT UPDATE
+                     WHERE d.team_id = t.team_id ]}
+  FROM team t WITH INSERT UPDATE DELETE;
+
+CREATE JSON RELATIONAL DUALITY VIEW driver_dv AS
+  SELECT JSON {'_id'     : d.driver_id,
+               'name'     : d.name,
+               'points'   : d.points,
+               UNNEST
+                 (SELECT JSON {'teamId' : t.team_id,
+                               'team'   : t.name WITH NOCHECK}
+                    FROM team t WITH NOINSERT NOUPDATE NODELETE
+                    WHERE t.team_id = d.team_id),
+               'race'     :
+                 [ SELECT JSON {'driverRaceMapId' : drm.driver_race_map_id,
+                                UNNEST
+                                  (SELECT JSON {'raceId' : r.race_id,
+                                                'name'   : r.name}
+                                     FROM race r WITH NOINSERT NOUPDATE NODELETE
+                                     WHERE r.race_id = drm.race_id),
+                                'finalPosition'   : drm.position}
+                    FROM driver_race_map drm WITH INSERT UPDATE NODELETE
+                    WHERE drm.driver_id = d.driver_id ]}
+    FROM driver d WITH INSERT UPDATE DELETE;
+
+CREATE OR REPLACE JSON RELATIONAL DUALITY VIEW waiter_dv_gen_constant AS
+  SELECT JSON {'_id'        : empno,
+               'name'       : name,
+               'wage'       : wage,
+               'tips'       : tips,
+               'allowances' : allowances GENERATED ON WRITE USING PATH '1000'}
+    FROM waiter e WITH (UPDATE, INSERT, DELETE);
+
+CREATE JSON DUALITY VIEW IF NOT EXISTS hr.emp_dv AS
+  SELECT JSON {'_id' : e.employee_id, 'name' : e.last_name}
+  FROM hr.employees e;
+
+
+ALTER JSON RELATIONAL DUALITY VIEW team_dv ENABLE LOGICAL REPLICATION;
+ALTER JSON DUALITY VIEW IF EXISTS hr.emp_dv DISABLE LOGICAL REPLICATION;
+
+-- Vis_26112026_[261101104]_CREATE PROPERTY GRAPH
+CREATE PROPERTY GRAPH "myGraph" VERTEX TABLES (my_table_1);
+CREATE PROPERTY GRAPH "myGraph" VERTEX TABLES (my_table_1, other_schema.my_table_1 AS my_table2);
+CREATE PROPERTY GRAPH "myGraph"
+     VERTEX TABLES (
+       VT1,
+       VT2 KEY(PK2),
+       VT3 KEY(PK31, PK32),
+       VT2 AS ALTVT2 KEY(PK4)
+     )
+     EDGE TABLES (
+       E1 SOURCE VT1
+          DESTINATION VT2,
+       E2 SOURCE      KEY(FK1) REFERENCES VT1 (PK1)
+          DESTINATION KEY(FK2) REFERENCES VT2 (PK2),
+       E3 SOURCE      KEY(FK1) REFERENCES VT1 (PK1)
+          DESTINATION VT2,
+       E4 SOURCE VT1
+          DESTINATION KEY(FK5) REFERENCES VT2(RK5))
+;
+CREATE PROPERTY GRAPH "myGraph"
+  VERTEX TABLES (VT1, VT2 KEY(PK2)),
+  EDGE TABLES (
+    ET1 SOURCE VT1 DESTINATION VT2,
+    ET2 SOURCE KEY(FK2) REFERENCES VT2 (PK2) DESTINATION VT1)
+ OPTIONS(ENFORCED MODE);
+CREATE OR REPLACE PROPERTY GRAPH IF NOT EXISTS hr.G
+VERTEX TABLES(
+EMP AS EMPLOYEE
+KEY(ID)
+LABEL EMPLOYEE
+PROPERTIES ARE ALL COLUMNS,
+V AS DEPARTMENT
+KEY(ID)
+LABEL DEPARTMENT
+PROPERTIES ARE ALL COLUMNS
+)
+EDGE TABLES(
+EMP AS employee_of KEY(ID)
+SOURCE KEY(ID) REFERENCES EMPLOYEE(ID)
+DESTINATION KEY(DEPARTMENT) REFERENCES DEPARTMENT(ID)
+NO PROPERTIES
+);
+
+-- Vis_26112026_[261101105]_CREATE MLE ENV and CREATE MLE MODULE
+CREATE MLE ENV scott."myenv";
+CREATE MLE ENV scott."myenv" CLONE "other_env";
+CREATE OR REPLACE MLE ENV IF NOT EXISTS app_env
+  IMPORTS ('helpers' MODULE scott.helper_mod, 'utils' MODULE utils_mod)
+  LANGUAGE OPTIONS 'js.strict=true'
+  PURE;
+
+CREATE OR REPLACE MLE MODULE hello_js
+  LANGUAGE JAVASCRIPT AS
+export function hello() {
+  return 'Hello, World!';
+}
+/
+
+CREATE OR REPLACE MLE MODULE test_wasm
+  LANGUAGE WASM
+  USING BLOB
+    SELECT content
+    FROM wasm_sources
+    WHERE module_name = 'MY_WASM_MODULE' AND VERSION = '1.0.1';
+
+CREATE OR REPLACE MLE MODULE test_wasm2
+  LANGUAGE WASM
+  USING BFILE(wasm_dir, 'my_module.wasm');
+
+-- Vis_26112026_[261101106]_CREATE VECTOR INDEX
+CREATE VECTOR INDEX galaxies_hnsw_idx ON galaxies (embedding) ORGANIZATION INMEMORY NEIGHBOR GRAPH
+DISTANCE COSINE
+WITH TARGET ACCURACY 95;
+
+CREATE VECTOR INDEX galaxies_hnsw_idx ON galaxies (embedding) ORGANIZATION INMEMORY NEIGHBOR GRAPH
+DISTANCE COSINE
+WITH TARGET ACCURACY 90 PARAMETERS (type HNSW, neighbors 40, efconstruction 500);
+
+CREATE VECTOR INDEX galaxies_ivf_idx ON galaxies (embedding) ORGANIZATION NEIGHBOR PARTITIONS
+DISTANCE COSINE
+WITH TARGET ACCURACY 95;
+
+CREATE VECTOR INDEX galaxies_ivf_idx ON galaxies (embedding) ORGANIZATION NEIGHBOR PARTITIONS
+DISTANCE COSINE
+WITH TARGET ACCURACY 90 PARAMETERS (type IVF, neighbor partitions 10);
+
+CREATE VECTOR INDEX docs_vidx ON hr.docs (embedding) INCLUDE (doc_id, title)
+  ORGANIZATION NEIGHBOR PARTITIONS WITH DISTANCE EUCLIDEAN
+  PARAMETERS (type IVF, neighbor partitions 10)
+  DISTRIBUTE BY ROWID RANGE
+  PARALLEL 4 ONLINE;
+
+-- Vis_26112026_[261101093]_CREATE ICEBERG TABLE
+CREATE ICEBERG TABLE sales.orders_ice
+  ( order_id NUMBER, order_date DATE, customer_id NUMBER )
+  WITHIN CATALOG glue_catalog
+  STORAGE LOCATION 's3://my-bucket/warehouse/orders'
+  PARTITION BY MONTH(order_date), BUCKET(16, customer_id);
+
+-- Vis_26112026_[261101107]_CREATE LOGICAL PARTITION TRACKING
+CREATE LOGICAL PARTITION TRACKING ON sales
+  PARTITION BY RANGE (sale_date)
+  INTERVAL (NUMTOYMINTERVAL(1, 'MONTH'))
+  ( PARTITION p0 VALUES LESS THAN (TO_DATE('2026-01-01', 'YYYY-MM-DD')) );
+
+-- Vis_26112026_[261101108]_CREATE MACRO and ALTER MACRO
+CREATE MACRO price_tier(base_price NUMBER) AS
+  CASE
+    WHEN base_price >= 1000 THEN 'Premium'
+    WHEN base_price >= 500 THEN 'Standard'
+    WHEN base_price >= 100 THEN 'Basic'
+    ELSE 'Entry'
+  END;
+
+CREATE MACRO greet(person_name VARCHAR2 DEFAULT 'World') AS
+  'Hello, ' || person_name || '!';
+
+CREATE MACRO staff_in_dept(deptno NUMBER) AS
+  SELECT *
+  FROM scott.emp NATURAL JOIN scott.dept
+  WHERE deptno = staff_in_dept.deptno;
+
+CREATE MACRO row_count(t TABLE) AS
+  SELECT COUNT(*) AS row_cnt FROM t;
+
+CREATE MACRO employee_pay_summary(
+  t TABLE(department_id NUMBER, salary NUMBER, job_id VARCHAR2),
+  job_title VARCHAR2
+) AS
+  SELECT department_id, AVG(salary) AS average_salary
+  FROM t
+  WHERE job_id = UPPER(employee_pay_summary.job_title)
+  GROUP BY department_id;
+
+CREATE MACRO scalar_query(n NUMBER) IS
+  (SELECT n FROM DUAL);
+
+CREATE MACRO positive_number(n NUMBER) AS (n > 0);
+
+CREATE MACRO check_title(title VARCHAR2) ON scott.emp AS
+  (job = UPPER(title));
+
+CREATE OR REPLACE MACRO IF NOT EXISTS hr.successor(n NUMBER) AS n + 1;
+
+ALTER MACRO adjusted_salary COMPILE;
+ALTER MACRO IF EXISTS adjusted_salary COMPILE;
+
+-- Vis_26112026_[261101109]_CREATE TRUE CACHE
+CREATE TRUE CACHE;
+-- Vis_26112026_[261101103]_JSON duality view GraphQL form
+CREATE OR REPLACE JSON RELATIONAL DUALITY VIEW student_ov AS
+    student { # this is a valid single line GraphQL comment
+    _id: stuid
+    Name: name
+};
+
+-- ===== Oracle 26ai: ANALYTIC VIEW / MATERIALIZED VIEW / MV LOG (IF NOT EXISTS, ANNOTATIONS, CONCURRENT REFRESH) =====
+-- Vis_26112026_[261101069]_IF NOT EXISTS on CREATE ANALYTIC VIEW and CREATE MATERIALIZED VIEW
+CREATE OR REPLACE ANALYTIC VIEW IF NOT EXISTS sales_av2
+USING sales_fact
+DIMENSION BY
+  (time_attr_dim
+    KEY month_id REFERENCES month_id
+    HIERARCHIES (
+      time_hier DEFAULT)
+   )
+MEASURES
+ (sales FACT sales,
+  units FACT units,
+  sales_prior_period AS
+    (LAG(sales) OVER (HIERARCHY time_hier OFFSET 1))
+  )
+DEFAULT MEASURE SALES;
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS hr.mv2 AS SELECT * FROM hr.employees;
+
+-- Vis_26112026_[261101070]_ANNOTATIONS on materialized view and view columns
+CREATE MATERIALIZED VIEW MView1 ANNOTATIONS (Title 'Tab1 MV1', ADD Snapshot) AS SELECT * from Table1;
+
+CREATE MATERIALIZED VIEW MView2(T ANNOTATIONS (Hidden)) ANNOTATIONS (Title 'Tab1 MV1', ADD Snapshot)
+   AS SELECT * from Table1;
+
+-- Vis_26112026_[261101079]_ENABLE CONCURRENT REFRESH
+CREATE MATERIALIZED VIEW sales_cr_mv
+   REFRESH FAST ON COMMIT
+   ENABLE CONCURRENT REFRESH
+   AS SELECT prod_id, SUM(amount_sold) AS amt FROM sales GROUP BY prod_id;
+
+-- Vis_26112026_[261101069]_CREATE MATERIALIZED VIEW LOG with and without IF NOT EXISTS
+CREATE MATERIALIZED VIEW LOG IF NOT EXISTS ON hr.employees
+   WITH PRIMARY KEY
+   INCLUDING NEW VALUES;
+
+CREATE MATERIALIZED VIEW LOG ON customers
+   PCTFREE 5
+   TABLESPACE example
+   STORAGE (INITIAL 10K);
+
+CREATE MATERIALIZED VIEW LOG ON orders
+  PCTFREE 5
+  TABLESPACE example
+  STORAGE (INITIAL 10K)
+  PURGE REPEAT INTERVAL '5' DAY;
+
+-- Vis_26112026_[261101080]_MV log WITH list with column lists between items
+CREATE MATERIALIZED VIEW LOG ON sales
+   WITH ROWID, SEQUENCE(amount_sold, time_id, prod_id)
+   INCLUDING NEW VALUES;
+
+CREATE MATERIALIZED VIEW LOG ON product_information
+   WITH ROWID, SEQUENCE (list_price, min_price, category_id), PRIMARY KEY
+   INCLUDING NEW VALUES;
+
+-- Vis_26112026_[261101069]_CREATE MATERIALIZED VIEW LOG without IF NOT EXISTS (regression)
+CREATE MATERIALIZED VIEW LOG ON sales
+   PCTFREE 5
+   TABLESPACE example
+   STORAGE (INITIAL 10K)
+   FOR SYNCHRONOUS REFRESH USING mystage_log;
+
+
+-- ===== Oracle 26ai: CREATE TABLE (IF NOT EXISTS, DOMAIN, ANNOTATIONS, JSON COLLECTION) and CREATE VIEW (IF NOT EXISTS, ANNOTATIONS, JSON COLLECTION) =====
+-- Vis_26112026_[261101069]_CREATE TABLE IF NOT EXISTS
+-- Vis_26112026_[261101074]_Column datatype DOMAIN d and DOMAIN d alone
+-- Vis_26112026_[261101076]_DEFAULT ON NULL FOR INSERT ONLY / FOR INSERT AND UPDATE
+CREATE TABLE IF NOT EXISTS hr.emp_26ai (
+  emp_id   NUMBER(6) PRIMARY KEY,
+  email    VARCHAR2(100) DOMAIN hr.email_dom,
+  dow      DOMAIN day_of_week,
+  yob      year_of_birth,
+  status   VARCHAR2(10) DEFAULT ON NULL FOR INSERT ONLY 'NEW',
+  updated  DATE DEFAULT ON NULL FOR INSERT AND UPDATE SYSDATE
+);
+
+-- Vis_26112026_[261101070]_ANNOTATIONS on tables and columns
+CREATE TABLE t1 (T NUMBER) ANNOTATIONS(Operations '["Sort", "Group"]', Hidden);
+
+CREATE TABLE t2 (T NUMBER) ANNOTATIONS (ADD Hidden);
+
+CREATE TABLE t3 (T NUMBER ANNOTATIONS(Operations 'Sort' , Hidden) );
+
+CREATE TABLE employee (
+  id NUMBER(5)
+    ANNOTATIONS(Identity, Display 'Employee ID', "Group" 'Emp_Info'),
+  ename VARCHAR2(50)
+    ANNOTATIONS(Display 'Employee Name', "Group" 'Emp_Info'),
+  sal NUMBER
+    ANNOTATIONS(Display 'Employee Salary', UI_Hidden)
+) ANNOTATIONS (Display 'Employee Table');
+
+-- Vis_26112026_[261101073]_Table-level DOMAIN clause, with USING
+CREATE TABLE tm1 (c1 NUMBER, c2 NUMBER, c3 VARCHAR2(15),c4 NUMBER, c5 NUMBER,
+                  c6 NUMBER, c7 NUMBER, DOMAIN dm1 (c1, c2, c3, c4),
+                  DOMAIN dn2(c5, c6), DOMAIN dn1(c7));
+
+CREATE TABLE readings (
+  units CHAR(1), temp NUMBER,
+  DOMAIN temperature (temp) USING (units)
+);
+
+-- Vis_26112026_[261101074]_Virtual column with datatype DOMAIN d
+-- Vis_26112026_[261101075]_Virtual column MATERIALIZED
+CREATE TABLE sales_v (
+  amount NUMBER, surcharge NUMBER,
+  tax    NUMBER DOMAIN money_dom GENERATED ALWAYS AS (amount + surcharge) VIRTUAL,
+  total  NUMBER AS (amount + tax) MATERIALIZED
+);
+
+-- Vis_26112026_[261101068]_CREATE JSON COLLECTION TABLE, with WITH ETAG
+-- Vis_26112026_[261101069]_CREATE JSON COLLECTION TABLE IF NOT EXISTS
+CREATE JSON COLLECTION TABLE emp_jct;
+
+CREATE JSON COLLECTION TABLE IF NOT EXISTS hr.orders_jct WITH ETAG;
+
+-- Vis_26112026_[261101069]_IF NOT EXISTS on CREATE VIEW
+CREATE OR REPLACE VIEW IF NOT EXISTS hr.emp_v AS
+   SELECT last_name, salary*12 annual_salary
+   FROM employees
+   WHERE department_id = 20;
+
+-- Vis_26112026_[261101070]_ANNOTATIONS on view and view columns
+CREATE OR REPLACE VIEW high_wage_employees (
+employee_id ANNOTATIONS (identity, display 'Employee ID'),
+first_name ANNOTATIONS (display 'Employee Name'),
+salary ANNOTATIONS (display 'Emp Salary') )
+ANNOTATIONS (Title 'High Wage Employee View') AS
+SELECT employee_id, first_name, salary
+FROM employees
+WHERE salary > 100000;
+
+-- Vis_26112026_[261101078]_CREATE JSON COLLECTION VIEW
+CREATE JSON COLLECTION VIEW IF NOT EXISTS emp_jcv AS
+  SELECT JSON {'_id' : employee_id, 'name' : last_name} AS data FROM employees;
+
+-- Vis_26112026_[261101069]_CREATE VIEW forms without IF NOT EXISTS (regression)
+CREATE EDITIONING VIEW ed_orders_view (o_id, o_date, o_status)
+  AS SELECT order_id, order_date, order_status FROM orders
+  WITH READ ONLY;
+
+CREATE VIEW emp_sal (emp_id, last_name,
+      email UNIQUE RELY DISABLE NOVALIDATE,
+   CONSTRAINT id_pk PRIMARY KEY (emp_id) RELY DISABLE NOVALIDATE)
+   AS SELECT employee_id, last_name, email FROM employees;
+
+CREATE VIEW clerk AS
+   SELECT employee_id, last_name, department_id, job_id
+   FROM employees
+   WHERE job_id = 'PU_CLERK'
+      or job_id = 'SH_CLERK'
+      or job_id = 'ST_CLERK'
+   WITH CHECK OPTION;
+
+CREATE VIEW customer_ro (name, language, credit)
+      AS SELECT cust_last_name, nls_language, credit_limit
+      FROM customers
+      WITH READ ONLY;
+
+CREATE VIEW emp_bq BEQUEATH CURRENT_USER AS SELECT * FROM employees;
+
+
+-- ===== CREATE TABLE tag nodes: JSON collection Table Formats, DOMAIN-only column TYPE, quoted domain owner, annotations placement =====
+-- Vis_26112026_[261101074]_DOMAIN-only column TYPE and quoted domain owner
+-- Vis_26112026_[261101073]_Table-level DOMAIN with quoted owner
+-- Vis_26112026_[261101070]_ANNOTATIONS on a virtual column
+CREATE TABLE emp_dom (
+  emp_id NUMBER(6),
+  dow    DOMAIN day_of_week,
+  email  VARCHAR2(100) DOMAIN "HR".email_dom,
+  city   DOMAIN "HR".us_city_dom,
+  c1 NUMBER, c2 NUMBER,
+  c3 NUMBER GENERATED ALWAYS AS (c1 + c2) VIRTUAL ANNOTATIONS (Display 'Sum'),
+  DOMAIN "HR".dm1 (c1, c2)
+);
+
+-- Vis_26112026_[261101070]_ANNOTATIONS after physical properties and before AS subquery
+CREATE TABLE t_ann_tbs (c NUMBER) TABLESPACE users ANNOTATIONS (Display 'T');
+
+CREATE TABLE t_ann_ctas TABLESPACE users ANNOTATIONS (Display 'Copy') AS SELECT * FROM employees;
+
+-- Vis_26112026_[261101068]_JSON collection table WITH ETAG followed by physical properties
+CREATE JSON COLLECTION TABLE IF NOT EXISTS hr.orders_jct2 WITH ETAG TABLESPACE users;

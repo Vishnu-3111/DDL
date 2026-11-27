@@ -86,7 +86,7 @@ parse(<language>);
 						| <create_extention>
 						| <create_foreign_data_wrapper>
 						| <create_user_mapping>
-						| <create_group_or_role>
+						| <create_group_or_role_or_user>
 						| <create_language>
 						| <create_operator_family>
 						| <create_operator_class>
@@ -111,6 +111,7 @@ parse(<language>);
 						|<alter_event_trigger>
 						|<alter_extention>
 						|<alter_foreign_data_wapper>
+						|<alter_all_in_tablespace>
 						|<alter_table>
 						|<alter_function>
 						|<alter_group>
@@ -195,19 +196,24 @@ parse(<language>);
 							|<reindex>
 							|<release_savepoint>
 							|<reset_session_auth>
+							|<set_session_auth>
 							|<reset>
 							|<rollback>
 							|<savepoint>
 							|<security_lable>
+							|<set_role>
 							|<set_transcation>
 							|<set_constraints>
 							|<set_command>
+							|<start_transaction>
 							|<truncate>
 							|<unlisten>
 							|<update>
 							|<vacum>
 							|<values>
 							|<sele_fun>
+							//Vis_26112026_[261101000]_Added SHOW ALL / SHOW <name> command as inline alternative in <other_commands>
+							|("SHOW" ("ALL"|<name>)[";"])
 							;
 
 <channel>			::=<IDENTIFIER> ;
@@ -1189,21 +1195,24 @@ parse(<language>);
 
 <abbreviated_grant_or_revoke>	::=	(<grant_abb>|<revoke_abb>)[";"] ;
 									
-<grant_abb>						::=	("GRANT" ( (<grand_object>(","<grand_object>)*) | "ALL" [ "PRIVILEGES" ] )
+//Vis_26112026_[261101001]_Grouped "ALL" [ "PRIVILEGES" ] in parentheses in abbreviated GRANT (ALTER DEFAULT PRIVILEGES)
+<grant_abb>						::=	("GRANT" ( (<grand_object>(","<grand_object>)*) | ("ALL" [ "PRIVILEGES" ]) )
 									"ON" ("TABLES"|"SEQUENCES"|"FUNCTIONS"|"ROUTINES"|"TYPE"|"SCHEMAS")
 									"TO" ( "PUBLIC"|([ "GROUP" ] <role_name>)  )
 									("," ( "PUBLIC"|([ "GROUP" ] <role_name>)  ))* [ "WITH" "GRANT" "OPTION" ]) ;								
 									
 									
+//Vis_26112026_[261101002]_Added ON LARGE OBJECTS to abbreviated REVOKE (ALTER DEFAULT PRIVILEGES)
 <revoke_abb>					::= ("REVOKE" [ "GRANT" "OPTION" "FOR" ]
 									(( <grand_object>(","<grand_object>)*)| "ALL" [ "PRIVILEGES" ] )
-									"ON" ("TABLES"|"SEQUENCES"|"FUNCTIONS"|"ROUTINES"|"TYPE"|"SCHEMAS")
+									"ON" ("TABLES"|"SEQUENCES"|"FUNCTIONS"|"ROUTINES"|"TYPE"|"SCHEMAS"|("LARGE" "OBJECTS"))
 									"FROM" ( "PUBLIC"|([ "GROUP" ] <role_name>)  )
 									("," ( "PUBLIC"|([ "GROUP" ] <role_name>)  ))* [ "WITH" "GRANT" "OPTION" ])
 									 [ ("CASCADE" | "RESTRICT") ] ;
 
+//Vis_26112026_[261101003]_Added MAINTAIN and CREATE privileges to <grand_object>
 <grand_object>		::=	("SELECT"|"INSERT"|"UPDATE"|"DELETE"|"TRUNCATE"
-						|"REFERENCES"|"TRIGGER"|"USAGE"|"EXECUTE") ;
+						|"REFERENCES"|"TRIGGER"|"USAGE"|"EXECUTE"|"MAINTAIN"|"CREATE") ;
 							
 <target_role>		::=<IDENTIFIER> ;
 
@@ -1235,6 +1244,7 @@ parse(<language>);
 															|("SET" "SCHEMA" <schema_name>)
 															|(("ADD"|"DROP") <member_object>)) [";"] ;
 															
+//Vis_26112026_[261101004]_Merged the four TEXT SEARCH CONFIGURATION/DICTIONARY/PARSER/TEMPLATE alternatives into one in ALTER EXTENSION ADD/DROP
 <member_object>				::=  (("ACCESS" "METHOD" <object_name>)|
 									("AGGREGATE" <object_name> "(" skipBalanced("(",")") ")") |
 								  ("CAST" "("skipBalanced("(",")")")") |
@@ -1255,10 +1265,7 @@ parse(<language>);
 								  ("SEQUENCE" <object_name>) |
 								  ("SERVER" <object_name>) |
 								  ("TABLE" <object_name>) |
-								  ("TEXT" "SEARCH" "CONFIGURATION" <object_name>) |
-								  ("TEXT" "SEARCH" "DICTIONARY" <object_name>) |
-								  ("TEXT" "SEARCH" "PARSER" <object_name>) |
-								  ("TEXT" "SEARCH" "TEMPLATE" <object_name>) |
+								  ("TEXT" "SEARCH" ("CONFIGURATION"|"DICTIONARY"|"PARSER"|"TEMPLATE") <object_name>) |
 								  ("TRANSFORM" "FOR" <type_name> "LANGUAGE" <lang_name>) |
 								  ("TYPE" <object_name>) |
 								  ("VIEW" <object_name>)) ;
@@ -1292,6 +1299,9 @@ parse(<language>);
 								|("ATTACH" "PARTITION" <name> (("FOR" "VALUES" <partition_bound_spec>)| "DEFAULT" ))
 								|("DETACH" "PARTITION" <name> [ "CONCURRENTLY" | "FINALIZE" ])
 								|("SET" "SCHEMA" <schema_name>))) [";"] ;
+								
+//Vis_26112026_[261101005]_Added ALTER TABLE ALL IN TABLESPACE ... [OWNED BY] SET TABLESPACE [NOWAIT] command
+<alter_all_in_tablespace>	::= "ALTER" "TABLE" "ALL" "IN" "TABLESPACE" <name> [ "OWNED" "BY" <name> ("," <name>)* ] "SET" "TABLESPACE" <tablespace_name> [ "NOWAIT" ]	[";"]	;				
 								
 <table_action>				::= (("DROP" "CONSTRAINT" [ "IF" "EXISTS"] <constraint_name> [ "RESTRICT" | "CASCADE" ])
 								|("ALTER" "CONSTRAINT" <constraint_name> [ "DEFERRABLE" | "NOT" "DEFERRABLE" ] [ "INITIALLY" "DEFERRED" | "INITIALLY" "IMMEDIATE" ] [ "ENFORCED" | "NOT" "ENFORCED"] ["INHERIT" | "NO" "INHERIT"])
@@ -1370,6 +1380,7 @@ parse(<language>);
 									|(<function_action>*  [ "RESTRICT" ] ))
 									[";"] ;
 
+//Vis_26112026_[261101006]_Simplified [EXTERNAL] SECURITY INVOKER/DEFINER to one alternative in ALTER FUNCTION/PROCEDURE actions
 <function_action>			::= ((("CALLED" "ON" "NULL" "INPUT") | ("RETURNS" "NULL" "ON" "NULL" "INPUT") | "STRICT")
 									|("IMMUTABLE" | "STABLE" | "VOLATILE")
 									|(("NOT" "LEAKPROOF")|"LEAKPROOF")
@@ -1380,14 +1391,15 @@ parse(<language>);
 									|("SET" <configuration_parameter> (( "TO" | "=" ) ( (<value>(","<value>)*) | "DEFAULT" )) |("FROM" "CURRENT"))
 									|("RESET" <configuration_parameter>)
 									|("RESET" "ALL")
-									|((["EXTERNAL" ] "SECURITY" "INVOKER") | ([ "EXTERNAL" ] "SECURITY" "DEFINER"))) ;
+									|(["EXTERNAL" ] "SECURITY" ("INVOKER" | "DEFINER"))) ;
 
 <alter_group>				::= "ALTER" "GROUP" <role_specification> ((("ADD"|"DROP") "USER" <name> ("," <name>)* )
 									|("RENAME" "TO" <name>)) [";"] ;
 
 <role_specification>		::= ("CURRENT_ROLE" | "CURRENT_USER" | "SESSION_USER"|<role_name>) ;
 
-<alter_index>				::= "ALTER" "INDEX" [ "IF" "EXISTS" ] <name> 
+//Vis_26112026_[261101007]_Added optional ALL IN TABLESPACE to ALTER INDEX
+<alter_index>				::= "ALTER" "INDEX" [ "IF" "EXISTS" ] ["ALL" "IN" "TABLESPACE"] <name> 
 								(("RENAME" "TO" <name>)
 								|("SET" "TABLESPACE" <tablespace_name>)
 								|("ATTACH" "PARTITION" <name>)
@@ -1483,11 +1495,12 @@ parse(<language>);
 									|(<procedure_action>*  [ "RESTRICT" ]))									
 									[";"] ;
 									
+//Vis_26112026_[261101006]_Simplified [EXTERNAL] SECURITY INVOKER/DEFINER to one alternative in ALTER FUNCTION/PROCEDURE actions
 <procedure_action>			::=(("SET" <configuration_parameter> ( "TO" | "=" ) (( <value>(","<value>)*) | "DEFAULT"))
 								|("SET" <configuration_parameter> "FROM" "CURRENT")
 								|("RESET" <configuration_parameter>)
 								|("RESET" "ALL")								
-								|(([ "EXTERNAL" ] "SECURITY" "INVOKER") | ([ "EXTERNAL" ] "SECURITY" "DEFINER"))) [";"] ;
+								|([ "EXTERNAL" ] "SECURITY" ("INVOKER"| "DEFINER"))) [";"] ;
 								
 /*								
 <alter_publication>			::=	"ALTER" "PUBLICATION" <name>((("ADD"|"DROP"|"SET") <publication_object> ("," <publication_object>)*)
@@ -1679,10 +1692,14 @@ parse(<language>);
 								|("SET" "(" skipBalanced("(",")") ")")
 								|("RESET" "(" skipBalanced("(",")") ")")) [";"] ;
 								
+//Vis_26112026_[261101008]_Added optional ONLY before the table list in ANALYZE
 <analyze_command>			::=	"ANALYZE" [ "(" skipBalanced("(",")") ")" ]
-							[ "VERBOSE" ] [ <table_and_columns> (","<table_and_columns>)* ]	[";"] ;
+							[ "VERBOSE" ] [ ["ONLY"]<table_and_columns> (","<table_and_columns>)* ]	[";"] ;
+							
+							
 
-<table_and_columns>			::=	 <table_string_name> [ "(" skipBalanced("(",")") ")" ]	[";"] ;					
+//Vis_26112026_[261101009]_Added optional "*" after the table name and removed the trailing [";"] in <table_and_columns> (shared by ANALYZE and VACUUM)
+<table_and_columns>			::=	 <table_string_name>["*"] [ "(" skipBalanced("(",")") ")" ]	 ;					
 
 <begin>						::= "BEGIN" [ "WORK" | "TRANSACTION"] [ <transaction_mode> ("," <transaction_mode>)* ] [";"] ;
 
@@ -1783,6 +1800,7 @@ parse(<language>);
 
 <dest_encoding>				::=<StringValue> ;	
 
+//Vis_26112026_[261101010]_Added BUILTIN_LOCALE option to CREATE DATABASE
 <create_database>			::= "CREATE" "DATABASE" <name>
 								[ "WITH" ] (("OWNER" ["="] <name> )
 									   |( "TEMPLATE" ["="] <template> )
@@ -1798,7 +1816,8 @@ parse(<language>);
 									   |( "ALLOW_CONNECTIONS" ["="] ("TRUE"|"FALSE") )
 									   |( "CONNECTION" "LIMIT" ["="] <NUMBER> )
 									   |( "IS_TEMPLATE" ["="] ("TRUE"|"FALSE") )
-									   |( "OID" ["="] <NUMBER>))*	 [";"] ;					
+									   |( "OID" ["="] <NUMBER>)
+									   |("BUILTIN_LOCALE" ["="] <IDENTIFIER>))*	 [";"] ;					
 									   
 <template>			::=<IDENTIFIER> ;	
 
@@ -1820,7 +1839,8 @@ parse(<language>);
 									[ (("VALIDATOR" <handler_function>) | ("NO" "VALIDATOR")) ]
 									[ "OPTIONS" "(" skipBalanced("(",")")")" ] [";"] ;									 
 
-<create_group_or_role>				::=	"CREATE" ("GROUP"|"ROLE"|"USER") <name> [ [ "WITH" ] <group_option>* ]	[";"] ;
+//Vis_26112026_[261101011]_Renamed <create_group_or_role> to <create_group_or_role_or_user> (rule and <create_commands> reference)
+<create_group_or_role_or_user>				::=	"CREATE" ("GROUP"|"ROLE"|"USER") <name> [ [ "WITH" ] <group_option>* ]	[";"] ;
 
 <group_option>				::=  (("SUPERUSER" | "NOSUPERUSER")
 								| ("CREATEDB" | "NOCREATEDB")
@@ -1878,10 +1898,11 @@ parse(<language>);
 								[ "WITH" "CHECK" "("skipBalanced("(",")") ")" ]	[";"] ;	
 
 
+//Vis_26112026_[261101012]_Fixed " NOTHING" keyword (stray leading space) in CREATE RULE ... DO NOTHING
 <create_rule>				::= "CREATE" [ "OR" "REPLACE" ] "RULE" <name> "AS" "ON" <rule_event>
 									"TO" <table_string_name> [ "WHERE" <condition> ]
 									"DO" [ "ALSO" | "INSTEAD" ] 
-									(" NOTHING" | <command> | ("(" skipBalanced("(",")") ")") )	[";"] ;	
+									("NOTHING" | <command> | ("(" skipBalanced("(",")") ")") )	[";"] ;	
 
 <rule_event>		::=( "SELECT" | "INSERT" | "UPDATE" | "DELETE") ;	
 
@@ -2068,7 +2089,8 @@ parse(<language>);
 <drop_cast>				::= "DROP" "CAST" [ "IF" "EXISTS" ] "(" skipBalanced("(",")") ")" 
 								[ "CASCADE" | "RESTRICT" ] [";"] ;	
 
-<drop_database>			::=	"DROP" "DATABASE" [ "IF" "EXISTS" ] <name> [ ["WITH" ] "(" "FORCE" ")" ] [";"] ;	
+//Vis_26112026_[261101013]_Replaced fixed "(" "FORCE" ")" with skipBalanced option list in DROP DATABASE ... WITH (...)
+<drop_database>			::=	"DROP" "DATABASE" [ "IF" "EXISTS" ] <name> [ ["WITH" ] "(" skipBalanced("(",")")  ")" ] [";"] ;	
 
 <drop_operator>			::=	"DROP" "OPERATOR" [ "IF" "EXISTS" ] 
 							("^"|"~"|<operator>) "(" skipBalanced("(",")") ")" 
@@ -2185,15 +2207,17 @@ parse(<language>);
 							| ("SHARE" [("UPDATE" "EXCLUSIVE")|("ROW" "EXCLUSIVE")]) 
 							| "EXCLUSIVE" | ("ACCESS" "EXCLUSIVE")) ;
 							
+//Vis_26112026_[261101014]_Renamed <where_clause> to <when_clause> and added WHEN NOT MATCHED BY SOURCE/TARGET to MERGE
 <merge>					::=["WITH" ["RECURSIVE"] <column_names> "AS"  "(" skipBalanced("(",")")")"]
 							"MERGE" "INTO" [ "ONLY" ] <table_string_name> [ "*" ] [ [ "AS" ] <table_string_name> ]
 							"USING" <data_source>  [ "AS" ] (("ON" <join_condition>)|(<table_string_name>  "ON" <join_condition>))
-							<where_clause>* [";"] ;
+							<when_clause>* [";"] ;
 							
 <data_source>			::=((["ONLY"] <table_string_name> [ "*" ]) | ("(" skipBalanced("(",")") ")") ) ;
 
-<where_clause>			::=( ("WHEN" "MATCHED" [ "AND" <condition> ] "THEN" ( <merge_update> | <merge_delete> | ("DO" "NOTHING") )) |
-								("WHEN" "NOT" "MATCHED" [ "AND" <condition> ] "THEN" (<merge_insert> | "DO" "NOTHING"))) ;
+//Vis_26112026_[261101014]_Renamed <where_clause> to <when_clause> and added WHEN NOT MATCHED BY SOURCE/TARGET to MERGE
+<when_clause>			::=( ("WHEN" "MATCHED" [ "AND" <condition> ] "THEN" ( <merge_update> | <merge_delete> | ("DO" "NOTHING") )) |
+								("WHEN" "NOT" "MATCHED" ["BY" ("SOURCE"|"TARGET")] [ "AND" <condition> ] "THEN" (<merge_insert> | "DO" "NOTHING"))) ;
 								
 								
 <merge_insert>			::= "INSERT" ["(" <column_String_name> (","<column_String_name>)* ")"]
@@ -2273,7 +2297,10 @@ parse(<language>);
 <set_constraints>		::= "SET" "CONSTRAINTS" ( "ALL" | (<name> (","<name>)* )) 
 								( "DEFERRED" | "IMMEDIATE" ) [";"] ;
 								
-<reset_session_auth>	::= "RESET" "SESSION" "AUTHORIZATION" [";"] ;
+<reset_session_auth>	::= "RESET"  "SESSION" "AUTHORIZATION"  [";"] ;
+
+//Vis_26112026_[261101015]_Added SET [LOCAL] SESSION AUTHORIZATION command
+<set_session_auth>		::= "SET" ["LOCAL"] "SESSION" "AUTHORIZATION" ("DEFAULT"|<IDENTIFIER>|<StringValue>) [";"] ;
 
 <set_transcation>		::= "SET"["SESSION" "CHARACTERISTICS" "AS"]"TRANSACTION" ["SNAPSHOT"]
 							(<snapshot_id>| (<transaction_mode> (","<transaction_mode>)*)) [";"] ;
@@ -2305,9 +2332,10 @@ parse(<language>);
 								[ "RETURNING" (( "*" | (<output_expression> [ [ "AS" ] <output_name> ] )) 
 								("," ( "*" | (<output_expression> [ [ "AS" ] <output_name> ] )))*) ] ; 
 								
+//Vis_26112026_[261101016]_VACUUM now accepts ONLY and a comma-separated table list via <table_and_columns>
 <vacum>					::= "VACUUM" [ "(" skipBalanced("(",")") ")" ] 
 							["FULL"] ["FREEZE"] ["VERBOSE"] ["ANALYZE"]
-							[<table_string_name> [ "(" <column_String_name> (","<column_String_name>)* ")" ]] [";"] ;
+							[["ONLY"]<table_and_columns>	("," ["ONLY"]<table_and_columns>)* ] [";"] ;
 							
 							
 <values>				::= "VALUES" "(" skipBalanced("(",")") ")" (",""(" skipBalanced("(",")") ")")*
@@ -2318,3 +2346,9 @@ parse(<language>);
 									[ "FETCH" ( "FIRST" | "NEXT" ) [ <NUMBER> ] ( "ROW" | "ROWS" ) "ONLY" ] [";"] ;				
 
 <column_String_name>		::=	(<IDENTIFIER>|<StringValue>);
+
+//Vis_26112026_[261101017]_Added SET [SESSION|LOCAL] ROLE / RESET ROLE command
+<set_role>					::= ("RESET"|"SET" )[ "SESSION" | "LOCAL" ] "ROLE" [("NONE"|<role_name>|<StringValue>)] [";"] ;
+
+//Vis_26112026_[261101018]_Added START TRANSACTION command
+<start_transaction>			::= "START" "TRANSACTION" [ <transaction_mode> ("," <transaction_mode>)* ] [";"] ;

@@ -44,15 +44,15 @@ function main()
 	while (guid != undefined)
 	{	
 		ddl_Element = Repository.GetElementByGuid(guid); // Selected elements from Generate ddl file window
-		if(genOutputType == "1")
-			source_Filepath = fileSystemObj.OpenTextFile(ddl_FilePath + ddl_Element.Name + ".sql", 2, true);
-		elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);		
-		if(genOutputType == "1")
-			source_Filepath.Close();
+			if(genOutputType == "1")
+				source_Filepath = fileSystemObj.OpenTextFile(ddl_FilePath + ddl_Element.Name + ".sql", 2, true);
+			elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);
+			if(genOutputType == "1")
+				source_Filepath.Close();
 		i++;
 		guid = ssproperties.get('Object' + i);
-	}
-	
+		}
+
 }
 
 function elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table)
@@ -559,19 +559,27 @@ function create_view_command(view_element)
 		}
 		else if(view_type != null && view_type.Value == "External")
 		{
+			//Vis_25112026_PROTECTED keyword is written only when the isProtected tagged value is True
+			var is_protected as EA.TaggedValue;
+			is_protected = view_element.TaggedValues.GetByName("isProtected");
+
+			var external_keyword = "Create External View ";
+			if(is_protected != null && is_protected.Value == "True")
+				external_keyword = "Create External Protected View ";
+
 			if(fq_table_name != null && fq_table_name.Value != "")
 			{
 				if(fq_table_name.Value.endsWith("."))
-					view_command +="Create External Protected View  " + fq_table_name.Value+"\"" + view_element.Name+"\" ";
+					view_command += external_keyword + fq_table_name.Value+"\"" + view_element.Name+"\" ";
 				else
-					view_command +="Create External Protected View  \"" + fq_table_name.Value +"\".\""+ view_element.Name+"\" ";
+					view_command += external_keyword + "\"" + fq_table_name.Value +"\".\""+ view_element.Name+"\" ";
 			}
 			else
 			{
-				view_command += "Create External Protected View \""+view_element.Name+"\" ";
+				view_command += external_keyword + "\""+view_element.Name+"\" ";
 			}
-			
-			
+
+
 		}
 		else 
 		{
@@ -581,8 +589,9 @@ function create_view_command(view_element)
 		var Not_exits as EA.TaggedValue;
 		Not_exits = view_element.TaggedValues.GetByName("Not Exists");		
 
-		if(Not_exits != null && Not_exits.Value == "True")			
-			view_command += Not_exits.Value+"\n";
+		//Vis_25112026_Write the "If Not Exists" keyword instead of the tag value "True"
+		if(Not_exits != null && Not_exits.Value == "True")
+			view_command += "If Not Exists\n";
 		
 		// To include additional commands from the "Redshift::view" Tagged values in view_command
 
@@ -616,16 +625,21 @@ function create_view_command(view_element)
 		if(encode_auto != null && encode_auto.Value == "True")
 			view_command += "Encode Auto\n";
 
+		//Vis_25112026_Iceberg view clause, written when isIceberg is True (same position as <icebergView> in the grammar)
+		view_command += create_iceberg_view_clause(view_element);
+
 		var auto_refresh as EA.TaggedValue;
 		auto_refresh = view_element.TaggedValues.GetByName("Auto Refresh");
 
-		if(auto_refresh != null && auto_refresh.Value != ""&& view_type.Value == "Materialized")
-			view_command += "Auto Refresh "+auto_refresh.Value+"\n";	
+		//Vis_25112026_Null-check View Type before reading its value
+		if(auto_refresh != null && auto_refresh.Value != "" && view_type != null && view_type.Value == "Materialized")
+			view_command += "Auto Refresh "+auto_refresh.Value+"\n";
 		var externalviewprop as EA.TaggedValue;
 		externalviewprop = view_element.TaggedValues.GetByName("External view Properties");
 
-		if(externalviewprop != null && externalviewprop.Value != ""&& view_type.Value == "External")
-			view_command += "Auto Refresh "+auto_refresh.Value+"\n";
+		//Vis_25112026_Write the External view Properties value (catalog.schema.view) instead of Auto Refresh
+		if(externalviewprop != null && externalviewprop.Value != "" && view_type != null && view_type.Value == "External")
+			view_command += view_tag_text(externalviewprop)+"\n";
 		
 
 		var view_def as EA.TaggedValue;
@@ -640,6 +654,72 @@ function create_view_command(view_element)
 		Session.Output("Stack Trace : " +e.stack+" \n\n" );	
 	}
 		return view_command;
+}
+
+//Vis_25112026_Returns the text of a tagged value, reading Notes when EA stores it as <memo>
+function view_tag_text(tag)
+{
+	if(tag == null)
+		return "";
+	if(tag.Value == "<memo>")
+		return tag.Notes;
+	return tag.Value;
+}
+
+//Vis_25112026_Builds the Iceberg clause for an external view from isIceberg, View Location, Partitioned By and Table properties
+function create_iceberg_view_clause(view_element)
+{
+	var iceberg_command = "";
+
+	try
+	{
+		var is_iceberg as EA.TaggedValue;
+		is_iceberg = view_element.TaggedValues.GetByName("isIceberg");
+
+		if(is_iceberg == null || is_iceberg.Value != "True")
+			return iceberg_command;
+
+		iceberg_command += "Using Iceberg\n";
+
+		var view_location as EA.TaggedValue;
+		view_location = view_element.TaggedValues.GetByName("View Location");
+		var location_text = view_tag_text(view_location);
+
+		if(location_text != "")
+		{
+			if(location_text.charAt(0) != "'")
+				location_text = "'" + location_text + "'";
+			iceberg_command += "Location " + location_text + "\n";
+		}
+
+		var partition_by as EA.TaggedValue;
+		partition_by = view_element.TaggedValues.GetByName("Partitioned By");
+		var partition_text = view_tag_text(partition_by);
+
+		if(partition_text != "")
+		{
+			if(partition_text.charAt(0) != "(")
+				partition_text = "(" + partition_text + ")";
+			iceberg_command += "Partitioned By " + partition_text + "\n";
+		}
+
+		var table_properties as EA.TaggedValue;
+		table_properties = view_element.TaggedValues.GetByName("Table properties");
+		var properties_text = view_tag_text(table_properties);
+
+		if(properties_text != "")
+		{
+			if(properties_text.charAt(0) != "(")
+				properties_text = "(" + properties_text + ")";
+			iceberg_command += "Table Properties " + properties_text + "\n";
+		}
+	}
+	catch(e)
+	{
+		Session.Output("Message :"+ e.message+"\n")
+		Session.Output("Stack Trace : " +e.stack+" \n\n" );
+	}
+	return iceberg_command;
 }
 
 function create_procd_command(proc_element)

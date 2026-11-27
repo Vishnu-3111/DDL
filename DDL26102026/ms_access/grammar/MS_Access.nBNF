@@ -144,9 +144,10 @@ parse(<language>);
 								[<constraint_columns>]
 								);
 
+//Vis_05112026_[051101001]_Added optional explicit NULL to column definition in CREATE TABLE
 <column_defintion>			::= node("ATTRIBUTE" , attributeEx("EASTEREOTYPE" , "MsAccess::column")
 								(( attribute("NAME" ,<column_name> ) )|<multiIdentifier>)
-								 <column_type> ["NOT" "NULL" attributeEx("NOTNULL" , "true")] 
+								 <column_type> [("NOT" "NULL" attributeEx("NOTNULL" , "true"))|("NULL")] 
 								 ["WITH" ("COMPRESSION" | "COMP") node("Compression" , attributeEx("VALUE" , "True"))] 
 									[node("CONSTRAINT" , <single_field_constraint>)]
 								);
@@ -160,7 +161,7 @@ parse(<language>);
 <multifieldindex>			::= (
 									("PRIMARY" "KEY"  attributeEx("EASTEREOTYPE" , "MsAccess::PK") <constraint_columns> )
 									| ("UNIQUE" attributeEx("EASTEREOTYPE" , "MsAccess::unique") <constraint_columns>)
-									|( "NOT" "NULL" "(" <notnull> ("," <notnull>)* ")" )									
+									|("NULL"|( "NOT" "NULL" "(" <notnull> ("," <notnull>)* ")" ))	//VIS_05112026_051101001 added support to null in create table								
 								);
 								
 <notnull>					::= <IDENTIFIER> ;
@@ -364,17 +365,44 @@ parse(<language>);
 <group>				::= <user>;
 
 
+//Vis_26112026_[261101067]_Quoted bare DROP keyword as "DROP" and regrouped ADD alternatives in ALTER TABLE
 <alter_table>			::= mapRight("ALTER" "TABLE" node("OWNER",(( attribute("NAME",<table_name>))|<multiIdentifier>)), 
-								("ADD" (("COLUMN" <col_name> <column_type>["("<NUMBER> ")"] ["NOT" "NULL"] ["CONSTRAINT" <constraint_index>] )
+								(
+								("ADD" 
+								(
+								("COLUMN" <col_name> <column_type>["("<NUMBER> ")"] ["NOT" "NULL"] ["CONSTRAINT" <constraint_index>] )
 								| ( <add_constarint_value> ))
+								)
 								|("ALTER" "COLUMN" <col_name> <column_type>["("<NUMBER> ")"] )
-								| (DROP (("COLUMN" <col_name>) | ("CONSTRAINT" ["["] <constraint_name> ["]"])) ))) [";"] ;
+								| ("DROP" (("COLUMN" <col_name>) | ("CONSTRAINT" ["["] <constraint_name> ["]"])) ))) [";"] ;
 
 
 <constraint_index>		::=(<foreign_key> |(<table_constraint>));
 
-<add_constarint_value>	::= (<foreign_key> |(node("OPERATION" , <table_constraint>))) ;
+<non_reflected_constaraint> ::=  (<nonreflected_foreign>|<non_reflected_table_constraint>);//VIS_05112026_051101000 constraint in alter table add column no need to add opertion 
+//Vis_05112026_[051101000]_Helper rules for non-reflected FOREIGN KEY constraint (nonreflected_foreign, non_reflected_references)
+<nonreflected_foreign>		::=  
+									 ["CONSTRAINT" ( <constraint_name>|<multiIdentifier>  )]
+									"FOREIGN" "KEY" ["NO" "INDEX"] 
+									[<constraint_columns>]
+									<non_reflected_references>
+									[<fk_options>*]
+								;
+<non_reflected_references>				::=   "REFERENCES"  (<foreigntable>|<multiIdentifier>)	[<constraint_columns>]	;
 
+
+//Vis_05112026_[051101000]_Removed OPERATION node wrapper from table_constraint in ALTER TABLE ADD constraint
+<add_constarint_value>	::= (<foreign_key> | <table_constraint>) ;
+
+//Vis_05112026_[051101000]_Helper rules for non-reflected PRIMARY KEY/UNIQUE/NOT NULL table constraint (non_reflected_table_constraint, non_reflected_multifieldindex)
+<non_reflected_table_constraint>		::= ["CONSTRAINT" ( <constraint_name>|<multiIdentifier>)]
+									<non_reflected_multifieldindex>
+									;
+<non_reflected_multifieldindex>			::= (
+									("PRIMARY" "KEY"   <constraint_columns> )
+									| ("UNIQUE" <constraint_columns>)
+									|( "NOT" "NULL" "(" <notnull> ("," <notnull>)* ")" )									
+								);
 
 <alter_database>		::= "ALTER" "DATABASE" "PASSWORD" <password> <password> [";"] ;
 
