@@ -9,6 +9,7 @@
 				</AppliesTo>
 				<TaggedValues>
 					<Tag name="MongoDB::collection(UML::Class)" type="" description="" unit="" values="" default="Collection"/>
+					<Tag name="MongoDB::EncryptedCollection(UML::Class)" type="" description="" unit="" values="" default="EncryptedCollection"/>
 					<Tag name="MongoDB::field(UML::Attribute)" type="" description="" unit="" values="" default="Field"/>
 					<Tag name="MongoDB::function(UML::Class)" type="" description="" unit="" values="" default="function"/>
 					<Tag name="MongoDB::Index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>

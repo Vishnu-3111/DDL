@@ -43,14 +43,14 @@ function main()
 	while (guid != undefined)
 	{	
 		ddl_Element = Repository.GetElementByGuid(guid); // Selected elements from Generate ddl file window
-		if(genOutputType == "1")
-			source_Filepath = fileSystemObj.OpenTextFile(ddl_FilePath + ddl_Element.Name + ".sql", 2, true);
-		elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);		
-		if(genOutputType == "1")
-			source_Filepath.Close();
+			if(genOutputType == "1")
+				source_Filepath = fileSystemObj.OpenTextFile(ddl_FilePath + ddl_Element.Name + ".sql", 2, true);
+			elemList(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table);
+			if(genOutputType == "1")
+				source_Filepath.Close();
 		i++;
 		guid = ssproperties.get('Object' + i);
-	}
+		}
 
 }
 
@@ -99,6 +99,47 @@ function elemList(ddl_Element,source_commands,columns,constraints,constraints_va
 		Session.Output("Stack Trace : " +e.stack+" \n\n" );	
 	}
 }
+// Returns the text of a tagged value. Memo tags keep their text in Notes, other tags in Value.
+function get_tag_text(tag)
+{
+	if(tag == null)
+		return "";
+	if(tag.Notes != "")
+		return tag.Notes;
+	if(tag.Value == "<none>" || tag.Value == "<memo>")
+		return "";
+	return tag.Value;
+}
+
+// True when the element or operation was imported from "... IF NOT EXISTS ...".
+function is_not_exists(ea_object)
+{
+	var not_exists as EA.TaggedValue;
+	not_exists = ea_object.TaggedValues.GetByName("Not Exists");
+
+	return (not_exists != null && not_exists.Value == "True");
+}
+
+// Table members written inside the column list: domain clause, period definition and supplemental logging.
+// A table can hold several of each, so every tagged value with the matching name is collected.
+function get_table_member_clauses(table_element)
+{
+	var clauses = [];
+	for(var t=0 ; t<table_element.TaggedValues.Count ; t++)
+	{
+		var member_tag as EA.TaggedValue;
+		member_tag = table_element.TaggedValues.GetAt(t);
+
+		if(member_tag.Name == "Domain clause" || member_tag.Name == "Period Definition" || member_tag.Name == "Supplemental Log")
+		{
+			var member_text = get_tag_text(member_tag);
+			if(member_text != "")
+				clauses.push(member_text);
+		}
+	}
+	return clauses;
+}
+
 function Create_table_command(ddl_Element,source_commands,columns,constraints,constraints_value,source_Filepath,fk_connector,reference_table)
 {
 	var commands=[];
@@ -106,26 +147,31 @@ function Create_table_command(ddl_Element,source_commands,columns,constraints,co
 	{
 		var index = "";
 		var trigger = "";
-		
+
 		source_commands = "Create ";
-			
+
 		var table_type as EA.TaggedValue;
 		table_type = ddl_Element.TaggedValues.GetByName("Table Type");
-		
+
 		if(table_type != null && table_type.Value != "<none>" && table_type.Value != "")
-			source_commands += table_type.Value + " ";
-		
+		{
+			if(table_type.Value == "Shared") // the grammar stores SHARDED as "Shared"
+				source_commands += "Sharded ";
+			else
+				source_commands += table_type.Value + " ";
+		}
+
 		source_commands += "Table ";
-		
+
+		if(is_not_exists(ddl_Element))
+			source_commands += "If Not Exists ";
+
 		var db_schema as EA.TaggedValue;
 		db_schema = ddl_Element.TaggedValues.GetByName("Database and Schema");
 		
 		if(db_schema != null && db_schema.Value != "")
 		{
-			if(db_schema.Value.endsWith("."))
-			source_commands += "\""+db_schema.Value+"\"";
-			else
-				source_commands += "\""+db_schema.Value+"\".";
+			source_commands += format_schema(db_schema.Value);
 			
 		}
 		source_commands +=  "\""+ddl_Element.Name +"\"\n";
@@ -136,8 +182,13 @@ function Create_table_command(ddl_Element,source_commands,columns,constraints,co
 		
 		if(sharing_clause != null && sharing_clause.Value !="")
 			source_commands += "Sharing = "+sharing_clause.Value+"\n";
-		
-		
+
+		var etag as EA.TaggedValue;
+		etag = ddl_Element.TaggedValues.GetByName("Etag");
+
+		if(etag != null && etag.Value != "" && etag.Value != "<none>")
+			source_commands += "With Etag\n";
+
 		var table_format as EA.TaggedValue;
 		table_format = ddl_Element.TaggedValues.GetByName("Table Formats");
 		
@@ -166,7 +217,10 @@ function Create_table_command(ddl_Element,source_commands,columns,constraints,co
 				source_commands += "Not Substitutable At All Levels \n";
 		}
 		
-		if(ddl_Element.Attributes.Count != 0)
+		var table_members = get_table_member_clauses(ddl_Element);
+		var has_table_body = (ddl_Element.Attributes.Count != 0 || table_members.length != 0);
+
+		if(has_table_body)
 			source_commands += "("  + "\n" ;
 		for(var j=0 ; j<ddl_Element.Attributes.Count ; j++) // To get the columns from the given table element
 		{
@@ -185,19 +239,32 @@ function Create_table_command(ddl_Element,source_commands,columns,constraints,co
 			index += create_commands[1];
 		if(create_commands[2]!=undefined)
 			trigger += create_commands[2];
-		 
-		if(ddl_Element.Attributes.Count != 0)
+
+		// Domain clause, period definition and supplemental logging members of the column list
+		var body_started = (ddl_Element.Attributes.Count != 0 || (create_commands[0] != undefined && create_commands[0] != ""));
+		for(var m=0 ; m<table_members.length ; m++)
 		{
-			var Outer_Ref_Constraint as EA.TaggedValue;
-			Outer_Ref_Constraint = columns.TaggedValues.GetByName("Outline Reference Constraint");
-			
-			if(Outer_Ref_Constraint != null && Outer_Ref_Constraint.Notes != "")
+			if(body_started)
+				source_commands += "," + "\n";
+			source_commands += table_members[m];
+			body_started = true;
+		}
+
+		if(has_table_body)
+		{
+			if(ddl_Element.Attributes.Count != 0)
 			{
-				source_commands += Outer_Ref_Constraint.Notes+" ";
+				var Outer_Ref_Constraint as EA.TaggedValue;
+				Outer_Ref_Constraint = columns.TaggedValues.GetByName("Outline Reference Constraint");
+
+				if(Outer_Ref_Constraint != null && Outer_Ref_Constraint.Notes != "")
+				{
+					source_commands += Outer_Ref_Constraint.Notes+" ";
+				}
 			}
-					
-			source_commands +=  "\n)\n"   ;	
-		}		
+
+			source_commands +=  "\n)\n"   ;
+		}
 
 			source_commands += table_add_properties(ddl_Element);
 
@@ -275,7 +342,12 @@ function create_column_command(table_element,columns)
 			column_Expression = columns.TaggedValues.GetByName("Column Expression");
 			
 			if(column_Expression !=null && column_Expression.Notes !="" )
-				column_Command += "("+column_Expression.Notes+") ";
+			{
+				if(auto_generate.Value != "True")
+				column_Command += "AS ("+column_Expression.Notes+") ";
+				else
+					column_Command += "("+column_Expression.Notes+") ";
+			}
 			
 			var is_virtual as EA.TaggedValue;
 			is_virtual = columns.TaggedValues.GetByName("Virtual");
@@ -388,17 +460,17 @@ function create_method_command(table_Elements,constraints,constraints_value,fk_c
 					if(index_type != null && index_type.Value != "<none>" && index_type.Value != "") 
 						index_command += index_type.Value+" ";					
 					
-					index_command += "Index ";		
+					index_command += "Index ";
+
+					if(is_not_exists(constraints))
+						index_command += "If Not Exists ";
 
 					var db_schema as EA.TaggedValue;
 					db_schema = table_Elements.TaggedValues.GetByName("Database and Schema");
 					
 					if(db_schema != null && db_schema.Value != "")
 					{
-						if(db_schema.Value.endsWith("."))
-						index_command += "\""+db_schema.Value+"\"";
-						else
-							index_command += "\""+db_schema.Value+"\".";
+						index_command += format_schema(db_schema.Value);
 						
 					}					
 					
@@ -423,10 +495,7 @@ function create_method_command(table_Elements,constraints,constraints_value,fk_c
 					
 					if(table_schema != null && table_schema.Value != "")
 					{
-						if(table_schema.Value.endsWith("."))
-						index_command += "\""+table_schema.Value+"\"";
-						else
-							index_command += "\""+table_schema.Value+"\".";
+						index_command += format_schema(db_schema.Value);
 						
 					}		
 					index_command += table_Elements.Name + "\n";				
@@ -457,16 +526,16 @@ function create_method_command(table_Elements,constraints,constraints_value,fk_c
 					}	
 					
 					trigger_command += "Trigger ";
-					
+
+					if(is_not_exists(constraints))
+						trigger_command += "If Not Exists ";
+
 						var db_schema as EA.TaggedValue;
 					db_schema = table_Elements.TaggedValues.GetByName("Database and Schema");
 					
 					if(db_schema != null && db_schema.Value != "")
 					{
-						if(db_schema.Value.endsWith("."))
-						trigger_command +="\""+ db_schema.Value+"\"";
-						else
-							trigger_command += "\""+db_schema.Value+"\".";
+						trigger_command += format_schema(db_schema.Value);
 						
 					}		
 					
@@ -596,10 +665,7 @@ function create_method_command(table_Elements,constraints,constraints_value,fk_c
 					
 					if(trigger_table_schema != null && trigger_table_schema.Value != "")
 					{
-						if(trigger_table_schema.Value.endsWith("."))
-							trigger_command += "\""+trigger_table_schema.Value+"\"";
-						else
-							trigger_command += "\""+trigger_table_schema.Value+"\".";
+						trigger_command += format_schema(db_schema.Value);
 						
 					}
 					
@@ -669,10 +735,7 @@ function create_method_command(table_Elements,constraints,constraints_value,fk_c
 								
 								if(ref_table_schema != null && ref_table_schema.Value != "")
 								{
-									if(ref_table_schema.Value.endsWith("."))
-									constraint_command += "\""+ref_table_schema.Value+"\"";
-									else
-										constraint_command += "\""+ref_table_schema.Value+"\".";
+									constraint_command += format_schema(ref_table_schema.Value);
 									
 								}
 								constraint_command +=  "\""+reference_table.Name +"\"\n";
@@ -737,12 +800,24 @@ function table_add_properties(table_element)
 	var source_commands="";
 	try
 	{
+		var annotations as EA.TaggedValue;
+		annotations = table_element.TaggedValues.GetByName("Annotations clause");
+
+		if(get_tag_text(annotations) != "")
+			source_commands += get_tag_text(annotations) + "\n";
+
 		var immutable as EA.TaggedValue;
 		immutable = table_element.TaggedValues.GetByName("Immutable Table");
-		
+
 		if(immutable != null && immutable.Notes != "")
 			source_commands += immutable.Notes + "\n";
-		
+
+		var blockchain as EA.TaggedValue;
+		blockchain = table_element.TaggedValues.GetByName("Blockchain Table");
+
+		if(get_tag_text(blockchain) != "")
+			source_commands += get_tag_text(blockchain) + "\n";
+
 		var collate as EA.TaggedValue;
 		collate = table_element.TaggedValues.GetByName("Collation");
 		
@@ -838,8 +913,14 @@ function table_add_properties(table_element)
 		table_partition =  table_element.TaggedValues.GetByName("Table Partition");
 		
 		if(table_partition != null && table_partition.Notes != "")
-			source_commands += table_partition.Notes+"\n";	
-		
+			source_commands += table_partition.Notes+"\n";
+
+		var attr_clustering as EA.TaggedValue;
+		attr_clustering = table_element.TaggedValues.GetByName("Attribute Clustering");
+
+		if(get_tag_text(attr_clustering) != "")
+			source_commands += get_tag_text(attr_clustering) + "\n";
+
 		var cache_option as EA.TaggedValue;
 		cache_option = table_element.TaggedValues.GetByName("Caching Option");
 		
@@ -1005,26 +1086,33 @@ function create_view_command(view_Element)
 			else if(view_type.Value == "Analytic")
 				view_commands += "Analytic ";
 			else if(view_type.Value == "Materialized")
-				view_commands += "Materialized ";			
-		}		
-		
+				view_commands += "Materialized ";
+			else if(view_type.Value == "Json Collection")
+				view_commands += "Json Collection ";
+		}
+
 		view_commands += "View ";
-		
+
 		var log_on as EA.TaggedValue;
 		log_on = view_Element.TaggedValues.GetByName("Log On");
-		
+
+		// CREATE MATERIALIZED VIEW LOG [IF NOT EXISTS] ON ... / CREATE VIEW [IF NOT EXISTS] ...
 		if(log_on != null && log_on.Value == "True")
-			view_commands += "Log On " ;
+		{
+			view_commands += "Log ";
+			if(is_not_exists(view_Element))
+				view_commands += "If Not Exists ";
+			view_commands += "On ";
+		}
+		else if(is_not_exists(view_Element))
+			view_commands += "If Not Exists ";
 		
 		var db_schema as EA.TaggedValue;
 		db_schema = view_Element.TaggedValues.GetByName("Database and Schema");
 		
 		if(db_schema != null && db_schema.Value != "")
 		{
-			if(db_schema.Value.endsWith("."))
-			view_commands += "\""+db_schema.Value+"\"";
-			else
-				view_commands += "\""+db_schema.Value+"\".";
+			view_commands += format_schema(db_schema.Value);
 			
 		}		
 		
@@ -1316,7 +1404,7 @@ function create_view_command(view_Element)
 		if(bequeath != null)
 		{
 			if(bequeath.Value == "Current User")
-				view_commands += "Bequeath Current User \n";
+				view_commands += "Bequeath Current_User \n";
 			else if(bequeath.Value == "Definer")
 				view_commands += "Bequeath Definer \n";
 		}
@@ -1350,15 +1438,15 @@ function create_seq_command(table_element)
 	var seq_commands = "Create Sequence ";
 	try
 	{
+		if(is_not_exists(table_element))
+			seq_commands += "If Not Exists ";
+
 		var db_schema as EA.TaggedValue;
 		db_schema = table_element.TaggedValues.GetByName("Database and Schema");
 		
 		if(db_schema != null && db_schema.Value != "")
 		{
-			if(db_schema.Value.endsWith("."))
-			seq_commands += "\""+db_schema.Value+"\"";
-			else
-				seq_commands += "\""+db_schema.Value+"\".";
+			seq_commands += format_schema(db_schema.Value);
 			
 		}
 		
@@ -1482,12 +1570,18 @@ function create_seq_command(table_element)
 			if(scale_option.Value == "Yes")
 			{
 				seq_commands += "Scale ";
-			
+
 				var scale_value as EA.TaggedValue;
-				scale_value = table_element.TaggedValues.GetByName("Scale Option");
-			
-				if(scale_value != null && scale_value.Value !="" && scale_value.Value !="<none>" )
-					seq_commands += scale_value.Value+"\n";
+				scale_value = table_element.TaggedValues.GetByName("Scale Value");
+
+				if(scale_value != null)
+				{
+					if(scale_value.Value == "Extend")
+						seq_commands += "Extend";
+					else if(scale_value.Value == "NoExtend")
+						seq_commands += "NoExtend";
+				}
+				seq_commands += "\n";
 			}
 			
 			if(scale_option.Value == "No")
@@ -1532,16 +1626,16 @@ function create_func_commands(func_element)
 		}	
 
 		func_command += "Function ";
-		
+
+		if(is_not_exists(func_element))
+			func_command += "If Not Exists ";
+
 		var db_schema as EA.TaggedValue;
 		db_schema = func_element.TaggedValues.GetByName("Database and Schema");
 		
 		if(db_schema != null && db_schema.Value != "")
 		{
-			if(db_schema.Value.endsWith("."))
-			func_command += "\""+db_schema.Value+"\"";
-			else
-				func_command += "\""+db_schema.Value+"\".";
+			func_command += format_schema(db_schema.Value);
 			
 		}
 		
@@ -1657,6 +1751,25 @@ function create_func_commands(func_element)
 		
 }
 
+// Builds the quoted schema prefix "schema". from a "Database and Schema" / "Table Schema" value.
+// The grammar may store the value with its trailing dot (hr.) and with double quotes ("hr"), so both are removed first.
+function format_schema(schema_value)
+{
+	if(schema_value == null)
+		return "";
+
+	var schema_name = schema_value.trim();
+	if(schema_name.endsWith("."))
+		schema_name = schema_name.substring(0, schema_name.length - 1).trim();
+	if(schema_name.length >= 2 && schema_name.charAt(0) == "\"" && schema_name.charAt(schema_name.length - 1) == "\"")
+		schema_name = schema_name.substring(1, schema_name.length - 1);
+
+	if(schema_name == "" || schema_name == "<none>")
+		return "";
+
+	return "\"" + schema_name + "\".";
+}
+
 function create_procedure_command(proc_element)
 {
 	var proc_commands = "Create ";
@@ -1680,16 +1793,16 @@ function create_procedure_command(proc_element)
 		}	
 
 		proc_commands += "Procedure ";
-		
+
+		if(is_not_exists(proc_element))
+			proc_commands += "If Not Exists ";
+
 		var db_schema as EA.TaggedValue;
 		db_schema = proc_element.TaggedValues.GetByName("Database and Schema");
 		
 		if(db_schema != null && db_schema.Value != "")
 		{
-			if(db_schema.Value.endsWith("."))
-			proc_commands += "\""+db_schema.Value+"\"";
-			else
-				proc_commands +="\""+ db_schema.Value+"\".";
+			proc_commands += format_schema(db_schema.Value);
 			
 		}
 		

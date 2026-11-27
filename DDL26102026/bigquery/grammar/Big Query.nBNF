@@ -105,6 +105,8 @@ parse(<language>);
 										 |<create_capacity>	
 										 |<create_reservation>
 										 |<create_assignment>
+										 |<create_data_policy>
+										 |<create_Connection>
 										 ;
 										
 <alter_commands>					::= <alter_schema>
@@ -113,6 +115,8 @@ parse(<language>);
 										| <alter_project>
 										| <alter_capacity>
 										| <alter_reservation>
+										| <alter_Index>
+										|<alter_data_Policy_or_connection>
 										;
 										
 <drop_commands>						::= <drop_function>
@@ -125,7 +129,7 @@ parse(<language>);
 										| <drop_reservation>
 										| <drop_assignement>
 										| <drop_search_index>
-										
+										| <drop_data_policy_or_connection>										
 											;	
 
 <other_commands>					::= <insert>
@@ -243,8 +247,9 @@ parse(<language>);
 <column_defintion>					::= <column> | ( node("OPERATION",  <primary_key>))
 										| (<foreign_key>);
 
+//Vis_26112026_[261101020]_Column NAME now uses <col_name>, so backtick-quoted column names are accepted
 <column>							::= node("ATTRIBUTE", attributeEx("EASTEREOTYPE", "BigQuery::column")
-												 attribute("NAME", <column_name>) <column_schema> 
+												 attribute("NAME", <col_name>) <column_schema> 
 											 );
 
 <column_schema>					 ::= (
@@ -278,7 +283,7 @@ parse(<language>);
 <default_expression>			::= <NUMBER> | <STRING> | <IDENTIFIER>;
 
 <column_option_list>			::= <table_option_list> ;
-//<constraint_definition>			::= (<primary_key>) | (["CONSTRAINT" <constraint_name>] <foreign_key>) ;
+//<constraint_definition>			::= (<->) | (["CONSTRAINT" <constraint_name>] <foreign_key>) ;
 									
 <foreign_key>  					::= node( "FOREIGNKEY" ,
 									["CONSTRAINT" attribute("NAME", <constraint_name>)]
@@ -291,7 +296,8 @@ parse(<language>);
 									node("TARGET",<table_path> <constraint_columns> ) ["NOT" "ENFORCED"]
 									;
 									
- <constraint_name>				::= <IDENTIFIER> ;
+//Vis_26112026_[261101021]_Constraint names accept backtick-quoted names
+ <constraint_name>				::= <IDENTIFIER>|("`" skip("`")"`")	;
 									
 <primary_key>					 ::= ["CONSTRAINT" attribute("NAME", <constraint_name>)] "PRIMARY" "KEY" attributeEx("EASTEREOTYPE", "BigQuery::PK") <constraint_columns> ["NOT" "ENFORCED"] ;	
 
@@ -407,7 +413,8 @@ parse(<language>);
 
 <having>							::= "HAVING" <condition> ;	
 
-<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;		
+//Vis_26112026_[261101022]_START TRANSACTION terminating semicolon made optional
+<start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] [";"] ;		
 
 <option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
 
@@ -541,7 +548,8 @@ parse(<language>);
 											[";"]
 											);
 											
-<index_name>						::= <IDENTIFIER>;
+//Vis_26112026_[261101023]_Index names accept backtick-quoted names
+<index_name>						::= <IDENTIFIER>|("`" skip("`")"`")	;
 <index_option_list>					::= <table_option_list>;
 
 <constraint_column>					::= node("PARAMETER", attribute("NAME", <column_name>));
@@ -600,7 +608,7 @@ parse(<language>);
 										|("DROP" "REPLICA" <replica_name>))
 											[";"];	
 											
-<replica_name>				::=<IDENTIFIER> [";"] ;
+<replica_name>				::= <IDENTIFIER> [";"] ;
 
 <schema_set_options_list>	::=   <table_option_list>;			
 
@@ -627,7 +635,11 @@ parse(<language>);
 										[";"];	
 
 
-<add_column>				::= "ADD" "COLUMN" ["IF" "NOT" "EXISTS"] <alter_column>;	
+//Vis_26112026_[261101024]_ALTER TABLE ADD COLUMN accepts a comma-separated list of columns
+<add_column>				::= "ADD" "COLUMN" ["IF" "NOT" "EXISTS"] <alter_columns>;	
+
+//Vis_26112026_[261101024]_Helper rule: comma-separated column definitions for ADD COLUMN
+<alter_columns>			::= <alter_column>	("," <alter_column> )*;
 
 <alter_column>			::= <col_name> <column_schema> ;
 
@@ -657,13 +669,16 @@ parse(<language>);
 <alter_project>			::= "ALTER" "PROJECT" <project_id>
 							"SET" "OPTIONS" "(" skipBalanced("(" , ")") ")"[";"] ;		
 							
-<project_id>			::= <IDENTIFIER>;
+//Vis_26112026_[261101025]_project_id now uses <tbl_name> (plain or backtick-quoted name)
+<project_id>			::= <tbl_name>;
 
-<alter_capacity>		::= "ALTER" ("BI_CAPACITY"| "CAPACITY") "`" <project_id>[("." | "-")<IDENTIFIER>]* "`"
+//Vis_26112026_[261101025]_ALTER CAPACITY / BI_CAPACITY takes a <project_id> instead of hand-built backtick tokens
+<alter_capacity>		::= "ALTER" ("BI_CAPACITY"| "CAPACITY") <project_id>
 							"SET" "OPTIONS" "(" skipBalanced("(" , ")") ")"[";"];
 
 
-<alter_reservation>		::= "ALTER" "RESERVATION"  "`" <project_id>[("." | "-")<IDENTIFIER>]* "`"
+//Vis_26112026_[261101025]_ALTER RESERVATION takes a <project_id> instead of hand-built backtick tokens
+<alter_reservation>		::= "ALTER" "RESERVATION"   <project_id>
 							"SET" "OPTIONS" "(" skipBalanced("(" , ")") ")"[";"];		
 
 <drop_schema>			::=  "DROP" ["EXTERNAL"] "SCHEMA" ["IF" "EXISTS"]
@@ -710,7 +725,8 @@ parse(<language>);
 <input>					::=  ("VALUES" <insert_values> ("," <insert_values>)*)
 							| <SelectQuery>;	
 
-<insert_values>			::= "(" <expr> ("," <expr>)* ")";
+//Vis_26112026_[261101026]_INSERT VALUES row is skipped as a balanced (...) block, so any expressions are accepted
+<insert_values>			::= "(" skipBalanced("(",")" )")";
 
 <expr>					::= ( ("(" skipBalanced("(" , ")")  ")")
 							|("[" skipBalanced("[" , "]")  "]")
@@ -883,7 +899,8 @@ parse(<language>);
 
 <message>						::= <STRING> | <IDENTIFIER> | <NUMBER>;
 
-<call>						::= "CALL" <procedure_name> "(" <procedure_argument> ("," <procedure_argument>)* ")"
+//Vis_26112026_[261101027]_CALL argument list is skipped as a balanced (...) block, so any arguments (or none) are accepted
+<call>						::= "CALL" <procedure_name> "(" skipBalanced("(",")") ")"
 								[";"];
 								
 <export_data>				::= "EXPORT" "DATA"
@@ -925,7 +942,8 @@ parse(<language>);
 
 <description>				::= <STRING>;
 
-<undrop>					::= "UNDROP" "SCHEMA" ["IF" "NOT" "EXISTS"][<project_name> "."]<dataset_name> ;
+//Vis_26112026_[261101028]_UNDROP SCHEMA accepts OPTIONS (...) and an optional terminating semicolon
+<undrop>					::= "UNDROP" "SCHEMA" ["IF" "NOT" "EXISTS"][<project_name> "."]<dataset_name> ["OPTIONS" "(" skipBalanced( "(",")" )")"] [";"];
 
 
 <col_data_type>							::= <NumericDataTypes> |
@@ -941,3 +959,29 @@ parse(<language>);
 										
 <StringBinaryDataTypes>				::= <StringBinaryType> ["("  [<IDENTIFIER>] ")"]; 
  
+ 
+//Vis_26112026_[261101029]_Added CREATE [OR REPLACE] DATA_POLICY [IF NOT EXISTS] ... OPTIONS (...)
+<create_data_policy>				::= "CREATE" [ "OR" "REPLACE" ] "DATA_POLICY" [ "IF" "NOT" "EXISTS" ] <tbl_name> "OPTIONS" "(" skipBalanced( "(",")" )")" [";"];
+
+//Vis_26112026_[261101030]_Added CREATE CONNECTION [IF NOT EXISTS] ... OPTIONS (...)
+<create_Connection>					::= "CREATE" "CONNECTION" ["IF" "NOT" "EXISTS"] <tbl_name> "OPTIONS" "(" skipBalanced( "(",")" )")" [";"] ;
+
+//Vis_26112026_[261101031]_Added ALTER SEARCH|VECTOR INDEX: SET OPTIONS, ADD/DROP COLUMN, ALTER COLUMN SET OPTIONS, REBUILD
+<alter_Index>						::= "ALTER" ("SEARCH"|"VECTOR") "INDEX" [ "IF" "EXISTS" ] <index_name> "ON" <tbl_name>
+												<alter_action> ("," <alter_action>)*
+												[ "REBUILD" ] [";"];
+
+//Vis_26112026_[261101031]_Helper rule: one ALTER SEARCH|VECTOR INDEX action
+<alter_action>						::= <set_options>| (<add_column> ["OPTIONS" "(" skipBalanced("(",")") ")"] )| <drop_column> | <alter_index_column> ;
+
+//Vis_26112026_[261101031]_Helper rule: SET OPTIONS (...)
+<set_options>						::=  "SET" "OPTIONS" "(" skipBalanced("(",")") ")"  ;
+
+//Vis_26112026_[261101031]_Helper rule: ALTER COLUMN [IF EXISTS] ... SET OPTIONS (...) for ALTER INDEX
+<alter_index_column>				::=  "ALTER" "COLUMN" [ "IF" "EXISTS" ] <column_name> "SET" "OPTIONS" "(" skipBalanced("(",")") ")" ;
+
+//Vis_26112026_[261101032]_Added ALTER DATA_POLICY / CONNECTION [IF EXISTS] ... SET OPTIONS (...)
+<alter_data_Policy_or_connection>	::= "ALTER" ("DATA_POLICY"|"CONNECTION") [ "IF" "EXISTS" ] <tbl_name> <set_options> [";"] ;
+
+//Vis_26112026_[261101033]_Added DROP DATA_POLICY / CONNECTION [IF EXISTS]
+<drop_data_policy_or_connection>	::=  "DROP" ("DATA_POLICY"|"CONNECTION") [ "IF" "EXISTS" ]  <tbl_name> [";"];

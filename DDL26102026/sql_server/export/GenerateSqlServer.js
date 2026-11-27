@@ -188,14 +188,24 @@ function create_table_command(table_Element,source_commands,columns,constraints,
 		
 		
 		
-		var tbl_option as EA.TaggedValue;		
+		//Vis_27112026_[261101149]_WITH clause: HISTORY_TABLE placed right after SYSTEM_VERSIONING = ON and emitted even when Table Option is empty
+		var tbl_option as EA.TaggedValue;
 		tbl_option = table_Element.TaggedValues.GetByName("Table Option");
-		
-		if(tbl_option != null && tbl_option.Notes != "")
-			source_commands += "With ( "+tbl_option.Notes+" )\n";	
 
-		source_commands += getConnectors(table_Element); //method for get relationship of table elements		
-		
+		var tbl_opt_text = (tbl_option != null) ? tbl_option.Notes : "";
+		var history_clause = getConnectors(table_Element); // "(HISTORY_TABLE = ...)" from the SqlServer::systemversion connector
+
+		if(history_clause != "")
+		{
+			var sv_regex = /SYSTEM_VERSIONING\s*=\s*ON/i;
+			if(sv_regex.test(tbl_opt_text))
+				tbl_opt_text = tbl_opt_text.replace(sv_regex, function(m){ return m + " " + history_clause; });
+			else
+				tbl_opt_text = "SYSTEM_VERSIONING = ON " + history_clause + (tbl_opt_text != "" ? ", " + tbl_opt_text : "");
+		}
+
+		if(tbl_opt_text != "")
+			source_commands += "With ( " + tbl_opt_text + " )\n";
 		var select_query as EA.TaggedValue;		
 		select_query = table_Element.TaggedValues.GetByName("Select Query");	
 		
@@ -716,6 +726,16 @@ function create_method_command(table_Element,constraints,constraints_value,fk_co
 				}
 				else
 					constraint_command += ") ";	
+				
+				if(constraints.Stereotype == "PK"||constraints.Stereotype == "unique")
+				{
+					var Constraint_Option as EA.TaggedValue;
+					Constraint_Option = constraints.TaggedValues.GetByName("Constrain Option");
+					if(Constraint_Option!=null&&Constraint_Option.Notes!="")
+					{
+						constraint_command += "With "+Constraint_Option.Notes
+					}
+				}
 
 				if(constraints.Stereotype == "FK") // To get the Refence table with column fromt the "SqlServer::FK" connector
 				{
@@ -1023,18 +1043,20 @@ function getConnectors(ddl_Element)
 				
 				if(table_con.FQStereotype == "SqlServer::systemversion")	
 				{
-					source_commands += "With \n( \nSYSTEM_VERSIONING = ON (HISTORY_TABLE = ";
+					source_commands += "\n(HISTORY_TABLE = ";
+					//Vis_27112026_[261101149]_History table schema now built with create_schema_name() like other object names
 					var schema_name as EA.TaggedValue;
 					schema_name = connected_table.TaggedValues.GetByName("Schema and Database");
-					
+
 					if(schema_name != null && schema_name.Value != "")
 					{
-						if(schema_name.Value.endsWith("."))
-							source_commands += schema_name.Value;
+						var hist_schema = create_schema_name(schema_name);
+						if(hist_schema.endsWith("."))
+							source_commands += hist_schema;
 						else
-							source_commands += schema_name.Value+".";
+							source_commands += hist_schema+".";
 					}
-					source_commands +=  "["+ connected_table.Name + "])\n)";
+					source_commands +=  "["+ connected_table.Name + "]\n)";
 				}
 			}	
 		}
@@ -1063,10 +1085,10 @@ function create_seq_command(seq_element)
 			fqseq_name+= create_schema_name(fq_seq_name )
 			if(!fqseq_name.endsWith("."))
 			{
-				seq_command += fqseq_name;
+				seq_command += fqseq_name+".";
 			}
 			else
-				seq_command += fqseq_name+".";
+				seq_command += fqseq_name;
 		}
 		
 		

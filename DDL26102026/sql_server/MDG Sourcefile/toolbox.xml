@@ -8,17 +8,17 @@
 					<Apply type="ToolboxPage"/>
 				</AppliesTo>
 				<TaggedValues>
-					<Tag name="SqlServer::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
-					<Tag name="SqlServer::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
+					<Tag name="SqlServer::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
+					<Tag name="SqlServer::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
+					<Tag name="SqlServer::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
+					<Tag name="SqlServer::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>
+					<Tag name="SqlServer::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
 					<Tag name="SqlServer::procedure(UML::Class)" type="" description="" unit="" values="" default="Procedure"/>
 					<Tag name="SqlServer::sequence(UML::Class)" type="" description="" unit="" values="" default="Sequence"/>
-					<Tag name="SqlServer::function(UML::Class)" type="" description="" unit="" values="" default="Function"/>
-					<Tag name="SqlServer::column(UML::Attribute)" type="" description="" unit="" values="" default="Column"/>
-					<Tag name="SqlServer::PK(UML::Operation)" type="" description="" unit="" values="" default="PK"/>
+					<Tag name="SqlServer::table(UML::Class)" type="" description="" unit="" values="" default="Table"/>
+					<Tag name="SqlServer::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>
 					<Tag name="SqlServer::unique(UML::Operation)" type="" description="" unit="" values="" default="Unique"/>
-					<Tag name="SqlServer::check(UML::Operation)" type="" description="" unit="" values="" default="Check"/>
-					<Tag name="SqlServer::index(UML::Operation)" type="" description="" unit="" values="" default="Index"/>										
-					<Tag name="SqlServer::trigger(UML::Operation)" type="" description="" unit="" values="" default="Trigger"/>	
+					<Tag name="SqlServer::view(UML::Class)" type="" description="" unit="" values="" default="View"/>
 				</TaggedValues>
 			</Stereotype>
 			<Stereotype name="Relationship" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">

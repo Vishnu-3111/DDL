@@ -81,10 +81,13 @@ parse(<language>);
 								|<create_cluster>
 								|<create_context>
 								|<create_controlfile>
+								|<create_data_grant>
+								|<create_data_role>
 								|<create_database_link>
 								|<create_dimension>
 								|<create_database>
 								|<create_directory>
+								|<create_directive>
 								|<create_diskgroup>
 								|<create_edition>
 								|<create_flashback_archive>
@@ -113,6 +116,21 @@ parse(<language>);
 								|<create_tablespace>
 								|<create_type_body>
 								|<create_type>
+								|<create_application_Identity>
+								|<create_assertion>
+								|<create_domain>
+								|<create_json_duality_view>
+								|<create_property_graph>
+								|<create_mle_env>
+								|<create_mle_module>
+								|<create_vector_index>
+								|<create_iceberg_table>
+								|<create_logical_partition_tracking>
+								|<create_macro>
+								|<create_true_cache>
+								|<create_hybrid_vector_index>
+								|<create_end_user_context>
+								|<create_end_user>
 								|<create_user>
 								;
 								
@@ -123,13 +141,20 @@ parse(<language>);
 																;
 																
 <alter_commands>			::=<alter_analytic_view>
+								|<alter_json_duality_view>
+								|<alter_macro>
+								|<alter_assertion>
 								|<alter_atribute_dimension>
 								|<alter_audit_policy>
 								|<alter_cluster>
-								|<alter_database>
 								|<alter_database_dictionary>
+								|<alter_database_link>
+								|<alter_database>
 								|<alter_dimension>
+								|<alter_directive>
 								|<alter_disk_group>
+								|<alter_domain>
+								|<alter_end_user>
 								|<alter_flashback_archive>
 								|<alter_function>
 								|<alter_hierarchy>
@@ -142,6 +167,8 @@ parse(<language>);
 								|<alter_materialized_view_log>
 								|<alter_materialized_view>
 								|<alter_materialized_zonemap>
+								|<alter_mle_env>
+								|<alter_mle_module>
 								|<alter_operator>
 								|<alter_outline>
 								|<alter_package>
@@ -149,6 +176,7 @@ parse(<language>);
 								|<alter_pmem_filestore>
 								|<alter_procedure>
 								|<alter_profile>
+								|<alter_property_graph>
 								|<alter_resource_cost>
 								|<alter_role>
 								|<alter_rollback_segment>
@@ -166,6 +194,9 @@ parse(<language>);
 								;
 								
 <drop_commands>				::=	<drop_common>
+								|<drop_edition>
+								|<drop_domain>
+								|<drop_iceberg_table>
 								|<drop_cluster>
 								|("DROP" "DATABASE" [";"])
 								|<drop_databaselink>
@@ -193,6 +224,13 @@ parse(<language>);
 									|<disassociate_statistics>
 									|<explain_plan>
 									|<flashback_table>
+									|<audit_command>
+									|<noaudit_command>
+									|<savepoint_command>
+									|<grant_data_role>
+									|<revoke_data_role>
+									|<set_use_data_grants_only>
+									|<update_end_user_context>
 									|<grand_commands>
 									|<insert_command>
 									|<lock_table_command>
@@ -211,33 +249,31 @@ parse(<language>);
 									|<delete_command>
 									;
 								
+//Vis_26112026_[261101068]_Updated CREATE TABLE: added JSON COLLECTION table type and JSON collection table body; [schema.]name and SHARING moved to <create_table_name>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE TABLE
 <create_table>				::=  node("ELEMENT", 
 										attributeEx("EATYPE", "Class")
 										attributeEx("EASTEREOTYPE", "Oracle::table")
-										"CREATE" 
-										[(
-											((
-												("GLOBAL" node("Table Type" , attributeEx("VALUE" , "Global Temporary")))
-												| ("PRIVATE" node("Table Type" , attributeEx("VALUE" , "Private Temporary"))) 
-											) "TEMPORARY") 
+										"CREATE"  
+										[( (  (("GLOBAL" node("Table Type" , attributeEx("VALUE" , "Global Temporary")))
+												| ("PRIVATE" node("Table Type" , attributeEx("VALUE" , "Private Temporary")))) 
+											 "TEMPORARY") 
+											
 											| ("SHARDED" node("Table Type" , attributeEx("VALUE" , "Shared")))
 											| ("DUPLICATED" node("Table Type" , attributeEx("VALUE" , "Duplicated")))
-											| ( "IMMUTABLE" "BLOCKCHAIN" node("Table Type" , attributeEx("VALUE" , "Immutable Blockchain")))
+											| ("IMMUTABLE" "BLOCKCHAIN" node("Table Type" , attributeEx("VALUE" , "Immutable Blockchain")))
 											| ("BLOCKCHAIN" node("Table Type" , attributeEx("VALUE" , "Blockchain")))
-											| ("IMMUTABLE" node("Table Type" , attributeEx("VALUE" , "Immutable")))										
+											| ("IMMUTABLE" node("Table Type" , attributeEx("VALUE" , "Immutable")))		
+											| ("JSON" "COLLECTION" node("Table Type" , attributeEx("VALUE" , "Json Collection")))							
+										
+										
 										)]
 										
 									   "TABLE"
-									  [ node("Database and Schema" , ((attribute("VALUE",<schema>  ))|<StringAsValue>)".") ]
-									  (attribute("NAME" , <table>)|<StringAsName>)
-									  [ "SHARING" "=" ( 
-										("METADATA" node("Sharing Clause", attributeEx("VALUE" , "Metadata"))) 
-										| ("DATA" node("Sharing Clause", attributeEx("VALUE" , "Data"))) 
-										| ("EXTENDED" "DATA" node("Sharing Clause", attributeEx("VALUE" , "Extended Data"))) 
-										| ("NONE" node("Sharing Clause", attributeEx("VALUE" , "None"))) 
-										) ]
-										
-									  ( <XMLType_table> |<object_table> | <relational_table> )
+									   ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))]
+									  <create_table_name>
+									  ( <XMLType_table> |<object_table> |<json_collection_table>| <relational_table> )
+										 
 									  [ "MEMOPTIMIZE" "FOR" "READ"  node("For Read" , attributeEx("VALUE" , "True"))]
 									  [ "MEMOPTIMIZE" "FOR" "WRITE" node("For Write" , attributeEx("VALUE" , "True"))]
 									  [ "PARENT"  node("Parent" , attribute("VALUE" , ([ <schema> "." ] <table>))) ]
@@ -338,8 +374,32 @@ parse(<language>);
 <object_type>			::= <IDENTIFIER>|<StringValue> ;
 
 
-<relational_table>		::= (node("Table Formats" , attributeEx("VALUE" , "Relational")))
-							[ "(" <relational_properties> ")" ]							
+// JSON_Collection_table (26ai): [ WITH ETAG ] [ ( expression_column [, ...], constraint [, ...] ) ] ...
+// Without WITH ETAG the body has the same shape as a relational table, so <relational_table> covers it.
+// [schema.] table [SHARING = ...], shared by every CREATE TABLE form. Attributes land on the table ELEMENT.
+//Vis_26112026_[261101068]_Helper: [schema.]table name and SHARING clause shared by every CREATE TABLE form
+<create_table_name>		::= [ node("Database and Schema" , ((attribute("VALUE",<schema>  ))|<StringAsValue>)".") ]
+							  (attribute("NAME" , <table>)|<StringAsName>)
+							  [ "SHARING" "=" ( 
+								("METADATA" node("Sharing Clause", attributeEx("VALUE" , "Metadata"))) 
+								| ("DATA" node("Sharing Clause", attributeEx("VALUE" , "Data"))) 
+								| ("EXTENDED" "DATA" node("Sharing Clause", attributeEx("VALUE" , "Extended Data"))) 
+								| ("NONE" node("Sharing Clause", attributeEx("VALUE" , "None"))) 
+								) ] ;
+
+// JSON_Collection_table (26ai): WITH ETAG [ ( columns / constraints ) ] [ physical_properties ] [ table_properties ].
+// WITH ETAG is required here: this rule is tried before <relational_table>, and an all-optional rule would
+// always match empty and stop every CREATE TABLE before its column list. Without WITH ETAG a JSON
+// collection table is parsed by <relational_table>.
+//Vis_26112026_[261101068]_Added JSON collection table body (WITH ETAG followed by relational table body)
+<json_collection_table>	::= "WITH" "ETAG" node("Etag",attributeEx("VALUE", "With Etag"))
+							<relational_table> ;
+
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to relational table properties (after column list and at end of table)
+//Vis_26112026_[261101071]_Fixed ROW ARCHIVAL keyword literal split into separate tokens
+<relational_table>		::= 
+							[ "(" <relational_properties> ")" ]
+							[ (node("Annotations clause",attribute("VALUE",<annotations_clause>))) ]							
 							[ node("Immutable Table" , attribute("VALUE" , <immutable_table_clauses>)) ]
 							[ node("Blockchain Table" , attribute("VALUE" , <blockchain_table_clauses>)) ]
 							[ "DEFAULT" "COLLATION"  node("Collation" , attribute("VALUE" , <collation_name>)) ]
@@ -376,7 +436,8 @@ parse(<language>);
 							[ <row_movement_clause>  ]
 							[ node("Logical Replication" , attribute("VALUE" , <logical_replication_clause>)) ]
 							[ <flashback_archive_clause> ]
-							[ "ROW ARCHIVAL"  node("Row Archival" , attributeEx("VALUE" , "True"))]
+							[ "ROW" "ARCHIVAL"  node("Row Archival" , attributeEx("VALUE" , "True"))]
+							[ <annotations_clause> ]
 							[ ("AS"  node("Select Query" , attribute("VALUE" , <subquery>)) )
 							| ( "FOR" "EXCHANGE" "WITH" "TABLE" 
 								node("Exchange with" , attribute("VALUE" , ([ (<schema>|<StringValue>) "."] <table_or_string> )))) ]
@@ -831,7 +892,8 @@ parse(<language>);
 <ilm_time_period>			::= <NUMBER>;
 
 <ilm_policy_name>			::= <IDENTIFIER>;
-<function_name>			::= <IDENTIFIER>|<StringValue>;
+//Vis_26112026_[261101072]_Removed <StringValue> alternative from <function_name> (quoted names in CREATE FUNCTION fall through to <StringAsName>)
+<function_name>			::= <IDENTIFIER>;
 								
 <inmemory_table_clause>		::= [ ( "INMEMORY" [ <inmemory_attributes> ] ) | ( "NO" "INMEMORY" ) ]
 								[ <inmemory_column_clause>* ];
@@ -884,14 +946,22 @@ parse(<language>);
 							
 <relational_properties>		::= <table_member> ("," <table_member>)*;
 
+//Vis_26112026_[261101073]_Added table-level DOMAIN clause to relational properties
 <table_member>				::= (
-									(<out_of_line_constraint> | <foreign_key> | ( node("Outline Reference Constraint", attribute("VALUE" ,<out_of_line_ref_constraint>))) ) 
+									(node("Domain clause",attribute("VALUE",<table_domain_clause>)))
+									| (<out_of_line_constraint> | <foreign_key> | ( node("Outline Reference Constraint", attribute("VALUE" ,<out_of_line_ref_constraint>))) ) 
 									| (node("Period Definition" , attribute("VALUE" , <period_definition>)))									
 									| (node("Supplemental Log" , attribute("VALUE" , <supplemental_logging_props>) ))									
 									| (<virtual_column_definition>)
 									|  (<column_definition>)
 								);
 								
+// 26ai table-level domain_clause (inside relational_properties). Its img_text page is empty upstream;
+// this follows the syntax diagram: DOMAIN [owner.]domain (column [, column]...) [USING (column [, column]...)]
+//Vis_26112026_[261101073]_Added table-level DOMAIN clause: DOMAIN [owner.]domain (columns) [USING (columns)]
+<table_domain_clause>			::= "DOMAIN" [ (<schema>|<StringValue>) "." ] <name> "(" <name_comma_list> ")"
+									[ "USING" "(" <name_comma_list> ")" ] ;
+
 <supplemental_id_key_clause>	::= "DATA"
 									"("  <id_key_clause_values>  ("," <id_key_clause_values>)* ")"
 									"COLUMNS";
@@ -963,20 +1033,24 @@ parse(<language>);
 <start_time_column>			::= <NUMBER>;
 <end_time_column>			::= <NUMBER>;
 								
+//Vis_26112026_[261101074]_Virtual columns accept a domain datatype (datatype DOMAIN d, or DOMAIN d alone)
+//Vis_26112026_[261101075]_Virtual columns accept MATERIALIZED as an alternative to VIRTUAL
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to virtual columns
 <virtual_column_definition> ::= node("ATTRIBUTE" , attributeEx("EASTEREOTYPE", "Oracle::column")
 									((attribute("NAME" , <column>))|<StringAsName>)
-									[ <column_type> [ "COLLATE" node("Collation" , attribute("VALUE" , <column_collation_name>)) ] ]
+									[ ( <column_domain_type> | ( <column_type> [ <column_domain_clause> ] ) )
+									  [ "COLLATE" node("Collation" , attribute("VALUE" , <column_collation_name>)) ] ]
 									[ ("VISIBLE" node("Visibility Specification" , attributeEx("VALUE" , "Visible"))) 
 										| ("INVISIBLE" node("Visibility Specification" , attributeEx("VALUE" , "Invisible"))) 
 									]
 									[ "GENERATED" "ALWAYS"  node("Automatic Generation" , attributeEx("VALUE" , "True"))]
 									"AS" "(" node("Column Expression" , attribute("VALUE" , <column_expression>)) ")" 
-									[ "VIRTUAL" node("Virtual" , attributeEx("VALUE" , "True"))]
+									[ ( "VIRTUAL" node("Virtual" , attributeEx("VALUE" , "True")) ) | "MATERIALIZED" ]
 									 [ <evaluation_edition_clause> ]
 									 [ node("Unusable Edition" , attribute("VALUE" , <unusable_editions_clause>))  ]
 									 [([ "NOT"  attributeEx("NOTNULL", "true")] "NULL")]
 									 [<inline_constraint_node>]
-									
+									 [ <annotations_clause> ]
 								);
 								
 <unusable_editions_clause>		::= [ "UNUSABLE" "BEFORE" ( ("CURRENT" "EDITION") | ("EDITION" <edition>) ) ]
@@ -988,9 +1062,13 @@ parse(<language>);
 
 <edition>				::= <IDENTIFIER> ;
 									
+//Vis_26112026_[261101074]_Columns accept a domain datatype (datatype DOMAIN d, or DOMAIN d alone)
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to columns
 <column_definition>			::= node("ATTRIBUTE" , attributeEx("EASTEREOTYPE", "Oracle::column")									
 									((attribute("NAME" , <column> ))|<StringAsName>)
-									[ <column_type> [ "COLLATE" node("Collation" , attribute("VALUE" , <column_collation_name>)) ] ]
+									// datatype_domain: { datatype [ DOMAIN [owner.]domain ] | [ DOMAIN ] [owner.]domain }
+									[ ( <column_domain_type> | ( <column_type> [ <column_domain_clause> ] ) )
+									  [ "COLLATE" node("Collation" , attribute("VALUE" , <column_collation_name>)) ] ]
 									[ "SORT" node("Sorted Index" , attributeEx("VALUE" , "True")) ] 
 									[ ("VISIBLE" node("Visibility Specification" , attributeEx("VALUE" , "Visible"))) 
 										| ("INVISIBLE" node("Visibility Specification" , attributeEx("VALUE" , "Invisible"))) 
@@ -1001,11 +1079,23 @@ parse(<language>);
 									
 									[ ( <inline_constraint_node>	) 
 									| ( node("Inline Reference Constraint" , attribute("VALUE" , <inline_ref_constraint> )))]
+									[ <annotations_clause> ]
 								);
+
+// DOMAIN after a datatype: parsed only (the datatype stays the column TYPE).
+//Vis_26112026_[261101074]_Added DOMAIN [owner.]domain after a column datatype (parsed only)
+<column_domain_clause>		::= "DOMAIN" [ (<schema>|<StringValue>) "." ] <name> ;
+
+// Column declared by its domain alone ("col DOMAIN d"): the domain name becomes the column TYPE,
+// the same as "col d" without the keyword, which <column_type> already models that way.
+//Vis_26112026_[261101074]_Added column declared by DOMAIN alone; the domain name becomes the column TYPE
+<column_domain_type>		::= "DOMAIN" node("TYPE", attribute("NAME", [ (<schema>|<StringValue>) "." ] <name>)) ;
 								
-<column_initialization>		::= ("DEFAULT" [ "ON" "NULL" ] <expr>) | ( <identity_clause> );
+//Vis_26112026_[261101076]_DEFAULT ON NULL accepts FOR INSERT ONLY and FOR INSERT AND UPDATE
+<column_initialization>		::= ("DEFAULT" [ "ON" "NULL" [ "FOR" "INSERT" ( "ONLY" | ( "AND" "UPDATE" ) ) ] ] <expr>) | ( <identity_clause> );
 								
-<column_type>				::= node("TYPE", attribute("NAME",[(<Schema>|<StringValue>)"."] <datatype>)
+//Vis_26112026_[261101077]_Fixed reference to undefined rule <Schema>, now <schema>
+<column_type>				::= node("TYPE", attribute("NAME",[(<schema>|<StringValue>)"."] <datatype>)
 								["(" ((attribute("PRECISION",<NUMBER>) "," attribute("SCALE" ,<NUMBER>) )|(attribute("LENGTH",<NUMBER>))) [ "BYTE" | "CHAR" ] ")"]) ;
 
 <expr>						::= (   <grouped_expr>
@@ -1158,7 +1248,8 @@ parse(<language>);
 								| <user_defined_types>
 							)["(" <NUMBER>[","<NUMBER>] ")"] ;					
 							
-<user_defined_types>		::= [<Schema>"."](<IDENTIFIER>|<StringValue>);
+//Vis_26112026_[261101077]_Fixed reference to undefined rule <Schema>, now <schema>
+<user_defined_types>		::= [<schema>"."](<IDENTIFIER>|<StringValue>);
 
 <Oracle_built_in_datatypes>		::= ( <character_datatypes>
 										| <number_datatypes>
@@ -1223,13 +1314,14 @@ parse(<language>);
 
 <spatial_types>				::= ( "SDO_Geometry" | "SDO_Topo_Geometry" | "SDO_GeoRaster" );
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE INDEX
 <create_index>				::=node("OPERATION",
 									attributeEx("EASTEREOTYPE", "Oracle::index")
 									"CREATE" 
 									[ ("UNIQUE" node("Index Type" , attributeEx("VALUE" , "Unique"))) 
 										| ("BITMAP" node("Index Type" , attributeEx("VALUE" , "Bitmap")))
 										| ("MULTIVALUE" node("Index Type" , attributeEx("VALUE" , "Multivalue"))) ] 
-									"INDEX" 
+									"INDEX"  ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))]
 									 [ node("Database and Schema" , ((attribute("VALUE",<schema>  ))|<StringAsValue>)".") ]
 									((attribute("NAME",  <index_name>)) |<StringAsName>)
 									[ <index_ilm_clause> ]
@@ -1608,7 +1700,8 @@ parse(<language>);
 
 <start> 							::= "START" "TRANSACTION" [ "ISOLATION" "LEVEL" <option> ] [ "READ" "WRITE" | "READ" "ONLY" ] ";" ;
 
-<option>							::= "SERIALIZABLE" | "READ UNCOMMITTED" | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
+//Vis_26112026_[261101071]_Fixed READ UNCOMMITTED keyword literal split into separate tokens
+<option>							::= "SERIALIZABLE" | ("READ" "UNCOMMITTED") | "READ" "COMMITTED" | "REPEATABLE" "READ" ;
 
 <option_clause>					::=  (<query_hint> |<boundary_value>) ([","] (<query_hint> |<boundary_value>) )* ;		
 
@@ -1620,7 +1713,8 @@ parse(<language>);
 										| ( "LABEL" "=" <IDENTIFIER> <StringValue> )
 										;
 										
-<boundary_value>				::= <NUMBER> [<string>] | <IDENTIFIER> [<string>] | <string> | "="  ;	
+//Vis_26112026_[261101077]_Fixed references to undefined rule <string>, now <StringValue>
+<boundary_value>				::= <NUMBER> [<StringValue>] | <IDENTIFIER> [<StringValue>] | <StringValue> | "="  ;	
 
 
 <convert_expression> 			::= <convert_value> ("," <convert_value> )* ;		
@@ -1631,6 +1725,10 @@ parse(<language>);
 
 <error_limit>		::= <NUMBER> ;
 
+//Vis_26112026_[261101078]_Added JSON COLLECTION view type to CREATE VIEW
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE VIEW and CREATE MATERIALIZED VIEW LOG
+//Vis_26112026_[261101079]_Added ENABLE/DISABLE CONCURRENT REFRESH to CREATE MATERIALIZED VIEW
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to CREATE VIEW
 <create_view>		::= node("ELEMENT", 
 								attributeEx("EATYPE", "Class")
 								attributeEx("EASTEREOTYPE", "Oracle::view")
@@ -1651,9 +1749,12 @@ parse(<language>);
 									| ("MATERIALIZED" node("View Type" , attributeEx("VALUE" , "Materialized")))
 								]
 								
+								// 26ai JSON collection view: parsed only (no "View Type" value exists for it in Oracle_MDG.xml)
+								[ "JSON" "COLLECTION"  node("View Type" , attributeEx("VALUE" , "Json Collection")) ]
+
 								"VIEW"  
 								
-								["LOG" "ON" node("Log On" , attributeEx("VALUE" , "True" ))]
+								( ("LOG" ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))] "ON" node("Log On" , attributeEx("VALUE" , "True" ))) | ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))] )
 								
 								[node("Database and Schema" ,((attribute("VALUE",<schema>  ))|<StringAsValue>)".")] 
 								
@@ -1696,6 +1797,8 @@ parse(<language>);
 									| ("DISABLE" node("Query Computation" , attributeEx("VALUE" , "Disable" ))) ) "ON" "QUERY" "COMPUTATION" ]
 									
 								[ <query_rewrite_clause> ] 
+
+								[ ( "ENABLE" | "DISABLE" ) "CONCURRENT" "REFRESH" ]
 								
 								 [ "SHARING" "=" ( 
 												("METADATA" node("Sharing Clause", attributeEx("VALUE" , "Metadata"))) 
@@ -1747,6 +1850,8 @@ parse(<language>);
 								[ "BEQUEATH" ( ("CURRENT_USER" node("Bequeath" , attributeEx("VALUE" , "Current User"))) 
 									| ("DEFINER" node("Bequeath" , attributeEx("VALUE" , "Definer"))) ) ]
 									
+								[ <annotations_clause> ]
+
 								[ "AS" node("viewdef" , attribute("VALUE" , <view_defintion>))]
 								
 								[ ("CONTAINER_MAP" node("Container Option" , attributeEx("VALUE" , "Map"))) 
@@ -1760,11 +1865,18 @@ parse(<language>);
 <view_defintion>		::= <subquery> [ <subquery_restriction_clause> ];
 						  
 						  
-<mat_view_options>		::= [<mat_view_with_option> ("," <mat_view_with_option>)*] 
-							["("<column_or_string> ("," <column_or_string>)* ")"]
+// MV log WITH list. Oracle's examples also put object types after the column list,
+// e.g. WITH ROWID, SEQUENCE (list_price, min_price), PRIMARY KEY
+//Vis_26112026_[261101080]_MV log WITH list accepts column lists between items, e.g. WITH ROWID, SEQUENCE (cols), PRIMARY KEY
+<mat_view_options>		::= [ <mat_view_with_item> ( [","] <mat_view_with_item> )* ]
 							[ <new_values_clause> ];
+
+//Vis_26112026_[261101080]_Helper: one MV log WITH item (option or parenthesized column list)
+<mat_view_with_item>		::= <mat_view_with_option>
+							| ( "(" <column_or_string> ("," <column_or_string>)* ")" ) ;
 						  
-<view_column_specification> 	::= ( <scoped_table_ref_constraint> | (<column_alias> ["ENCRYPT" [<encryption_spec>]]) ) ;
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to view column aliases
+<view_column_specification> 	::= ( <scoped_table_ref_constraint> | (<column_alias> ["ENCRYPT" [<encryption_spec>]] [ <annotations_clause> ]) ) ;
 						  
 <for_refresh_clause>	::= ( ("FOR" "SYNCHRONOUS" "REFRESH"  node("Refresh For" , attributeEx("VALUE" , "Synchronous"))  
 								"USING"  node("Staging Log Name" , attribute("VALUE" ,<staging_log_name> )) )
@@ -1950,8 +2062,9 @@ parse(<language>);
 <type_name>				::= <IDENTIFIER>|<StringValue> ;
 <superview>				::= <IDENTIFIER> ;
 
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause to view parameters
 <view_param>		::= (<out_of_line_constraint_tag>) 
-						| (<alias> [ "VISIBLE" | "INVISIBLE" ] [ <inline_constraint_tag> ]);
+						| (<alias> [ "VISIBLE" | "INVISIBLE" ] [ <annotations_clause> ] [ <inline_constraint_tag> ]);
 								
 <object_view_clause_values>	::= (<out_of_line_constraint_tag>) | (<attributes> <inline_constraint_tag>*);
 
@@ -1964,10 +2077,11 @@ parse(<language>);
 									 ) [ "CONSTRAINT" <constraint> ];
 									 
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE SEQUENCE
 <create_sequence>			::= node("ELEMENT", 
 							attributeEx("EATYPE", "Class")
 							attributeEx("EASTEREOTYPE", "Oracle::sequence")
-							"CREATE" "SEQUENCE" 
+							"CREATE" "SEQUENCE" ["IF" "NOT" "EXISTS" node("Not Exists",attributeEx("VALUE","True"))] 
 							[ node("Database and Schema" , ((attribute("VALUE",<schema>  ))|<StringAsValue>)".")  ]
 							((attribute("NAME" , <sequence>))|<StringAsName>)
 							  [ "SHARING" "=" ( 
@@ -2014,6 +2128,7 @@ parse(<language>);
 							
 <sequence>				::= <IDENTIFIER> ;
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE FUNCTION
 <create_function>		::= node("ELEMENT", 
 							attributeEx("EATYPE", "Class")
 							attributeEx("EASTEREOTYPE", "Oracle::function")
@@ -2021,7 +2136,7 @@ parse(<language>);
 							[ "OR" "REPLACE"  node("Is Replace" , attributeEx("VALUE" , "True"))]
 							[ ("EDITIONABLE" node("Function Type" , attributeEx("VALUE" , "Editionable"))) 
 								| ("NONEDITIONABLE" node("Function Type" , attributeEx("VALUE" , "Non Editionable"))) ]
-							"FUNCTION" <plsql_function_source>
+							"FUNCTION" ["IF" "NOT" "EXISTS" node("Not Exists",attributeEx("VALUE","True"))] <plsql_function_source>
 							[";"]
 							);
 							
@@ -2480,6 +2595,7 @@ parse(<language>);
 								( ("CURRENT_USER" node("Invoker Rights" , attributeEx("VALUE" , "Current User"))) 
 									| ("DEFINER" node("Invoker Rights" , attributeEx("VALUE" , "Definer"))) );
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE PROCEDURE
 <create_procedure>		::=  node( "ELEMENT", 
 									attributeEx("EATYPE", "Class")
 									attributeEx("EASTEREOTYPE", "Oracle::procedure")
@@ -2487,7 +2603,7 @@ parse(<language>);
 									["OR" "REPLACE" node("Is Replace" , attributeEx("VALUE" , "True"))]
 								[ ("EDITIONABLE" node("Procedure Type" , attributeEx("VALUE" , "Editionable"))) 
 									| ("NONEDITIONABLE" node("Procedure Type" , attributeEx("VALUE" , "Non Editionable"))) ]
-									"PROCEDURE" <plsql_procedure_source>
+									"PROCEDURE" ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))] <plsql_procedure_source>
 									[";"]
 							);
 
@@ -2508,13 +2624,14 @@ parse(<language>);
 								   
 <procedure_name>			::= <IDENTIFIER> ;
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE TRIGGER
 <create_trigger>			::= node("OPERATION" , 
 								attributeEx("EASTEREOTYPE", "Oracle::trigger")
 								"CREATE"
 								["OR" "REPLACE" node("Is Replace" , attributeEx("VALUE" , "True"))]
 								[ ("EDITIONABLE" node("Trigger Type" , attributeEx("VALUE" , "Editionable"))) 
 									| ("NONEDITIONABLE" node("Trigger Type" , attributeEx("VALUE" , "Non Editionable"))) ]
-								"TRIGGER" <plsql_trigger_source>								
+								"TRIGGER" ["IF" "NOT" "EXISTS" node( "Not Exists", attributeEx("VALUE","True"))] <plsql_trigger_source>								
 								) [";"];
 								
 <plsql_trigger_source>		::= [node("Database and Schema" ,((attribute("VALUE",<schema>  ))|<StringAsValue>)".")] 
@@ -2541,7 +2658,7 @@ parse(<language>);
 								 ( ([(<schema>|<StringValue>) "." ] "SCHEMA") | ([ "PLUGGABLE" ] "DATABASE") )
 								[ <trigger_ordering_clause> ] [ "ENABLE" | "DISABLE" ][ "WHEN" "(" skipBalanced("(",")")")" ] <trigger_body>;
 								
-<ddl_event>					::= <IDENTIFIER> ;
+<ddl_event>					::= <IDENTIFIER>  ;
 <database_event>					::= <IDENTIFIER> ;
 									
 <compound_dml_trigger>		::= "FOR" <dml_event_clause> [ <referencing_clause> ]
@@ -2584,6 +2701,7 @@ parse(<language>);
 								attribute("CODE" , <trigger_body>)
 								;
 									
+//Vis_26112026_[261101081]_Simplified [schema.] prefix in DML trigger ON clause (removed duplicate <StringValue> alternative)
 <dml_event_clause>			::=(("INSERT" ("OR" "UPDATE"[ "OF" <constraint_column> ("," <constraint_column>)* ] "OR" "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update or Delete"))) 
 								| ("INSERT" ("OR" "UPDATE" [ "OF" <constraint_column> ("," <constraint_column>)* ]) node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Update")))
 								| ("INSERT" ("OR" "DELETE") node("TRG_EVENT" , attributeEx("VALUE" , "Insert or Delete"))) 
@@ -2592,12 +2710,13 @@ parse(<language>);
 								| ("DELETE" node("TRG_EVENT" , attributeEx("VALUE" , "Delete")))
 								| ("UPDATE" [ "OF" <constraint_column> ("," <constraint_column>)* ] node("TRG_EVENT" , attributeEx("VALUE" , "Update"))) )
 								
-								"ON" [ ((<schema>|<StringValue>)|<StringValue>) "."] 							
+								"ON" [ (<schema>|<StringValue>) "."] 							
 								  node("OWNER", attribute("NAME",  <table_view> ) )
 								  
 								  ;
 								
-<table_view>				::= <IDENTIFIER> ;
+//Vis_26112026_[261101081]_DML trigger ON table accepts quoted table names
+<table_view>				::= <IDENTIFIER> |<StringValue>;
 								
 <referencing_clause>		::= "REFERENCING"
 								 ( ("OLD" [ "AS" ] <old>)
@@ -2645,9 +2764,10 @@ parse(<language>);
 										  
 <keystore_password>					::= (<StringValue>|<IDENTIFIER>);	
 
-<open_or_close_keystore>						::=	"SET" "KEYSTORE" ("OPEN"|"CLOSE")
+//Vis_26112026_[261101082]_IDENTIFIED BY made optional in SET KEYSTORE OPEN/CLOSE
+<open_or_close_keystore>			::=	"SET" "KEYSTORE" ("OPEN"|"CLOSE")
 										  [ "FORCE" "KEYSTORE" ]
-										  "IDENTIFIED" "BY" ( ("EXTERNAL" "STORE") | (<keystore_password>) )
+										  ["IDENTIFIED" "BY" ( ("EXTERNAL" "STORE") | (<keystore_password>) )] //its optional for close command Vis
 										  [ "CONTAINER" "=" ( "ALL" | "CURRENT" ) ] [";"]	;
 										  
 										  
@@ -2674,6 +2794,10 @@ parse(<language>);
 										"WITH" "BACKUP" [ "USING" <StringValue> ] 
 										  [";"] ;
 										 
+// mkid:mk hex values. A value like 1234abcd lexes as NUMBER + IDENTIFIER; abcd1234 as one IDENTIFIER.
+//Vis_26112026_[261101083]_Added helper for mkid/mk hex values in SET KEY
+<mk_hex>					::= ( <NUMBER> [ except(<IDENTIFIER>, ( "USING" | "FORCE" | "IDENTIFIED" )) ] ) | <IDENTIFIER> ;
+
 <key_management_clauses>		::=	<set_key>
 									|<create_key>
 									|<use_key>
@@ -2685,7 +2809,8 @@ parse(<language>);
 
 
 
-<set_key>				::= "SET" [ "ENCRYPTION" ] "KEY" [ ["mkid" ":"] <NUMBER> "a".."z"  ]
+//Vis_26112026_[261101083]_SET KEY accepts mkid:mk hex values (replaced invalid "mkid" ":" <NUMBER> "a".."z" form)
+<set_key>				::= "SET" [ "ENCRYPTION" ] "KEY" [ <mk_hex> ":" <mk_hex> ]
 							  [ "USING" "TAG" <StringValue> ]
 							  [ "USING" "ALGORITHM" <StringValue> ]
 							  [ "FORCE" "KEYSTORE" ]
@@ -2774,7 +2899,8 @@ parse(<language>);
 										
 <zero_down_time_software_patching_clauses>	::= "SWITCHOVER" ["TO"]"LIBRARY" <StringValue> "FOR" "ALL" "CONTAINERS" [";"] ;
 
-<alter_analytic_view>			::= "ALTER" "ANALYTIC" "VIEW" [(<schema>|<StringValue>) "." ] <name> 
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER ANALYTIC VIEW
+<alter_analytic_view>			::= "ALTER" "ANALYTIC" "VIEW" ["IF" "EXISTS"] [(<schema>|<StringValue>) "." ] <name> 
 									( ("RENAME" "TO" <name>) | "COMPILE"
 									| <alter_add_or_drop_cache_clause>) [";"] ; 
 									
@@ -2785,7 +2911,8 @@ parse(<language>);
 									
 <table_fullname>				::=[<IDENTIFIER> "."][<IDENTIFIER> "."]<IDENTIFIER>  ;
 
-<alter_atribute_dimension>		::= "ALTER" "ATTRIBUTE" "DIMENSION" [ (<schema>|<StringValue>) "." ]
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER ATTRIBUTE DIMENSION
+<alter_atribute_dimension>		::= "ALTER" "ATTRIBUTE" "DIMENSION" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ]
 									<name> ( "RENAME" "TO" <name> | "COMPILE" ) [";"] ; 
 									
 <alter_audit_policy>			::= "ALTER" "AUDIT" "POLICY" <name>
@@ -2806,9 +2933,10 @@ parse(<language>);
 
 <standard_actions>				::= "ACTIONS"	(<standard_actions_properties>(","<standard_actions_properties>)*)   ;
 									  
+//Vis_26112026_[261101071]_Fixed MINING MODEL keyword literal split into separate tokens
 <standard_actions_properties>		::=(( ( <object_action> | "ALL" )
 										["ON"  (("DIRECTORY" <name>)
-										   | ("MINING MODEL" [ (<schema>|<StringValue>) "." ] <name>)
+										   | ("MINING" "MODEL" [ (<schema>|<StringValue>) "." ] <name>)
 										   | ([ (<schema>|<StringValue>) "."] <name> ))])
 									  | ( <system_action> | "ALL" )
 									  ) ;
@@ -2833,11 +2961,13 @@ parse(<language>);
 									"PACKAGE"|"PROCEDURE"|"SEQUENCE"|"TABLE") ;
 									
 									
-<alter_cluster>					::= "ALTER" "CLUSTER" [ (<schema>|<StringValue>)"." ] <name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER CLUSTER
+//Vis_26112026_[261101071]_Fixed NOCACHE keyword literal (removed leading space)
+<alter_cluster>					::= "ALTER" "CLUSTER" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name>
 								  [( <physical_attributes_clause>
 								  | ("SIZE" <size_clause>)
 								  |	(<deallocate_unused_clause>)
-								  | (( "CACHE" |" NOCACHE" ))
+								  | (( "CACHE" |"NOCACHE" ))
 								  | ([ "MODIFY" "PARTITION" <IDENTIFIER> ] <allocate_extent_clause>)
 								  )* ]
 								  [<parallel_clause> ] [";"];
@@ -2850,26 +2980,32 @@ parse(<language>);
 
 <allocate_extent_clause>			::= "ALLOCATE" "EXTENT"["(" skipBalanced("(",")") ")"] ;
 
-<alter_database>					::= "ALTER" "DATABASE"(<startup_clauses>
-															|<database_file_clauses>
-															|<recovery_clauses>
-															|<logfile_clauses>
-															|<controlfile_clauses>
-															|<standby_database_clauses>
-															|<default_settings_clauses>
-															|<instance_clauses>
-															|<security_clause>
-															|<prepare_clause>
-															|<drop_mirror_copy>
-															|<lost_write_protection>
-															|<cdb_fleet_clauses>
-															|<property_clause>
-															|<replay_upgrate_clause>															
-															) [";"] ;
+//Vis_26112026_[261101085]_ALTER DATABASE accepts an optional database name; clause list moved to <database_options>
+<alter_database>					::= "ALTER" "DATABASE" ( <database_options>|<database><database_options>) [";"] ;
+																		
+																		
+//Vis_26112026_[261101085]_Helper: ALTER DATABASE clause list
+<database_options>					::= (<startup_clauses>
+										|<database_file_clauses>
+										|<recovery_clauses>
+										|<logfile_clauses>
+										|<controlfile_clauses>
+										|<standby_database_clauses>
+										|<default_settings_clauses>
+										|<instance_clauses>
+										|<security_clause>
+										|<prepare_clause>
+										|<drop_mirror_copy>
+										|<lost_write_protection>
+										|<cdb_fleet_clauses>
+										|<property_clause>
+										|<replay_upgrate_clause>															
+										) ;
 
+//Vis_26112026_[261101071]_Fixed READ WRITE keyword literal split into separate tokens
 <startup_clauses>					::=( ("MOUNT" [ ( "STANDBY" | "CLONE" ) "DATABASE" ])
 											|( "OPEN" [
-											  (  "READ WRITE" 
+											  (  "READ" "WRITE" 
 												 [ ( "RESETLOGS" | "NORESETLOGS" )]
 													[( "UPGRADE" | "DOWNGRADE") ]
 											  | ("READ" "ONLY")
@@ -3003,10 +3139,11 @@ parse(<language>);
 									[ "BLOCKSIZE" <size_clause>]
 									["REUSE" ] ;
 									
+//Vis_26112026_[261101071]_Fixed MEMBER keyword literal (removed leading space)
 <drop_logfile_clauses>		::= "DROP" [ "STANDBY" ] "LOGFILE"
 										 (( <logfile_descriptor>
 												 ("," <logfile_descriptor> )*)
-											   |(" MEMBER" 
+											   |("MEMBER" 
 											   <StringValue>(","<StringValue>)*
 														
 										   )) ;
@@ -3135,12 +3272,23 @@ parse(<language>);
 <switchover_clause>			::= ("SWITCHOVER"|"FAILOVER") "TO"<name> [ "VERIFY" | "FORCE" ]  ;
 
 
+//Vis_26112026_[261101071]_Fixed REKEY CREDENTIALS keyword literal split into separate tokens
 <alter_database_dictionary>	::= "ALTER" "DATABASE" "DICTIONARY" 
 								(   ("ENCRYPT" "CREDENTIALS")
-								  | ("REKEY CREDENTIALS")
+								  | ("REKEY" "CREDENTIALS")
 								  | ("DELETE" "CREDENTIALS" "KEY") 
 								)[";"] ;
 								
+								
+								
+//Vis_26112026_[261101086]_Added ALTER [SHARED] [PUBLIC] DATABASE LINK [IF EXISTS]
+<alter_database_link> 		::=	"ALTER" [ "SHARED" ] [ "PUBLIC" ] "DATABASE" "LINK" ["IF" "EXISTS"] <dblink>
+								  ( "CONNECT" ( ["("] "TO" <name> "IDENTIFIED" "BY" <password> [ <dblink_authentication> ] [")"]
+											  | ("WITH" <name>)
+								  | <dblink_authentication>
+								  ));							
+//Vis_26112026_[261101086]_Helper: credential name
+<credential>				::= <IDENTIFIER> ;
 								
 <alter_dimension>			::= "ALTER" "DIMENSION" [ (<schema>|<StringValue>) "." ] <IDENTIFIER> 
 								 ( ( "ADD" ( <level_clause>
@@ -3215,7 +3363,8 @@ parse(<language>);
 											
 <qualified_disk_clause>				::= <StringValue> [ "NAME" <name> ][ "SIZE" <size_clause> ][ ("FORCE" | "NOFORCE") ] ;
 
-<drop_disk_clause>					::= DROP( "DISKS" "IN" [ "QUORUM" | "REGULAR" ] "FAILGROUP"
+//Vis_26112026_[261101071]_Fixed unquoted DROP keyword
+<drop_disk_clause>					::= "DROP" ( "DISKS" "IN" [ "QUORUM" | "REGULAR" ] "FAILGROUP"
 												((<name> [ "FORCE" | "NOFORCE" ])
 												("," (<name> [ "FORCE" | "NOFORCE" ]))* )|
 												([ "QUORUM" | "REGULAR" ] "DISK" ((<name> [ "FORCE" | "NOFORCE" ])
@@ -3381,7 +3530,8 @@ parse(<language>);
 <flashback_archive_retention>		::= "RETENTION" <NUMBER> ("YEAR" | "MONTH" | "DAY") ;
 
 
-<alter_function>					::= "ALTER" "FUNCTION" [ (<schema>|<StringValue>)"." ] <function_name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER FUNCTION
+<alter_function>					::= "ALTER" "FUNCTION" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] <function_name>
 										( <function_compile_clause> |( ( "EDITIONABLE" | "NONEDITIONABLE" )) ) [";"] ;
 										
 <function_compile_clause>			::= "COMPILE" [ "DEBUG" ] [ <compiler_parameters_clause>*  ] [ "REUSE" "SETTINGS" ] ;
@@ -3392,12 +3542,14 @@ parse(<language>);
 
 <parameter_value>					::=(<StringValue>|<NUMBER>|<IDENTIFIER>) ;
 
-<alter_hierarchy>					::= "ALTER" "HIERARCHY" [ (<schema>|<StringValue>)"." ] <name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER HIERARCHY
+<alter_hierarchy>					::= "ALTER" "HIERARCHY" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name>
 											(( "RENAME" "TO" <name>)| "COMPILE" )[";"] ;
 											
 											
+//Vis_26112026_[261101087]_ALTER INDEX REBUILD accepts DEFERRED/IMMEDIATE INVALIDATION
 <alter_index>						::= "ALTER" "INDEX" [ (<schema>|<StringValue>) "." ] <index_name> [ <index_ilm_clause> ]
-												  ( 	<rebuild_clause>
+												  ( 	(<rebuild_clause>[ ( "DEFERRED" | "IMMEDIATE" ) "INVALIDATION" ])
 													  | ("PARAMETERS" "(" <StringValue> ")")
 													  | "COMPILE"
 													  | ( "ENABLE" | "DISABLE" )
@@ -3475,7 +3627,8 @@ parse(<language>);
 												  | <partial_index_clause>)*
 												  ] ;
 												  
-<alter_index_type>					::= "ALTER" "INDEXTYPE" [ (<schema>|<StringValue>)"." ] <indextype>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER INDEXTYPE
+<alter_index_type>					::= "ALTER" "INDEXTYPE" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] <indextype>
 										  (((<index_type_properties>	( "," <index_type_properties>)*) [ <using_type_clause> ])
 										  | "COMPILE"  )
 										  ["WITH" "LOCAL" [ "RANGE" ] "PARTITION" ] [ <stop_standby_clause_index> ] [";"] ;
@@ -3492,15 +3645,18 @@ parse(<language>);
 											
 <stop_standby_clause_index>				::= "WITH" ("SYSTEM" | "USER") "MANAGED" "STORAGE" "TABLES" ; 
 
-<alter_inmemory_join_group>				::= "ALTER" "INMEMORY" "JOIN" "GROUP" [ (<schema>|<StringValue>) "." ] <name>  ( "ADD" | "REMOVE" ) "(" skipBalanced("(",")") ")" [";"] ;
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER INMEMORY JOIN GROUP
+<alter_inmemory_join_group>				::= "ALTER" "INMEMORY" "JOIN" "GROUP" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <name>  ( "ADD" | "REMOVE" ) "(" skipBalanced("(",")") ")" [";"] ;
 
-<alter_java>						::= "ALTER" "JAVA"  ( "SOURCE" | "CLASS" ) [ (<schema>|<StringValue>)"." ]<StringValue>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER JAVA
+<alter_java>						::= "ALTER" "JAVA" ["IF" "EXISTS"] ( "SOURCE" | "CLASS" ) [ (<schema>|<StringValue>)"." ]<StringValue>
 										  [ "RESOLVER" "(" skipBalanced("(",")") ")" ]
 										  ( ( "COMPILE" | "RESOLVE" ) | <invoker_rights_clause>  ) [";"] ;
 										  
 
 
-<alter_library>						::= "ALTER" "LIBRARY" [ (<schema>|<StringValue>) "." ] <name>( <library_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER LIBRARY
+<alter_library>						::= "ALTER" "LIBRARY" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <name>( <library_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;
 
 
 <library_compile_clause>			::= "COMPILE" [ "DEBUG" ] [ <compiler_parameters_clause>* ] [ "REUSE" "SETTINGS" ] ;
@@ -3532,7 +3688,8 @@ parse(<language>);
 											)* ;
 											
 											
-<alter_materialized_view>			::= "ALTER" "MATERIALIZED" "VIEW"
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER MATERIALIZED VIEW
+<alter_materialized_view>			::= "ALTER" "MATERIALIZED" "VIEW" ["IF" "EXISTS"]
 											  [ (<schema>|<StringValue>) "." ] (<view>|<StringValue>)
 											  [ (<physical_attributes_clause>
 												  | <modify_mv_column_clause>
@@ -3857,10 +4014,12 @@ parse(<language>);
 
 <split_nested_table_parts>				::= <split_nested_table_part>[<split_nested_table_part>] ;
 
-<split_nested_table_part>				::= "NESTED"" TABLE" <column_or_string> "INTO"  "(" skipBalanced("(",")") ")"  ;
+//Vis_26112026_[261101071]_Fixed NESTED TABLE keyword literals
+<split_nested_table_part>				::= "NESTED" "TABLE" <column_or_string> "INTO"  "(" skipBalanced("(",")") ")"  ;
 
 
-<alter_materialized_view_log>			::= "ALTER" "MATERIALIZED" "VIEW" "LOG" [ "FORCE" ]
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER MATERIALIZED VIEW LOG
+<alter_materialized_view_log>			::= "ALTER" "MATERIALIZED" "VIEW" "LOG" ["IF" "EXISTS"] [ "FORCE" ]
 											  "ON" [ (<schema>|<StringValue>) "." ]<table_or_string>
 											  [( <physical_attributes_clause>
 											  | <alter_table_partitioning>
@@ -3884,7 +4043,8 @@ parse(<language>);
 													| (","( [ ("OBJECT" "ID")| ("PRIMARY" "KEY") | "ROWID"  | "SEQUENCE" ]  ["("<column_or_string> ("," <column_or_string> )* ")" ]))* ) 
 											[ <new_values_clause> ] ;
 											
-<alter_materialized_zonemap>			::= "ALTER" "MATERIALIZED" "ZONEMAP" [ (<schema>|<StringValue>) "." ] <name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER MATERIALIZED ZONEMAP
+<alter_materialized_zonemap>			::= "ALTER" "MATERIALIZED" "ZONEMAP" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <name>
 											  ( <alter_zonemap_attributes>
 												  | <zonemap_refresh_clause>
 												  | (( "ENABLE" | "DISABLE" ) "PRUNING")
@@ -3899,7 +4059,8 @@ parse(<language>);
 <zonemap_refresh_clause>				::= "REFRESH"[ "FAST" | "COMPLETE" | "FORCE" ][ "ON" ( "DEMAND" | "COMMIT" | "LOAD" | ("DATA" "MOVEMENT") | ("LOAD" "DATA" "MOVEMENT" )) ] ;
 
 
-<alter_operator>						::= "ALTER" "OPERATOR" [(<schema>|<StringValue>)"." ] <name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER OPERATOR
+<alter_operator>						::= "ALTER" "OPERATOR" ["IF" "EXISTS"] [(<schema>|<StringValue>)"." ] <name>
 												  ( <add_binding_clause>
 													  | <drop_binding_clause>
 													  | "COMPILE"
@@ -3929,15 +4090,17 @@ parse(<language>);
 <drop_binding_clause>			::= "DROP" "BINDING" "(" skipBalanced("(",")") ")"  [ "FORCE" ] ;
 
 
+//Vis_26112026_[261101071]_Fixed RENAME TO and CHANGE CATEGORY TO written as single quoted literals
 <alter_outline>					::= "ALTER" "OUTLINE" [ "PUBLIC" | "PRIVATE" ] <name>
 												  ( "REBUILD"
-												  | "RENAME TO <name>"
-												  | "CHANGE CATEGORY TO <name>"
+												  | ("RENAME" "TO" <name>)
+												  | ("CHANGE" "CATEGORY" "TO" <name>)
 												  | ( "ENABLE" | "DISABLE" )
 												  )*
 												  [";"]	 ;
 
-<alter_package>					::=	"ALTER" "PACKAGE" [ (<schema>|<StringValue>)"." ] <name>( <package_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;	 
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER PACKAGE
+<alter_package>					::=	"ALTER" "PACKAGE" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name>( <package_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;	 
 
 
 <package_compile_clause>		::=	"COMPILE" [ "DEBUG" ] [("PACKAGE"|"SPECIFICATION"|"BODY")] [ <compiler_parameters_clause>* ] [ "REUSE" "SETTINGS" ]		;							  
@@ -3967,6 +4130,7 @@ parse(<language>);
 <pdb_unplug_encrypt>			::= "ENCRYPT" "USING" <StringValue> ;
 
 
+//Vis_26112026_[261101071]_Fixed DEFAULT TARGET keyword literal split into separate tokens
 <pdb_settings_clauses>		::= (	(   (( "DEFAULT" "EDITION" "=" <name>)
 										  | ("SET" "DEFAULT" "(" ("BIGFILE" | "SMALLFILE") ")" "TABLESPACE")
 										  | ("DEFAULT" "TABLESPACE" <tablespace>)
@@ -3983,7 +4147,7 @@ parse(<language>);
 											| ("SET" "CONTAINER_MAP" "=" <StringValue>)
 									  )
 									)
-									| ("CONTAINERS" (( "DEFAULT TARGET" "=" (( "("<name>")") | "NONE" ))
+									| ("CONTAINERS" (( "DEFAULT" "TARGET" "=" (( "("<name>")") | "NONE" ))
 												 |( "HOST" "=" <StringValue>)
 												 | ("PORT" "=" <NUMBER>)
 												 ) 
@@ -4080,7 +4244,8 @@ parse(<language>);
 
 
 
-<alter_procedure>				::= "ALTER" "PROCEDURE" [ (<schema>|<StringValue>) "." ] <procedure_name>( <procedure_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER PROCEDURE
+<alter_procedure>				::= "ALTER" "PROCEDURE" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <procedure_name>( <procedure_compile_clause> | ( "EDITIONABLE" | "NONEDITIONABLE" ) ) [";"] ;
 
 
 <procedure_compile_clause>		::= <function_compile_clause> ;
@@ -4128,13 +4293,20 @@ parse(<language>);
 									  )*  [";"] ;
 									  
 
-<alter_role>					::= "ALTER" "ROLE" <name> (( ("NOT" "IDENTIFIED") | ("IDENTIFIED" ( ("BY" <password>) | ("USING" [ (<schema>|<StringValue>)"." ] <package>)| "EXTERNALLY"| ("GLOBALLY" "AS" <name> )) ))
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER ROLE
+<alter_role>					::= "ALTER" "ROLE" <name> ["IF" "EXISTS"] (
+										( ("NOT" "IDENTIFIED")
+											| ("IDENTIFIED" ( ("BY" <password>)
+															| ("USING" [ (<schema>|<StringValue>)"." ] <package>)
+															| "EXTERNALLY"
+															| ("GLOBALLY" "AS" <name> )) ))
 									  [ "CONTAINER" "=" ( "CURRENT" | "ALL" ) ] ) [";"] ;
 									  
 <alter_rollback_segment>		::= "ALTER" "ROLLBACK" "SEGMENT" <name> ( "ONLINE"  | "OFFLINE"  | <storage_clause>  | ("SHRINK" [ "TO" <size_clause> ]))  [";"] ;									  
 
 
-<alter_sequence>				::= "ALTER" "SEQUENCE" [ (<schema>|<StringValue>) "." ]<sequence>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER SEQUENCE
+<alter_sequence>				::= "ALTER" "SEQUENCE" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ]<sequence>
 										  ( ("INCREMENT" "BY" <NUMBER>)
 											  | (("MAXVALUE" <NUMBER> )| "NOMAXVALUE" )
 											  | (( "MINVALUE" <NUMBER>) | "NOMINVALUE" )
@@ -4170,14 +4342,16 @@ parse(<language>);
 													|( <parameter_name> "=" <parameter_value> )*
 												) ;
 												
-<alter_synonym>						::= "ALTER" [ "PUBLIC" ] "SYNONYM" [ (<schema>|<StringValue>) "." ] <name>  ( "EDITIONABLE" | "NONEDITIONABLE" | "COMPILE" ) [";"] ;
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER SYNONYM
+<alter_synonym>						::= "ALTER" [ "PUBLIC" ] "SYNONYM" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <name>  ( "EDITIONABLE" | "NONEDITIONABLE" | "COMPILE" ) [";"] ;
 
+//Vis_26112026_[261101071]_Fixed CONFIRM APPLY keyword literal split into separate tokens
 <alter_system>						::= "ALTER" "SYSTEM" ( <archive_log_clause>
 													  | <checkpoint_clause>
 													  | <check_datafiles_clause>
 													  | <distributed_recov_clauses>
 													  | ("FLUSH" ( "SHARED_POOL" | ("GLOBAL" "CONTEXT") | "BUFFER_CACHE" | "FLASH_CACHE"         
-																	| ("REDO" "TO" <name> [ [ "NO" ] "CONFIRM APPLY" ] )))
+																	| ("REDO" "TO" <name> [ [ "NO" ] "CONFIRM" "APPLY" ] )))
 													  | <end_session_clauses>
 													  | ("SWITCH" "LOGFILE")
 													  | ( "SUSPEND" | "RESUME" )
@@ -4220,7 +4394,8 @@ parse(<language>);
 
 <rolling_migration_clauses>		::=(( "START" "ROLLING" "MIGRATION" "TO" <StringValue>)|( "STOP" "ROLLING" "MIGRATION") );
 
-<rolling_patch_clauses>			::= (("START|STOP") "ROLLING" "PATCH");
+//Vis_26112026_[261101071]_Fixed START|STOP literal split into a START/STOP choice
+<rolling_patch_clauses>			::= (("START"|"STOP") "ROLLING" "PATCH");
 
 <security_clauses>				::= ( (( "ENABLE" | "DISABLE" ) "RESTRICTED" "SESSION")
 									  | ( "SET" "ENCRYPTION" "WALLET" ("OPEN"|"CLOSE")
@@ -4252,7 +4427,8 @@ parse(<language>);
 
 
 
-<alter_table>					::=  mapRight("ALTER" "TABLE" [ (<schema>|<StringValue>)"." ] node("OWNER", ((attribute("NAME",  <table> ))|<StringAsName>) ),
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER TABLE
+<alter_table>					::=  mapRight("ALTER" "TABLE" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] node("OWNER", ((attribute("NAME",  <table> ))|<StringAsName>) ),
 												  [ <memoptimize_read_clause> ]
 												  [ ( <modify_opaque_type>
 												  | <constraint_clauses>
@@ -4455,7 +4631,8 @@ parse(<language>);
 <upgrade_table_clause>					::= "UPGRADE" [ ["NOT" ] "INCLUDING" "DATA" ]   [ <column_properties> ]		;				
 												
 												
-<alter_tablespace>						::= "ALTER" "TABLESPACE" <tablespace> <alter_tablespace_attrs> [";"] ;
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER TABLESPACE
+<alter_tablespace>						::= "ALTER" "TABLESPACE" ["IF" "EXISTS"] <tablespace> <alter_tablespace_attrs> [";"] ;
 
 <alter_tablespace_attrs>				::= ( <default_tablespace_params>
 												| ("MINIMUM" "EXTENT" <size_clause>)
@@ -4522,7 +4699,8 @@ parse(<language>);
 
 <alter_tablespace_set>					::= "ALTER" "TABLESPACE" "SET" <tablespace> <alter_tablespace_attrs> [";"] ;
 
-<alter_trigger>							::= "ALTER" "TRIGGER"[ (<schema>|<StringValue>) "." ] (<trigger_name>|<StringValue>)
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER TRIGGER
+<alter_trigger>							::= "ALTER" "TRIGGER" ["IF" "EXISTS"][ (<schema>|<StringValue>) "." ] (<trigger_name>|<StringValue>)
 											  ( <trigger_compile_clause>
 												  | ( "ENABLE" | "DISABLE" )
 												  | ("RENAME" "TO" <name>)
@@ -4531,7 +4709,8 @@ parse(<language>);
 											  
 <trigger_compile_clause>				::= <function_compile_clause> ;
 
-<alter_type>							::= "ALTER" "TYPE" [ (<schema>|<StringValue>) "." ] <name>(  ( "EDITIONABLE" | "NONEDITIONABLE" )|<alter_type_clause>  ) [";"];
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER TYPE
+<alter_type>							::= "ALTER" "TYPE" ["IF" "EXISTS"] [ (<schema>|<StringValue>) "." ] <name>(  ( "EDITIONABLE" | "NONEDITIONABLE" )|<alter_type_clause>  ) [";"];
 
 <alter_type_clause>						::= ( <type_compile_clause>
 												| <type_replace_clause>
@@ -4570,7 +4749,8 @@ parse(<language>);
 <procedure_spec>						::= "PROCEDURE" <procedure_name>  "(" skipBalanced("(",")") ")"  [ ( "IS" | "AS" ) <call_spec> ] ;
 
 
-<alter_user>							::= "ALTER" "USER"( (<name>
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER USER
+<alter_user>							::= "ALTER" "USER" ["IF" "EXISTS"]( (<name>
 														(( ("IDENTIFIED"
 															  (( "BY" <password> [ "REPLACE" <password> ])
 																  | ("EXTERNALLY" [ "AS" <StringValue> ])
@@ -4619,10 +4799,12 @@ parse(<language>);
 														
 
 
-<alter_view>				::= "ALTER" "VIEW" [ (<schema>|<StringValue>)"." ] (<view> |<StringValue>) ( ("ADD" <out_of_line_constraint>)
+//Vis_26112026_[261101084]_Added IF EXISTS to ALTER VIEW
+//Vis_26112026_[261101071]_Fixed unquoted DROP keyword
+<alter_view>				::= "ALTER" "VIEW" ["IF" "EXISTS"] [ (<schema>|<StringValue>)"." ] (<view> |<StringValue>) ( ("ADD" <out_of_line_constraint>)
 																		  | ("MODIFY" "CONSTRAINT" <constraint>
 																			  ( "RELY" | "NORELY" ))
-																		  | (DROP (( "CONSTRAINT" <constraint>)
+																		  | ("DROP" (( "CONSTRAINT" <constraint>)
 																				 | ("PRIMARY" "KEY")
 																				 | ("UNIQUE" "("(<column_or_string>("," <column_or_string>)*) ")")
 																				 ))
@@ -4715,7 +4897,8 @@ parse(<language>);
 															  
 															  
 															  
-<create_attribute_dimension>			::= "CREATE" [ "OR" "REPLACE" ] [ "FORCE" | "NOFORCE" ] "ATTRIBUTE" "DIMENSION"
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE ATTRIBUTE DIMENSION
+<create_attribute_dimension>			::= "CREATE" [ "OR" "REPLACE" ] [ "FORCE" | "NOFORCE" ] "ATTRIBUTE" "DIMENSION" ["IF" "NOT" "EXISTS"]
 									  [ (<schema>|<StringValue>)"." ] <name>
 									  [ "SHARING" "=" "(" "METADATA" | "NONE" ")" ]  [<classification_clause_dim>]
 									  [ "DIMENSION" "TYPE" ("STANDARD" | "TIME" ) ]
@@ -4785,14 +4968,17 @@ parse(<language>);
 									  
 									  
 									  
-<create_cluster>				::= "CREATE" "CLUSTER" [ (<schema>|<StringValue>)"." ] <cluster>
-										  "(" skipBalanced("(",")") ")"
-										  [ "SHARIN" "=" ( "METADATA" | "NONE" ) ]
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE CLUSTER
+//Vis_26112026_[261101088]_Moved SHARING clause before the column list in CREATE CLUSTER
+//Vis_26112026_[261101071]_Fixed SINGLE TABLE keyword literal split into separate tokens
+<create_cluster>				::= "CREATE" "CLUSTER" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <cluster>
+											[ "SHARIN" "=" ( "METADATA" | "NONE" ) ]
+										  "(" skipBalanced("(",")") ")"										  
 										  [ ( <physical_attributes_clause>
 											| ("SIZE" <size_clause>)
 											| ("TABLESPACE" <tablespace>)
 											| ("INDEX"
-											  | [ "SINGLE TABLE" ]
+											  | [ "SINGLE" "TABLE" ]
 												"HASHKEYS" <NUMBER> [ "HASH" "IS" "(" skipBalanced("(",")") ")" ]
 											  )
 											)*
@@ -4837,6 +5023,7 @@ parse(<language>);
 <character_set_clause>			::= "CHARACTER" "SET" <character_set> ;
 
 
+//Vis_26112026_[261101089]_CREATE DATABASE accepts <database> USING MIRROR COPY <name>
 <create_database>				::= "CREATE" "DATABASE" [ <database> ]
 										  ( ("USER" "SYS" "IDENTIFIED" "BY" <password>)
 											  | ("USER" "SYSTEM" "IDENTIFIED" "BY" <password>)
@@ -4848,6 +5035,7 @@ parse(<language>);
 											  | ("SET" "DEFAULT" ( "BIGFILE" | "SMALLFILE" ) "TABLESPACE")
 											  | <database_logging_clauses>
 											  | <tablespace_clauses>
+											  |	(<database> "USING" "MIRROR" "COPY" <name>)
 											  | <set_time_zone_clause>
 											  | <enable_pluggable_database>
 											  | ([ ("BIGFILE" | "SMALLFILE") ] "USER_DATA" "TABLESPACE" <tablespace>
@@ -4897,7 +5085,8 @@ parse(<language>);
 
 <file_name_convert>					::= "FILE_NAME_CONVERT" "="  ( "("  skipBalanced("(",")")")" |  "NONE") ;
 
-<create_database_link>				::= "CREATE" [ "SHARED" ] [ "PUBLIC" ] "DATABASE" "LINK" <dblink_db>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE DATABASE LINK
+<create_database_link>				::= "CREATE" [ "SHARED" ] [ "PUBLIC" ] "DATABASE" "LINK" ["IF" "NOT" "EXISTS"] <dblink_db> 
 									  [ ("CONNECT" 
 										 (("TO" ( "CURRENT_USER"  | (<IDENTIFIER> "IDENTIFIED" "BY" <password> [ <dblink_authentication> ])) ) 
 										 | ("WITH" <IDENTIFIER>) )
@@ -4918,7 +5107,8 @@ parse(<language>);
 														  )*
 														[";"] ;
 														
-<create_directory>				::= "CREATE" [ "OR" "REPLACE" ] "DIRECTORY" <name> 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE DIRECTORY
+<create_directory>				::= "CREATE" [ "OR" "REPLACE" ] "DIRECTORY" ["IF" "NOT" "EXISTS"] <name> 
 									[ "SHARING" "=" ( "METADATA" | "NONE" ) ]  "AS" <StringValue> [";"] ;
 									
 <create_diskgroup>				::=	"CREATE" "DISKGROUP" <name>
@@ -4930,7 +5120,8 @@ parse(<language>);
 												  ("," ( <StringValue> "=" <StringValue>) )*) ] [";"];								
 												  
 												  
-<create_edition>				::=	"CREATE" "EDITION" <IDENTIFIER>  [ "AS" "CHILD" "OF" <IDENTIFIER> ] [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE EDITION
+<create_edition>				::=	"CREATE" "EDITION"  ["IF" "NOT" "EXISTS"]<IDENTIFIER>  [ "AS" "CHILD" "OF" <IDENTIFIER> ] [";"] ;
 
 
 <create_flashback_archive>			::= "CREATE" "FLASHBACK" "ARCHIVE" ["DEFAULT"] <flashback_archive>
@@ -4940,8 +5131,9 @@ parse(<language>);
 										  <flashback_archive_retention> [";"]
 										;
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE HIERARCHY
 <create_hierarchy>					::= "CREATE" [ "OR" "REPLACE" ] [ ("FORCE" | "NOFORCE") ] 
-										  "HIERARCHY" [ (<schema>|<StringValue>)"." ] <hierarchy> 
+										  "HIERARCHY" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <hierarchy> 
 										  [ "SHARING" "=" ( "METADATA" | "NONE" ) ]
 										  [ <classification_clause_dim>*  ]
 										  <hier_using_clause>
@@ -4956,7 +5148,8 @@ parse(<language>);
 
 <hier_attrs_clause>			::= "HIERARCHICAL" "ATTRIBUTES" "(" skipBalanced("(",")") ")" ;
 
-<create_indextype>			::= "CREATE" [ "OR" "REPLACE" ] "INDEXTYPE" [ (<schema>|<StringValue>)"." ] <indextype>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE INDEXTYPE
+<create_indextype>			::= "CREATE" [ "OR" "REPLACE" ] "INDEXTYPE" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <indextype>
 										 [ "SHARING" "=" ( "METADATA" | "NONE" ) ]
 										  "FOR"( ([ (<schema>|<StringValue>)"." ] <operator> "("skipBalanced("(",")")")")
 												("," ([ (<schema>|<StringValue>)"." ] <operator> "("skipBalanced("(",")")")"))*)
@@ -4967,11 +5160,13 @@ parse(<language>);
 
 
 
-<create_inmemory_join_group>		::= "CREATE" "INMEMORY" "JOIN" "GROUP" [ (<schema>|<StringValue>)"." ] <name> "(" skipBalanced("(",")") ")" [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE INMEMORY JOIN GROUP
+<create_inmemory_join_group>		::= "CREATE" "INMEMORY" "JOIN" "GROUP" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name> "(" skipBalanced("(",")") ")" [";"] ;
 
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE JAVA
 <create_java>				::= "CREATE" [ "OR" "REPLACE" ] [ "AND" ( "RESOLVE" | "COMPILE" ) ] [ "NOFORCE" ]
-											  "JAVA" (( ( "SOURCE" | "RESOURCE" ) "NAMED" [ (<schema>|<StringValue>)"." ] <primary_name>)
+											  "JAVA" ["IF" "NOT" "EXISTS"] (( ( "SOURCE" | "RESOURCE" ) "NAMED" [ (<schema>|<StringValue>)"." ] <primary_name>)
 												   | ("CLASS" [ "SCHEMA" (<schema>|<StringValue>) ])
 												   )
 											  [ "SHARING" "=" ( "METADATA" | "NONE" ) ]
@@ -4986,7 +5181,8 @@ parse(<language>);
 <primary_name>				::=(<StringValue>|<IDENTIFIER>) ;
 
 
-<create_library>			::= "CREATE" [ "OR" "REPLACE" ][ "EDITIONABLE" | "NONEDITIONABLE" ] "LIBRARY" <plsql_library_source> [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE LIBRARY
+<create_library>			::= "CREATE" [ "OR" "REPLACE" ][ "EDITIONABLE" | "NONEDITIONABLE" ] "LIBRARY" ["IF" "NOT" "EXISTS"] <plsql_library_source> [";"] ;
 
 
 <plsql_library_source>		::= [ (<schema>|<StringValue>)"."] <library_name> [ "SHARING" "=" ( "METADATA" | "NONE" )  ] ( "IS" | "AS" )
@@ -5007,7 +5203,8 @@ parse(<language>);
 <create_materialized_zonemap>	::=(<create_zonemap_on_table>|<create_zonemap_as_subquery>) [";"] ;
 
 
-<create_zonemap_on_table>		::= "CREATE" "MATERIALIZED" "ZONEMAP"  [ (<schema>|<StringValue>)"." ] <name>  [ <zonemap_attributes> ]  [ <zonemap_refresh_clause> ]
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE MATERIALIZED ZONEMAP
+<create_zonemap_on_table>		::= "CREATE" "MATERIALIZED" "ZONEMAP" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name>  [ <zonemap_attributes> ]  [ <zonemap_refresh_clause> ]
 									  [ ( "ENABLE" | "DISABLE" ) "PRUNING" ]
 									  "ON" [ (<schema>|<StringValue>)"." ] <table_or_string> "(" <column_or_string> ("," <column_or_string>)* ")" [";"] ;
 									  
@@ -5015,13 +5212,15 @@ parse(<language>);
 <zonemap_attributes>			::= ( "TABLESPACE" <tablespace>| "SCALE" <NUMBER>| ( "CACHE" | "NOCACHE" )) ;
 
 
-<create_zonemap_as_subquery>	::= "CREATE" "MATERIALIZED" "ZONEMAP" [ (<schema>|<StringValue>)"." ] <name>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE MATERIALIZED ZONEMAP ... AS subquery
+<create_zonemap_as_subquery>	::= "CREATE" "MATERIALIZED" "ZONEMAP" ["IF" "NOT" "EXISTS"] [ (<schema>|<StringValue>)"." ] <name>
 										  [ <zonemap_attributes> ]
 										  [ <zonemap_refresh_clause> ]
 										 [ ( "ENABLE" | "DISABLE" ) "PRUNING" ]
 										  "AS" <SelectQuery> ;
 
-<create_operation>				::= "CREATE" [ "OR" "REPLACE" ] "OPERATOR"
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE OPERATOR
+<create_operation>				::= "CREATE" [ "OR" "REPLACE" ] "OPERATOR" ["IF" "NOT" "EXISTS"]
 									[ (<schema>|<StringValue>)"." ] <operator> <binding_clause>  [ "SHARING" "=" ( "METADATA" | "NONE" )] [";"] ;
 									
 <binding_clause>				::= "BINDING" ("(" skipBalanced("(",")") ")"
@@ -5041,14 +5240,16 @@ parse(<language>);
 									   [ "FOR" "CATEGORY" <IDENTIFIER> ]
 									   [ "ON" <SelectQuery> ] [";"] ;
 									   
-<create_package>					::= "CREATE" [ "OR" "REPLACE" ][ ("EDITIONABLE" | "NONEDITIONABLE" )] "PACKAGE" <plsql_package_source> [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE PACKAGE
+<create_package>					::= "CREATE" [ "OR" "REPLACE" ][ ("EDITIONABLE" | "NONEDITIONABLE" )] "PACKAGE" ["IF" "NOT" "EXISTS"] <plsql_package_source> [";"] ;
 
 
 <plsql_package_source>				::=[ (<schema>|<StringValue>)"." ] <name> [ "SHARING" "=" ( "METADATA" | "NONE" ) ] [ ( <default_collation_clause> | <invoker_rights_clause> | <accessible_by_clause> )* ]  
 										( "IS" | "AS" ) <package_item_list>* "END" [ <name> ] [ "EXCEPTION" <exception_handler>* ] [";"] ;
 										
 										
-<create_package_body>				::= "CREATE" [ "OR" "REPLACE" ][ ("EDITIONABLE" | "NONEDITIONABLE" )] "PACKAGE" "BODY" <plsql_package_body_source> [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE PACKAGE BODY
+<create_package_body>				::= "CREATE" [ "OR" "REPLACE" ][ ("EDITIONABLE" | "NONEDITIONABLE" )] "PACKAGE" "BODY" ["IF" "NOT" "EXISTS"] <plsql_package_body_source> [";"] ;
 
 
 <plsql_package_body_source>			::= [ (<schema>|<StringValue>)"." ] <name> [ "SHARING" "=" ( "METADATA" | "NONE" ) ] ( "IS" | "AS" )( <column_or_string> <uneffected_datatype>";")* ( <package_declare_section>  [ <initialize_section> ] )* "END" [ <name> ]  ;
@@ -5110,7 +5311,8 @@ parse(<language>);
 
 
 
-<service_name_convert>			::="SERVICE_NAME_CONVERT " "="  ( "("  skipBalanced("(",")")")" |  "NONE") ;
+//Vis_26112026_[261101071]_Fixed SERVICE_NAME_CONVERT keyword literal (removed trailing space)
+<service_name_convert>			::="SERVICE_NAME_CONVERT" "="  ( "("  skipBalanced("(",")")")" |  "NONE") ;
 
 <path_prefix_clause>			::= "PATH_PREFIX" "=" ("NONE"| <StringValue> | <name>  ) ;
 
@@ -5177,7 +5379,8 @@ parse(<language>);
  
 <create_pdb_from_mirror_copy>	::= <name> "FROM" <name> "@"<name> "USING" "MIRROR" "COPY" <name> ;
 
-<container_map_clause>			::=  "CONTAINER_MAP UPDATE" ( <add_table_partition> | <split_table_partition> ) ;
+//Vis_26112026_[261101071]_Fixed CONTAINER_MAP UPDATE keyword literal split into separate tokens
+<container_map_clause>			::=  "CONTAINER_MAP" "UPDATE" ( <add_table_partition> | <split_table_partition> ) ;
 
 
 <create_pmem_filestore>			::= "CREATE" "PMEM" "FILESTORE" <name>
@@ -5206,7 +5409,8 @@ parse(<language>);
 								   ] [";"];								  
 								   
 								   
-<create_role>				::= "CREATE" "ROLE" <name>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE ROLE
+<create_role>				::= "CREATE" "ROLE" ["IF" "NOT" "EXISTS"] <name>
 							   [ (("NOT" "IDENTIFIED")
 							   | "IDENTIFIED"( ( "BY"<password>)
 											| ("USING" [ (<schema>|<StringValue>)"." ] <package>)
@@ -5223,8 +5427,9 @@ parse(<language>);
 
 <create_spfile>				::= "CREATE" "SPFILE" ["=" <StringValue> ]  "FROM" (( "PFILE" ["=" <StringValue> ] [ "AS" "COPY"])   | "MEMORY" ) [";"] ;
 
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE SYNONYM
 <create_synonym>			::= "CREATE" [ "OR" "REPLACE" ] [ ("EDITIONABLE" | "NONEDITIONABLE" )]
-									   [ "PUBLIC" ] "SYNONYM"
+									   [ "PUBLIC" ] "SYNONYM" ["IF" "NOT" "EXISTS"]
 									   [(<schema>|<StringValue>)"." ] <IDENTIFIER>
 									   [ "SHARING" "=" ( "METADATA" | "NONE" ) ]
 									   "FOR" [ (<schema>|<StringValue>) "." ] <object> [ "@" <dblink_synonym> ] [";"] ;
@@ -5235,7 +5440,8 @@ parse(<language>);
 <create_tablespace>			::= "CREATE" [ "BIGFILE" | "SMALLFILE" ]  ( <permanent_tablespace_clause>| <temporary_tablespace_clause>  | <undo_tablespace_clause>) [";"] ;
 
 
-<permanent_tablespace_clause>	::= "TABLESPACE" <tablespace>  [ "DATAFILE" <file_specification> ("," <file_specification> )* ]
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE TABLESPACE
+<permanent_tablespace_clause>	::= "TABLESPACE" ["IF" "NOT" "EXISTS"] <tablespace>  [ "DATAFILE" <file_specification> ("," <file_specification> )* ]
 									  [ <permanent_tablespace_attrs> ]
 									  [ "IN" "SHARDSPACE" <IDENTIFIER> ] ;
 									  
@@ -5269,7 +5475,8 @@ parse(<language>);
 											"("  ["DATAFILE" <file_specification> ("," <file_specification> )* ]< permanent_tablespace_attrs> ")" ] [";"];
 											
 											
-<create_type>						::= "CREATE" [ "OR" "REPLACE" ][ "EDITIONABLE" | "NONEDITIONABLE" ] "TYPE" <plsql_type_source>[";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE TYPE
+<create_type>						::= "CREATE" [ "OR" "REPLACE" ][ "EDITIONABLE" | "NONEDITIONABLE" ] "TYPE" ["IF" "NOT" "EXISTS"] <plsql_type_source>[";"] ;
 
 
 <plsql_type_source>					::=[ (<schema>|<StringValue>)"." ] <name> [ "FORCE" ] [ "OID" <StringValue> ] 
@@ -5292,7 +5499,8 @@ parse(<language>);
 <object_subtype_def>				::=  "UNDER" [(<schema>|<StringValue>)"."]<name> "(" skipBalanced( "(",")" )  ")"  [(  ["NOT"] ("FINAL" | "INSTANTIABLE" )  )*] ;
 
 
-<create_type_body>					::= "CREATE" [ "OR" "REPLACE" ] [ ("EDITIONABLE" | "NONEDITIONABLE") ]   "TYPE" "BODY" <plsql_type_body_source> [";"] ;
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE TYPE BODY
+<create_type_body>					::= "CREATE" [ "OR" "REPLACE" ] [ ("EDITIONABLE" | "NONEDITIONABLE") ]   "TYPE" "BODY" ["IF" "NOT" "EXISTS"] <plsql_type_body_source> [";"] ;
 
 
 <plsql_type_body_source>			::=[ (<schema>|<StringValue>)"." ] <name> [ "SHARING" "=" ( "METADATA" | "NONE" ) ]( "IS" | "AS" )
@@ -5329,7 +5537,8 @@ parse(<language>);
 											
 											
 											
-<create_user>						::= "CREATE" "USER" <name>
+//Vis_26112026_[261101069]_Added IF NOT EXISTS to CREATE USER
+<create_user>						::= "CREATE" "USER" ["IF" "NOT" "EXISTS"] <name>
 											    
 												   (("IDENTIFIED"
 															  (( "BY" <password> [ "REPLACE" <password> ])
@@ -5361,24 +5570,53 @@ parse(<language>);
 											
 <drop_common>						::= "DROP" <drop_object> [ (<schema>|<StringValue>)"." ] <name> ["FORCE"] ["CASCADE"] [";"];
 
+// IF EXISTS placement follows the Oracle 26ai syntax of each statement.
+//Vis_26112026_[261101090]_Updated generic DROP object list: IF EXISTS where supported, added 26ai object types (application identity, assertion, data grant/role, end user [context], macro, MLE env/module, property graph, directive)
+<drop_object>		::= ( <drop_object_if_exists> [ "IF" "EXISTS" ] )
+						| ( "PACKAGE" [ "IF" "EXISTS" ] [ "BODY" ] )
+						| ( "MATERIALIZED" "VIEW" "LOG" [ "IF" "EXISTS" ] "ON" )
+						| <drop_object_no_if_exists> ;
 
-<drop_object>		::=(("ANALYTIC" "VIEW")|("ATTRIBUTE" "DIMENSION")|("AUDIT" "POLICY")
-						|"CONTEXT"|"DIMENSION"|"DIRECTORY"|"EDITION"|("FLASHBACK" "ARCHIVE")|"FUNCTION"|"HIERARCHY"
-						|"INDEXTYPE"|("INMEMORY" "JOIN" "GROUP")|"LIBRARY"|("LOCKDOWN" "PROFILE")|("MATERIALIZED" "VIEW" "LOG" "ON")|("MATERIALIZED" "ZONEMAP")
-						|"OPERATOR"|"OUTLINE"|"PACKAGE"|"PROCEDURE"|"PROFILE"|"ROLE"|("ROLLBACK" "SEGMENT")|"SEQUENCE"|"TRIGGER"|"USER") ;
+// Objects whose DROP statement accepts IF EXISTS right after the object keyword(s)
+//Vis_26112026_[261101090]_Helper: DROP object keywords that accept IF EXISTS
+<drop_object_if_exists>	::= ("ANALYTIC" "VIEW")|("ATTRIBUTE" "DIMENSION")|("APPLICATION" "IDENTITY")|"ASSERTION"
+						|("DATA" "GRANT")|("DATA" "ROLE")|"DIRECTORY"|("END" "USER" "CONTEXT")|("END" "USER")
+						|"FUNCTION"|"HIERARCHY"|"INDEXTYPE"|("INMEMORY" "JOIN" "GROUP")|"LIBRARY"|"MACRO"
+						|("MLE" "ENV")|("MLE" "MODULE")|"OPERATOR"|"PROCEDURE"|("PROPERTY" "GRAPH")
+						|"ROLE"|"SEQUENCE"|"TRIGGER"|"USER" ;
+
+// Objects whose DROP statement has no IF EXISTS
+//Vis_26112026_[261101090]_Helper: DROP object keywords without IF EXISTS
+<drop_object_no_if_exists>	::= ("AUDIT" "POLICY")|"CONTEXT"|"DIMENSION"|"DIRECTIVE"|("FLASHBACK" "ARCHIVE")
+						|("LOCKDOWN" "PROFILE")|("MATERIALIZED" "ZONEMAP")|"OUTLINE"|"PROFILE"|("ROLLBACK" "SEGMENT") ;
+
+//Vis_26112026_[261101091]_Added DROP EDITION name [IF EXISTS] [CASCADE] (EDITION removed from <drop_object>)
+<drop_edition>		::= "DROP" "EDITION" <name> [ "IF" "EXISTS" ] [ "CASCADE" ] [";"] ;
+
+//Vis_26112026_[261101092]_Added DROP [USECASE] DOMAIN [IF EXISTS] ... [FORCE [PRESERVE]]
+<drop_domain>		::= "DROP" "DOMAIN" [ "USECASE" ] [ "IF" "EXISTS" ] [ <schema> "." ] <domain_name>
+						[ "FORCE" [ "PRESERVE" ] ] [";"] ;
+
+//Vis_26112026_[261101093]_Added DROP ICEBERG TABLE ... WITHIN CATALOG
+<drop_iceberg_table>	::= "DROP" "ICEBERG" "TABLE" [ <schema> "." ] <name> "WITHIN" "CATALOG" <name> [ "PURGE" ] [";"] ;
 
 
-<drop_cluster>		::="DROP" "CLUSTER"  [ (<schema>|<StringValue>)"." ] <name>  [ "INCLUDING" "TABLES" [ "CASCADE" "CONSTRAINTS" ] ]  [";"];
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP CLUSTER
+<drop_cluster>		::="DROP" "CLUSTER" [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] <name>  [ "INCLUDING" "TABLES" [ "CASCADE" "CONSTRAINTS" ] ]  [";"];
 
-<drop_databaselink>		::= "DROP" [ "PUBLIC" ] "DATABASE" "LINK" <dblink_name> [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP DATABASE LINK
+<drop_databaselink>		::= "DROP" [ "PUBLIC" ] "DATABASE" "LINK" [ "IF" "EXISTS" ] <dblink_name> [";"] ;
 
 <drop_diskgroup>		::= "DROP" "DISKGROUP" <name> [  ("FORCE" "INCLUDING" "CONTENTS") | ( "INCLUDING" | "EXCLUDING" ) "CONTENTS"  ] [";"];
 
-<drop_index>			::= "DROP" "INDEX" [ (<schema>|<StringValue>)"." ] <index> [ "ONLINE" ] [ "FORCE" ]  [ ( "DEFERRED" | "IMMEDIATE" ) "INVALIDATION" ] [";"];
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP INDEX
+<drop_index>			::= "DROP" "INDEX" [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] <index> [ "ONLINE" ] [ "FORCE" ]  [ ( "DEFERRED" | "IMMEDIATE" ) "INVALIDATION" ] [";"];
 
-<drop_java>				::= "DROP" "JAVA" ( "SOURCE" | "CLASS" | "RESOURCE" )  [(<schema>|<StringValue>)"." ] (<StringValue>|<IDENTIFIER>) [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP JAVA
+<drop_java>				::= "DROP" "JAVA" [ "IF" "EXISTS" ] ( "SOURCE" | "CLASS" | "RESOURCE" )  [(<schema>|<StringValue>)"." ] (<StringValue>|<IDENTIFIER>) [";"] ;
 
-<drop_materialized_view> ::= "DROP" "MATERIALIZED" "VIEW" [ (<schema>|<StringValue>)"." ] (<view> |<StringValue>)  [ "PRESERVE" "TABLE" ] [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP MATERIALIZED VIEW
+<drop_materialized_view> ::= "DROP" "MATERIALIZED" "VIEW" [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] (<view> |<StringValue>)  [ "PRESERVE" "TABLE" ] [";"] ;
 
 <drop_pluggable_database>		::= "DROP" "PLUGGABLE" "DATABASE" <pdb_name>  [ ( "KEEP" | "INCLUDING" ) "DATAFILES" ] [";"] ;
 
@@ -5386,17 +5624,22 @@ parse(<language>);
 
 <drop_restore_point>			::= "DROP" "RESTORE" "POINT" <name> [ "FOR" "PLUGGABLE" "DATABASE" <pdb_name> ] [";"] ;
 
-<drop_synonym>				::= "DROP" ["PUBLIC"] "SYNONYM" [(<schema>|<StringValue>)"." ] <name> ["FORCE"] [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP SYNONYM
+<drop_synonym>				::= "DROP" ["PUBLIC"] "SYNONYM" [ "IF" "EXISTS" ] [(<schema>|<StringValue>)"." ] <name> ["FORCE"] [";"] ;
 
-<drop_table>				::= "DROP" "TABLE" [ (<schema>|<StringValue>)"." ] <table_or_string>  [ "CASCADE" "CONSTRAINTS" ] [ "PURGE" ] [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP TABLE
+<drop_table>				::= "DROP" "TABLE" [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] <table_or_string>  [ "CASCADE" "CONSTRAINTS" ] [ "PURGE" ] [";"] ;
 
 
-<drop_tablespace>			::= "DROP" "TABLESPACE" ["SET"] <tablespace> [ ( "DROP" | "KEEP" ) "QUOTA" ] 
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP TABLESPACE
+<drop_tablespace>			::= "DROP" "TABLESPACE" ( "SET" | [ "IF" "EXISTS" ] ) <tablespace> [ ( "DROP" | "KEEP" ) "QUOTA" ] 
 								[ "INCLUDING" "CONTENTS" [ ( "AND" | "KEEP" ) "DATAFILES" ] [ "CASCADE" "CONSTRAINTS" ] ] [";"] ;
 								
-<drop_type>					::= "DROP" "TYPE" ["BODY"] [ (<schema>|<StringValue>)"." ] <name> [ ("FORCE" | "VALIDATE") ] [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP TYPE
+<drop_type>					::= "DROP" "TYPE" ["BODY"] [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] <name> [ ("FORCE" | "VALIDATE") ] [";"] ;
 								
-<drop_view>					::= "DROP" "VIEW" [ (<schema>|<StringValue>)"." ] (<view>|<StringValue>) [ "CASCADE" "CONSTRAINTS" ] [";"] ;
+//Vis_26112026_[261101090]_Added IF EXISTS to DROP VIEW
+<drop_view>					::= "DROP" "VIEW" [ "IF" "EXISTS" ] [ (<schema>|<StringValue>)"." ] (<view>|<StringValue>) [ "CASCADE" "CONSTRAINTS" ] [";"] ;
 
 
 <explain_plan>				::= "EXPLAIN" "PLAN"   [ "SET" "STATEMENT_ID" "=" <StringValue> ]   [ "INTO" [ (<schema>|<StringValue>)"." ] <table_or_string> [ "@" <dblink> ] ] "FOR" <statement> [";"] ;
@@ -5621,3 +5864,507 @@ parse(<language>);
 
 <delete_condition>			::= [<table_or_string>][( ("." | "/"|"+")<column_or_string>) | ("(" <col_names> ")")] [ ("(" skipBalanced("(" , ")" ) ")") ] ["/" [<IDENTIFIER> "."] <IDENTIFIER>] [<NUMBER>] [<comparison_Operator> ]
 									( ((<returning_clause> |<error_logging_clause>))| (["NEW" <IDENTIFIER>"("  <StringValue> ")"]  ["(" "SUBSTRING" "(" skipBalanced("(" , ")" ) ")" ")"] [ ("(" skipBalanced("(" , ")" ) ")") |("CONVERT" "("skipBalanced("(" , ")" )")" )  | ( [<table_or_string>  | <StringValue> | (<DECIMAL>)|(<NUMBER>) ] [("."  <column_or_string>| <NUMBER>  )] ["AND" (<DECIMAL> | <NUMBER>)] [("(" skipBalanced("(" , ")" ) ")")] )| (<default_expr> )  ]	) );
+									
+									
+//Vis_26112026_[261101094]_Added ALTER ASSERTION
+<alter_assertion>			::=	 "ALTER" "ASSERTION" [ "IF" "EXISTS" ][<name> "."] <assertion_name>
+									["ENABLE"|"DISABLE"]
+									["VALIDATE"|"NOVALIDATE"]			 [";"];
+									
+//Vis_26112026_[261101094]_Helper: assertion name
+<assertion_name>			::=<name> ;									
+
+// ALTER DIRECTIVE (NOTIFY) and ALTER DIRECTIVE (VALIDATE).
+// 26ai publishes no text BNF for the NOTIFY form; its page says to give at least one of the
+// ON clause, notification_columns_clause, sys_context_clause, ENABLE/DISABLE or retention_clause.
+// The VALIDATE form (ALTER DIRECTIVE name ENABLE|DISABLE) is a subset of this.
+//Vis_26112026_[261101095]_Added ALTER DIRECTIVE (NOTIFY and VALIDATE forms)
+<alter_directive>			::= "ALTER" "DIRECTIVE" [ <schema> "." ] <notification_directive_name>
+								[ "ON" ( "INSERT" | "UPDATE" | "DELETE" )+ ]
+								[ <notification_columns_clause> ]
+								[ <sys_context_clause> ]
+								[ "ENABLE" | "DISABLE" ]
+								[ <retention_clause> ] [";"] ;
+
+//Vis_26112026_[261101095]_Helper: notification directive name
+<notification_directive_name> ::= <name>;
+
+// USING NOTIFICATION TABLE t [TABLESPACE ts] NOTIFICATION VIEW v
+//Vis_26112026_[261101095]_Helper: USING NOTIFICATION TABLE ... NOTIFICATION VIEW for CREATE DIRECTIVE
+<notification_using_clause>		::= "USING" "NOTIFICATION" "TABLE" <name> [ "TABLESPACE" <name> ]
+									"NOTIFICATION" "VIEW" <name> ;
+
+// [WITH {LOGGED COLUMNS (cols) [KEY (cols)] | KEY (cols)}] [{INCLUDING | EXCLUDING} OLD VALUES]
+//Vis_26112026_[261101095]_Helper: WITH LOGGED COLUMNS / KEY and INCLUDING/EXCLUDING OLD VALUES for directives
+<notification_columns_clause>	::= [ "WITH" ( ( "LOGGED" "COLUMNS" "(" <name_comma_list> ")" [ "KEY" "(" <name_comma_list> ")" ] )
+											| ( "KEY" "(" <name_comma_list> ")" ) ) ]
+									[ ( "INCLUDING" | "EXCLUDING" ) "OLD" "VALUES" ] ;
+
+//Vis_26112026_[261101095]_Helper: CONTEXT NAMESPACE clause for directives
+<sys_context_clause>			::= ( "CONTEXT" "NAMESPACE" <namespace_paramaters_list> )+ ;
+
+// The 26ai diagram text says ATTRIBUTE; every Oracle example uses ATTRIBUTES. Both are accepted.
+//Vis_26112026_[261101095]_Helper: namespace ATTRIBUTE(S) list for directives
+<namespace_paramaters_list> 	::= <name> ( "ATTRIBUTES" | "ATTRIBUTE" )
+									<namespace_parameter> ( "," <namespace_parameter> )* ;
+
+//Vis_26112026_[261101095]_Helper: namespace attribute with optional length
+<namespace_parameter>			::= <parameter_name> [ "(" <NUMBER> ")" ] ;
+
+//Vis_26112026_[261101095]_Helper: RETENTION clause for directives
+<retention_clause>				::=  "RETENTION" ("NONE"    | <NUMBER> ( "MINUTES" | "HOURS" | "DAYS" )) ;
+
+//Vis_26112026_[261101092]_Added ALTER [USECASE] DOMAIN (DISPLAY, ORDER, ANNOTATIONS)
+<alter_domain>					::= "ALTER" [ "USECASE" ] "DOMAIN" [ "IF" "EXISTS" ][ <schema> "." ] <domain_name>
+									  ( (( "ADD" | "MODIFY" ) "DISPLAY" <display_expression>)
+									   | ("DROP" "DISPLAY")
+									   | (("ADD" | "MODIFY" ) "ORDER" <display_expression>)
+									   | ("DROP" "ORDER")
+									   | <annotations_clause> ) [";"] ;
+									   
+//Vis_26112026_[261101092]_Helper: domain name
+<domain_name>					::=<name>;			
+
+//Vis_26112026_[261101070]_Added ANNOTATIONS clause (contents skipped)
+<annotations_clause>			::= "ANNOTATIONS" "(" skipBalanced("(",")") ")"	;	
+
+//Vis_26112026_[261101092]_Helper: domain DISPLAY/ORDER expression
+<display_expression>			::= <domain_expr>;
+
+// CREATE DOMAIN (Oracle 23ai / 26ai). Parsed only; produces no model content.
+// Flexible and multi-column forms are tried first, because the single-column form is the most permissive.
+//Vis_26112026_[261101092]_Added CREATE DOMAIN (single-column, multi-column, enum and flexible forms)
+<create_domain>					::= <create_flexible_domain>
+									| <create_multi_column_domain>
+									| <create_single_column_domain> ;
+
+//Vis_26112026_[261101092]_Added single-column and enum CREATE DOMAIN
+<create_single_column_domain>	::= "CREATE" [ "USECASE" ] "DOMAIN" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <domain_name>
+									"AS" ( <domain_enum_list> | ( <domain_datatype> [ "STRICT" ] ) )
+									<domain_tail> [";"] ;
+
+//Vis_26112026_[261101092]_Added multi-column CREATE DOMAIN
+<create_multi_column_domain>	::= "CREATE" [ "USECASE" ] "DOMAIN" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <domain_name>
+									"AS" "(" <domain_column> ( "," <domain_column> )* ")"
+									<domain_tail> [";"] ;
+
+//Vis_26112026_[261101092]_Added CREATE FLEXIBLE DOMAIN
+<create_flexible_domain>		::= "CREATE" [ "USECASE" ] "FLEXIBLE" "DOMAIN" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <domain_name>
+									"(" <name> ( "," <name> )* ")"
+									"CHOOSE" "DOMAIN" "USING" "(" <domain_discriminant> ( "," <domain_discriminant> )* ")"
+									"FROM" ( ( "DECODE" "(" skipBalanced("(",")") ")" )
+										   | ( "CASE" skipBalanced("CASE","END") "END" ) )
+									[ <annotations_clause> ] [";"] ;
+
+//Vis_26112026_[261101092]_Helper: flexible domain discriminant column
+<domain_discriminant>			::= <name> <domain_datatype> ;
+
+//Vis_26112026_[261101092]_Helper: multi-column domain column
+<domain_column>					::= <name> "AS" <domain_datatype> [ "STRICT" ] [ <domain_column_properties> ] [ <annotations_clause> ] ;
+
+//Vis_26112026_[261101092]_Helper: domain datatype
+<domain_datatype>				::= [ <schema> "." ] <datatype> [ "(" skipBalanced("(",")") ")" ] ;
+
+//Vis_26112026_[261101092]_Helper: domain properties, DISPLAY, ORDER and ANNOTATIONS
+<domain_tail>					::= [ <domain_column_properties> ]
+									[ "DISPLAY" <domain_expr> ]
+									[ "ORDER" <domain_expr> ]
+									[ <annotations_clause> ] ;
+
+//Vis_26112026_[261101092]_Helper: list of domain column properties
+<domain_column_properties>		::= <domain_column_property> ( <domain_column_property> )* ;
+
+//Vis_26112026_[261101092]_Helper: domain DEFAULT, constraint or COLLATE
+<domain_column_property>		::= <domain_default_clause>
+									| <domain_constraint_clause>
+									| ( "COLLATE" <collation_name> ) ;
+
+//Vis_26112026_[261101092]_Helper: domain DEFAULT [ON NULL [FOR INSERT ...]] clause
+<domain_default_clause>			::= "DEFAULT" [ "ON" "NULL" [ "FOR" "INSERT" ( "ONLY" | ( "AND" "UPDATE" ) ) ] ] <domain_expr> ;
+
+//Vis_26112026_[261101092]_Helper: domain NOT NULL / NULL / CHECK constraint
+<domain_constraint_clause>		::= [ "CONSTRAINT" <name> ]
+									( ( "NOT" "NULL" ) | "NULL" | ( "CHECK" "(" skipBalanced("(",")") ")" ) )
+									[ <constraint_state> ] ;
+
+//Vis_26112026_[261101092]_Helper: ENUM ( ... ) domain
+<domain_enum_list>				::= "ENUM" "(" <domain_enum_item> ( "," <domain_enum_item> )* ")" ;
+
+// enum_alias_list [= value], e.g.  New = N = 'N'
+//Vis_26112026_[261101092]_Helper: enum item with aliases and value
+<domain_enum_item>				::= <name> ( "=" ( <NUMBER> | <name> ) )* ;
+
+// Display/order/default expressions: operands joined by || + - * /. Ends at the next clause keyword.
+//Vis_26112026_[261101092]_Helper: domain expression
+<domain_expr>					::= <domain_expr_term> ( <domain_expr_operator> <domain_expr_term> )* ;
+
+//Vis_26112026_[261101092]_Helper: domain expression operand
+<domain_expr_term>				::= ( "CASE" skipBalanced("CASE","END") "END" )
+									| ( "(" skipBalanced("(",")") ")" )
+									| ( <IDENTIFIER> ( "." <IDENTIFIER> )* [ "(" skipBalanced("(",")") ")" ] )
+									| <NUMBER>
+									| <StringValue> ;
+
+//Vis_26112026_[261101092]_Helper: domain expression operator
+<domain_expr_operator>			::= ( "|" "|" ) | "+" | "-" | "*" | "/" ;
+
+//Vis_26112026_[261101096]_Added ALTER END USER
+<alter_end_user>				::=	   "ALTER" "END" "USER" [ "IF" "EXISTS" ] <name>
+									  [ "IDENTIFIED" "BY" <password> [ "REPLACE" <password> ] ]
+									  [ "ADD" | "UPDATE" | "DROP" ]
+									  "FACTOR" <factor> "AS" <name>
+									  [ "PROFILE" <password> ]
+									  [ "PASSWORD" "EXPIRE" ]
+									  [ "ACCOUNT" ( "LOCK" | "UNLOCK" ) ]
+									  [  ("SCHEMA" <schema>) | ("NO" "SCHEMA") ]
+									  [ ("START" "TIME" <timestamp>) | ("NO" "START" "TIME") ]
+									  [ ("END" "TIME" <timestamp>) | ("NO" "END" "TIME") ] [";"] ;
+									  
+									  
+//Vis_26112026_[261101096]_Helper: START TIME / END TIME value
+<timestamp>						::=( ("TIMESTAMP" <StringValue>) | <NUMBER> | <name> );
+
+//Vis_26112026_[261101096]_Helper: end user authentication factor
+<factor>						::= <name> ;
+
+//Vis_26112026_[261101096]_Added CREATE END USER
+<create_end_user>				::=	   "CREATE" "END" "USER" [ "IF" "NOT" "EXISTS" ] <name>
+										  [ "IDENTIFIED" "BY" <password> ]
+										  "ADD" "FACTOR" <factor> "AS" <name>
+										  [ "PROFILE" <name> ]
+										  [ "PASSWORD" "EXPIRE" ]
+										  [ "ACCOUNT" ( "LOCK" | "UNLOCK" ) ]
+										  [ "SCHEMA" <schema> ]
+										  [ "START" "TIME" <timestamp> ]
+										  [ "END" "TIME" <timestamp> ] [";"] ;
+
+// The JSON schema is a single-quoted string literal: '{ ... }'
+//Vis_26112026_[261101097]_Added CREATE [OR REPLACE] END USER CONTEXT ... USING JSON SCHEMA
+<create_end_user_context>		::=	   "CREATE" [ "OR" "REPLACE" ] "END" "USER" "CONTEXT" [ "IF" "NOT" "EXISTS" ]
+										  [ <schema> "." ] <name>
+										  "USING" "JSON" "SCHEMA" <StringValue> [";"] ;
+
+// Column may be written bare (as in the syntax diagram) or in parentheses (as in Oracle's examples).
+//Vis_26112026_[261101098]_Added CREATE HYBRID VECTOR INDEX
+<create_hybrid_vector_index>	::=	   "CREATE" "HYBRID" "VECTOR" "INDEX" [ <schema> "." ] <index_name>
+										  "ON" [ <schema> "." ] <table>
+										  ( ( "(" skipBalanced("(",")") ")" ) | <name> )
+										  "PARAMETERS" "(" skipBalanced("(",")") ")" [";"] ;
+
+// ---------------------------------------------------------------------------
+// Oracle 26ai: AUDIT / NOAUDIT, SAVEPOINT, data roles, data grants, end user context
+// Parsed only; no model content.
+// ---------------------------------------------------------------------------
+
+//Vis_26112026_[261101073]_Helper: comma-separated name list (also used by directive, audit and data grant rules)
+<name_comma_list>				::= <name> ( "," <name> )* ;
+
+// AUDIT (Unified Auditing). Traditional AUDIT is desupported in 23ai/26ai.
+//Vis_26112026_[261101099]_Added AUDIT (Unified Auditing: POLICY and CONTEXT NAMESPACE forms)
+<audit_command>					::= "AUDIT" ( <audit_policy_clause> | <audit_context_clause> ) [";"] ;
+
+//Vis_26112026_[261101099]_Helper: AUDIT POLICY clause
+<audit_policy_clause>			::= "POLICY" <name>
+									[ <by_users_with_roles> | ( "BY" <name_comma_list> ) | ( "EXCEPT" <name_comma_list> ) ]
+									[ <audit_whenever_clause> ] ;
+
+//Vis_26112026_[261101099]_Helper: BY USERS WITH GRANTED ROLES
+<by_users_with_roles>			::= "BY" "USERS" "WITH" "GRANTED" "ROLES" <name_comma_list> ;
+
+//Vis_26112026_[261101099]_Helper: WHENEVER [NOT] SUCCESSFUL
+<audit_whenever_clause>			::= "WHENEVER" [ "NOT" ] "SUCCESSFUL" ;
+
+// CONTEXT NAMESPACE ns ATTRIBUTES a [, a]... [, CONTEXT NAMESPACE ns ATTRIBUTES a [, a]...]... [BY user [, user]...]
+//Vis_26112026_[261101099]_Helper: AUDIT/NOAUDIT CONTEXT NAMESPACE clause
+<audit_context_clause>			::= "CONTEXT" "NAMESPACE" <name> "ATTRIBUTES" <name>
+									( "," ( ( "CONTEXT" "NAMESPACE" <name> "ATTRIBUTES" <name> ) | <name> ) )*
+									[ "BY" <name_comma_list> ]
+									[ <audit_whenever_clause> ] ;
+
+// NOAUDIT (Unified Auditing) and NOAUDIT (Traditional Auditing)
+//Vis_26112026_[261101100]_Added NOAUDIT (Unified and Traditional Auditing)
+<noaudit_command>				::= "NOAUDIT"
+									( ( "POLICY" <name> [ <by_users_with_roles> | ( "BY" <name_comma_list> ) ] )
+									| <audit_context_clause>
+									| <noaudit_traditional> ) [";"] ;
+
+//Vis_26112026_[261101100]_Helper: NOAUDIT traditional auditing forms
+<noaudit_traditional>			::= ( "NETWORK"
+									| ( "DIRECT_PATH" "LOAD" [ "BY" <name_comma_list> ] )
+									| ( skip( "BY" | "ON" | "WHENEVER" | "CONTAINER" | ";" )
+										[ ( "ON" <noaudit_on_target> ) | ( "BY" <name_comma_list> ) ] ) )
+									[ <audit_whenever_clause> ]
+									[ "CONTAINER" "=" ( "CURRENT" | "ALL" ) ] ;
+
+//Vis_26112026_[261101100]_Helper: NOAUDIT ... ON object target
+<noaudit_on_target>				::= ( "DIRECTORY" <name> )
+									| ( "MINING" "MODEL" [ <schema> "." ] <name> )
+									| ( "SQL" "TRANSLATION" "PROFILE" [ <schema> "." ] <name> )
+									| "DEFAULT"
+									| ( [ <schema> "." ] <name> ) ;
+
+//Vis_26112026_[261101101]_Added SAVEPOINT
+<savepoint_command>				::= "SAVEPOINT" <name> [";"] ;
+
+//Vis_26112026_[261101102]_Added GRANT DATA ROLE
+<grant_data_role>				::= "GRANT" "DATA" "ROLE" [ "IF" "EXISTS" ] <name_comma_list>
+									"TO" <name_comma_list>
+									[ "START" "TIME" <timestamp> ]
+									[ "END" "TIME" <timestamp> ] [";"] ;
+
+//Vis_26112026_[261101102]_Added REVOKE DATA ROLE
+<revoke_data_role>				::= "REVOKE" "DATA" "ROLE" [ "IF" "EXISTS" ] <name_comma_list>
+									"FROM" <name_comma_list> [";"] ;
+
+//Vis_26112026_[261101102]_Added SET USE DATA GRANTS ONLY
+<set_use_data_grants_only>		::= "SET" "USE" "DATA" "GRANTS" "ONLY" "ON" [ <schema> "." ] <name>
+									[ "ENABLED" | "DISABLED" ] [";"] ;
+
+// UPDATE END_USER_CONTEXT t SET t.CONTEXT.attribute = value WHERE OWNER = owner AND NAME = name
+//Vis_26112026_[261101097]_Added UPDATE END_USER_CONTEXT
+<update_end_user_context>		::= "UPDATE" "END_USER_CONTEXT" <name>
+									"SET" <name> "." "CONTEXT" "." <name> "=" <end_user_context_value>
+									"WHERE" <name> "=" <end_user_context_value>
+									"AND" <name> "=" <end_user_context_value> [";"] ;
+
+//Vis_26112026_[261101097]_Helper: end user context value
+<end_user_context_value>		::= <NUMBER> | <StringValue> | <name> ;
+
+// ---------------------------------------------------------------------------
+// Oracle 26ai: new CREATE / ALTER statements. Parsed only; no model content.
+// ---------------------------------------------------------------------------
+
+// CREATE JSON [RELATIONAL] DUALITY VIEW - SQL form (SELECT JSON {...} FROM ...) or GraphQL form.
+//Vis_26112026_[261101103]_Added CREATE JSON [RELATIONAL] DUALITY VIEW (SQL and GraphQL forms)
+<create_json_duality_view>		::= "CREATE" [ "OR" "REPLACE" ] [ [ "NO" ] "FORCE" ] [ "EDITIONABLE" | "NONEDITIONABLE" ]
+									"JSON" [ "RELATIONAL" ] "DUALITY" "VIEW" [ "IF" "NOT" "EXISTS" ]
+									[ <schema> "." ] <name> "AS"
+									( <duality_view_sql_body> | <duality_view_graphql_body> ) [";"] ;
+
+//Vis_26112026_[261101103]_Helper: duality view SQL body (SELECT JSON {...} FROM ...)
+<duality_view_sql_body>			::= "SELECT" "JSON" "{" skipBalanced("{","}") "}"
+									"FROM" [ <schema> "." ] <name>
+									[ <duality_table_tags> | ( <name> [ <duality_table_tags> ] ) ] ;
+
+// WITH { {CHECK|NOCHECK} [ETAG] | INSERT | NOINSERT | UPDATE | NOUPDATE | DELETE | NODELETE }...
+// Oracle's developer guide also shows the parenthesized form WITH (UPDATE, INSERT, DELETE).
+//Vis_26112026_[261101103]_Helper: duality view WITH table tags
+<duality_table_tags>			::= "WITH" ( ( "(" skipBalanced("(",")") ")" ) | <duality_table_tag> ( <duality_table_tag> )* ) ;
+
+//Vis_26112026_[261101103]_Helper: one duality view table tag
+<duality_table_tag>				::= ( ( "CHECK" | "NOCHECK" ) [ "ETAG" ] )
+									| "INSERT" | "NOINSERT" | "UPDATE" | "NOUPDATE" | "DELETE" | "NODELETE" ;
+
+// graphql_object_name [ (arguments) ] [ @directive... ] { selection } | [ { selection } ]
+//Vis_26112026_[261101103]_Helper: duality view GraphQL body
+<duality_view_graphql_body>		::= <name> [ "." <name> ] [ "(" skipBalanced("(",")") ")" ]
+									( <graphql_directive> )*
+									( ( "{" skipBalanced("{","}") "}" )
+									| ( "[" "{" skipBalanced("{","}") "}" "]" ) ) ;
+
+//Vis_26112026_[261101103]_Helper: GraphQL @directive
+<graphql_directive>				::= "@" <IDENTIFIER> [ "(" skipBalanced("(",")") ")" ] ;
+
+//Vis_26112026_[261101103]_Added ALTER JSON [RELATIONAL] DUALITY VIEW ENABLE/DISABLE LOGICAL REPLICATION
+<alter_json_duality_view>		::= "ALTER" "JSON" [ "RELATIONAL" ] "DUALITY" "VIEW" [ "IF" "EXISTS" ]
+									[ <schema> "." ] <name>
+									( "ENABLE" | "DISABLE" ) "LOGICAL" "REPLICATION" [";"] ;
+
+// CREATE PROPERTY GRAPH. Oracle's examples put a comma between the VERTEX and EDGE table lists.
+//Vis_26112026_[261101104]_Added CREATE PROPERTY GRAPH
+<create_property_graph>			::= "CREATE" [ "OR" "REPLACE" ] "PROPERTY" "GRAPH" [ "IF" "NOT" "EXISTS" ]
+									[ <schema> "." ] <name>
+									"VERTEX" "TABLES" "(" skipBalanced("(",")") ")"
+									[ [ "," ] "EDGE" "TABLES" "(" skipBalanced("(",")") ")" ]
+									[ "OPTIONS" "(" skipBalanced("(",")") ")" ] [";"] ;
+
+//Vis_26112026_[261101105]_Added CREATE MLE ENV
+<create_mle_env>				::= "CREATE" [ "OR" "REPLACE" ] "MLE" "ENV" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <name>
+									[ ( "CLONE" [ <schema> "." ] <name> )
+									| ( [ "IMPORTS" "(" skipBalanced("(",")") ")" ] [ "LANGUAGE" "OPTIONS" <StringValue> ] ) ]
+									[ "PURE" ] [";"] ;
+
+// CREATE MLE MODULE. With AS, the module text (JavaScript) runs to the SQL*Plus "/" terminator line.
+//Vis_26112026_[261101105]_Added CREATE MLE MODULE
+<create_mle_module>				::= "CREATE" [ "OR" "REPLACE" ] "MLE" "MODULE" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <name>
+									"LANGUAGE" <name> [ "VERSION" <StringValue> ]
+									( ( "USING" "BFILE" "(" skipBalanced("(",")") ")" )
+									| ( "USING" ( "CLOB" | "BLOB" | "BFILE" ) ( ( "(" skipBalanced("(",")") ")" ) | skip(";") ) )
+									| ( "AS" skip("/") "/" ) ) [";"] ;
+
+// Not referenced by any rule: these literals only make keywords() produce tokens for characters
+// that occur in MLE JavaScript module text (template strings `...${x}...`), so the lexer can read them.
+//Vis_26112026_[261101105]_Added lexer tokens for MLE JavaScript module text
+<mle_module_text_tokens>		::= "`" | "$" ;
+
+//Vis_26112026_[261101106]_Added CREATE VECTOR INDEX
+<create_vector_index>			::= "CREATE" "VECTOR" "INDEX" [ <schema> "." ] <name>
+									"ON" [ <schema> "." ] <name> "(" skipBalanced("(",")") ")"
+									[ "INCLUDE" "(" skipBalanced("(",")") ")" ]
+									[ "GLOBAL" ]
+									[ <vector_index_organization_clause> ]
+									[ "QUANTIZATION" <name> "COMPRESSION" "RATIO" <NUMBER> ]
+									[ "WITH" "TARGET" "ACCURACY" <NUMBER> ]
+									[ "PARAMETERS" "(" skipBalanced("(",")") ")" ]
+									[ <vector_index_replication_clause> ]
+									[ "PARALLEL" <NUMBER> ]
+									[ "ONLINE" ] [ "LOCAL" ] [";"] ;
+
+//Vis_26112026_[261101106]_Helper: vector index ORGANIZATION clause
+<vector_index_organization_clause> ::= "ORGANIZATION" ( ( "INMEMORY" [ "NEIGHBOR" ] "GRAPH" ) | ( [ "NEIGHBOR" ] "PARTITIONS" ) )
+									[ [ "WITH" ] "DISTANCE" <name> ] ;
+
+//Vis_26112026_[261101106]_Helper: vector index DUPLICATE/DISTRIBUTE clause
+<vector_index_replication_clause> ::= ( "DUPLICATE" "ALL" )
+									| ( "DISTRIBUTE" ( "AUTO" | ( "BY" ( ( "ROWID" "RANGE" ) | "PARTITION" | "SUBPARTITION" ) ) ) ) ;
+
+//Vis_26112026_[261101093]_Added CREATE ICEBERG TABLE
+<create_iceberg_table>			::= "CREATE" "ICEBERG" "TABLE" [ <schema> "." ] <name> "(" skipBalanced("(",")") ")"
+									"WITHIN" "CATALOG" <name>
+									"STORAGE" "LOCATION" <StringValue>
+									"PARTITION" "BY" <iceberg_partition_transform> ( "," <iceberg_partition_transform> )* [";"] ;
+
+//Vis_26112026_[261101093]_Helper: Iceberg partition transform
+<iceberg_partition_transform>	::= ( ( "YEAR" | "MONTH" | "DAY" | "HOUR" ) "(" <name> ")" )
+									| ( "BUCKET" "(" <NUMBER> "," <name> ")" ) ;
+
+//Vis_26112026_[261101107]_Added CREATE LOGICAL PARTITION TRACKING
+<create_logical_partition_tracking> ::= "CREATE" "LOGICAL" "PARTITION" "TRACKING" "ON" [ <schema> "." ] <name>
+									"PARTITION" "BY" "RANGE" "(" skipBalanced("(",")") ")"
+									[ "INTERVAL" "(" skipBalanced("(",")") ")" ]
+									"(" skipBalanced("(",")") ")" [";"] ;
+
+// CREATE MACRO: the scalar expression or subquery body runs to the statement terminator.
+//Vis_26112026_[261101108]_Added CREATE MACRO
+<create_macro>					::= "CREATE" [ "OR" "REPLACE" ] "MACRO" [ "IF" "NOT" "EXISTS" ] [ <schema> "." ] <name>
+									[ "(" skipBalanced("(",")") ")" ]
+									[ "ON" [ <schema> "." ] <name> ]
+									( "AS" | "IS" ) skip(";") [";"] ;
+
+//Vis_26112026_[261101108]_Added ALTER MACRO ... COMPILE
+<alter_macro>					::= "ALTER" "MACRO" [ "IF" "EXISTS" ] [ <schema> "." ] <name> "COMPILE" [";"] ;
+
+//Vis_26112026_[261101109]_Added CREATE TRUE CACHE
+<create_true_cache>				::= "CREATE" "TRUE" "CACHE" [";"] ;
+
+
+
+//Vis_26112026_[261101105]_Added ALTER MLE ENV
+<alter_mle_env>					::= "ALTER" "MLE" "ENV" [ "IF" "EXISTS" ] [<schema> "."] <name>
+									  (	 		( "ADD" "IMPORTS" "("  skipBalanced("(",")") ")")
+											| 	( "DROP" "IMPORTS" "(" skipBalanced("(",")") ")")
+											| 	( "ALTER" "IMPORTS" "(" skipBalanced("(",")") ")" )
+											| 	("SET" "LANGUAGE" "OPTIONS" <option_string>)
+											| ("COMPILE")
+									   )  [";"] ;
+
+//Vis_26112026_[261101105]_Helper: MLE ENV language option string
+<option_string>					::= <name>;
+
+
+//Vis_26112026_[261101105]_Added ALTER MLE MODULE ... SET METADATA
+<alter_mle_module>				::= "ALTER" "MLE" "MODULE" [ "IF" "EXISTS" ] [<schema> "."] <name> "SET" "METADATA" "USING" "CLOB" ( ( "(" skipBalanced("(",")") ")" ) | <StringValue> | <name> ) [";"] ;
+
+
+//Vis_26112026_[261101104]_Added ALTER PROPERTY GRAPH ... COMPILE
+<alter_property_graph>			::= "ALTER" "PROPERTY" "GRAPH" [ "IF" "EXISTS" ] [ <schema>"."] <name> "COMPILE" [";"] ;
+
+
+//Vis_26112026_[261101110]_Added CREATE APPLICATION IDENTITY
+<create_application_Identity>	::= "CREATE" [ "OR" "REPLACE" ] "APPLICATION" "IDENTITY" ["IF" "NOT" "EXISTS" ]
+										<name>  "MAPPED" "TO" <StringValue> [";"] ;
+										
+//Vis_26112026_[261101094]_Added CREATE ASSERTION
+<create_assertion>				::=	"CREATE" "ASSERTION" [ "IF" "NOT" "EXISTS" ] [ <schema> "."]<name>
+										"CHECK" "(" skipBalanced( "(",")" ) ")"
+										[ <assertions_constraint_state> ]	 [";"] ;
+										
+// The 26ai BNF spells DEFERABLE; Oracle's examples (and the database) use DEFERRABLE. Both accepted.
+// Every part is optional so that e.g. "... ) NOVALIDATE" or "... ) DISABLE" parse.
+//Vis_26112026_[261101094]_Helper: assertion constraint state
+<assertions_constraint_state>	::= 	[ ( [ "NOT" ] <assertion_deferrable> [ "INITIALLY" ( "DEFERRED" | "IMMEDIATE" ) ] )
+										| ( "INITIALLY" [ "DEFERRED" | "IMMEDIATE" ] [ [ "NOT" ] <assertion_deferrable> ] ) ]
+											[ "ENABLE" | "DISABLE" ]  [ "VALIDATE" | "NOVALIDATE" ]	  ;
+
+//Vis_26112026_[261101094]_Helper: DEFERRABLE / DEFERABLE keyword
+<assertion_deferrable>			::= "DEFERRABLE" | "DEFERABLE" ;
+
+//Vis_26112026_[261101102]_Added CREATE DATA GRANT
+<create_data_grant>				::= 	"CREATE" ["OR" "REPLACE" ] "DATA" "GRANT" [ "IF" "NOT" "EXISTS" ]
+										  [ <schema> "." ] <name> "AS" <privilege_list>
+										  "ON" [ <schema> "." ] <name>
+										  [ "WHERE" <predicate> ]
+										  "TO" <name_comma_list>
+										  [ "START" "TIME" <timestamp> ]
+										  [ "END" "TIME" <timestamp> ] [";"] ;
+
+//Vis_26112026_[261101102]_Helper: data grant privilege list
+<privilege_list>				::=		<privilege_item> ("," <privilege_item>)*;
+
+// privilege [ ( [ ALL COLUMNS EXCEPT ] column [, column]... ) ]
+//Vis_26112026_[261101102]_Helper: data grant privilege with optional column list
+<privilege_item>				::=		<privilege> [ "(" [ "ALL" "COLUMNS" "EXCEPT" ] <name_comma_list> ")" ] ;
+
+//Vis_26112026_[261101102]_Helper: data grant privilege
+<privilege>						::= ("SELECT"|"UPDATE"|"INSERT"|"DELETE") ;
+
+// Data grant predicate: free SQL condition, consumed up to the TO keyword.
+//Vis_26112026_[261101102]_Helper: data grant WHERE predicate
+<predicate>						::= skip("TO") ;
+
+
+//Vis_26112026_[261101102]_Added CREATE DATA ROLE
+<create_data_role>				::= "CREATE" [ "OR" "REPLACE" ] "DATA" "ROLE" [ "IF" "NOT" "EXISTS" ] <name>
+									(  <external_role_clause> | <local_role_clause>) [";"] ;
+
+//Vis_26112026_[261101102]_Helper: data role MAPPED TO clause
+<external_role_clause>			::= "MAPPED" "TO" <StringValue> ;
+
+//Vis_26112026_[261101102]_Helper: local data role ENABLED/DISABLED
+<local_role_clause>				::= ["ENABLED"|"DISABLED"];
+
+// CREATE DIRECTIVE: VALIDATE form (OR REPLACE allowed) is tried before the NOTIFY form.
+//Vis_26112026_[261101095]_Added CREATE DIRECTIVE (VALIDATE and NOTIFY forms)
+<create_directive>				::= <create_directive_validate> | <create_directive_notify> ;
+
+// CREATE DIRECTIVE (NOTIFY). The BNF has no schema prefixes, but Oracle's examples use them.
+//Vis_26112026_[261101095]_Added CREATE DIRECTIVE (NOTIFY)
+<create_directive_notify>		::=  "CREATE" "DIRECTIVE" [ <schema> "." ] <notification_directive_name>
+									"FOR" ( <table_notification_clause> | <json_relational_duality_view_clause> ) [";"];
+
+//Vis_26112026_[261101095]_Helper: NOTIFY clause for a table
+<table_notification_clause>		::= [ <schema> "." ] <name> "NOTIFY" [ "ON" ( "INSERT" | "UPDATE" | "DELETE" )+ ]
+									  <notification_using_clause>
+									  <notification_columns_clause>
+									  [ <sys_context_clause> ]
+									  [ "ENABLE" | "DISABLE" ]
+									  [ <retention_clause> ] ;
+
+//Vis_26112026_[261101095]_Helper: NOTIFY clause for a JSON relational duality view
+<json_relational_duality_view_clause>	::=	[ <schema> "." ] <name> "NOTIFY" [ "ON" ( "INSERT" | "UPDATE" | "DELETE" )+ ]
+											  <notification_using_clause>
+											  [ <sys_context_clause> ]
+											  [ "ENABLE" | "DISABLE" ]
+											  [ <retention_clause> ] ;
+
+// CREATE DIRECTIVE (VALIDATE)
+//Vis_26112026_[261101095]_Added CREATE [OR REPLACE] DIRECTIVE (VALIDATE)
+<create_directive_validate>		::= "CREATE" [ "OR" "REPLACE" ] "DIRECTIVE" [ <schema> "." ] <name>
+									"FOR" [ <schema> "." ] <name>
+									"VALIDATE" "ON" <directive_action_list>
+									<directive_processing_clause>
+									[ "VALIDATE" | "NOVALIDATE" ] [ "ENABLE" | "DISABLE" ]
+									<directive_using_clause> [";"] ;
+
+//Vis_26112026_[261101095]_Helper: VALIDATE ON action list
+<directive_action_list>			::= ( "SELECT" [ "INSERT" | "UPDATE" ] )
+									| ( "INSERT" [ "UPDATE" ] )
+									| ( "UPDATE" [ "SELECT" ] ) ;
+
+//Vis_26112026_[261101095]_Helper: BEFORE OBJECT / AFTER OBJECT / ON COMMIT
+<directive_processing_clause>	::= ( "BEFORE" "OBJECT" ) | ( "AFTER" "OBJECT" ) | ( "ON" "COMMIT" ) ;
+
+// USING { expr | plsql_anonymous_block | plsql_function }
+//Vis_26112026_[261101095]_Helper: directive USING expression or PL/SQL block
+<directive_using_clause>		::= "USING" ( ( [ "DECLARE" skip("BEGIN") ] "BEGIN" skipBalanced("BEGIN", ( "END" ";" )) "END" ";" )
+											| skip(";") ) ;

@@ -45,7 +45,7 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="Oracle"/>
-						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;Aggregate By=Common Properties;Pipeline=Common Properties;Function Type=Function Definition;Parameter Declaration=Function Definition;Return Type=Function Definition;funcdef=Function Definition;Invoker Rights=Oracle Function Properties;Accesible By=Oracle Function Properties;Deterministic=Oracle Function Properties;Parallel Enable=Oracle Function Properties;Result Cache=Oracle Function Properties;Sql Macro=Oracle Function Properties;Object Body Indicator=Oracle Function Properties;Default Collation=Function Structure Specification;Sharing Clause=Function Structure Specification;Partition By=Function Structure Specification;"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;Aggregate By=Common Properties;Pipeline=Common Properties;Not Exists=Common Properties;Function Type=Function Definition;Parameter Declaration=Function Definition;Return Type=Function Definition;funcdef=Function Definition;Invoker Rights=Oracle Function Properties;Accesible By=Oracle Function Properties;Deterministic=Oracle Function Properties;Parallel Enable=Oracle Function Properties;Result Cache=Oracle Function Properties;Sql Macro=Oracle Function Properties;Object Body Indicator=Oracle Function Properties;Default Collation=Function Structure Specification;Sharing Clause=Function Structure Specification;Partition By=Function Structure Specification;"/>
 						<Property name="_tagGroups" value="Common Properties,Function Definition,Oracle Function Properties,Function Structure Specification"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Function Definition=closed;Function Structure Specification=closed;Oracle Function Properties=closed;"/>
 						<Property name="isActive" value=""/>
@@ -61,6 +61,7 @@
 					<Tag name="Function Type" type="Function Type" description="" unit="" values="" default=""/>
 					<Tag name="Invoker Rights" type="" description="" unit="" values="" default=""/>
 					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Object Body Indicator" type="" description="" unit="" values="" default=""/>
 					<Tag name="Parallel Enable" type="" description="" unit="" values="" default=""/>
 					<Tag name="Parameter Declaration" type="" description="" unit="" values="" default=""/>
@@ -75,7 +76,7 @@
 			<Stereotype name="index" metatype="index" notes="" cx="0" cy="0" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0" generalizes="EAUML::index" baseStereotypes="EAUML::index">
 				<AppliesTo>
 					<Apply type="Operation">
-						<Property name="_tagGroupings" value="Index Expression=Table Index Clause Properties;Index Properties=Table Index Clause Properties;Bitmap From=Bitmap Index Properties;Where Condition=Bitmap Index Properties;Local Partitioned=Bitmap Index Properties;Index Type=Common Properties;Database and Schema=Common Properties;Table Schema=Common Properties;Index Format=Common Properties;Index Attributes=Oracle Index properties;Index Status=Oracle Index properties;Invalidation=Oracle Index properties;ILM Cluase=ILM Property;"/>
+						<Property name="_tagGroupings" value="Index Type=Common Properties;Database and Schema=Common Properties;Index Format=Common Properties;Table Schema=Common Properties;Not Exists=Common Properties;Index Expression=Table Index Clause Properties;Index Properties=Table Index Clause Properties;Bitmap From=Bitmap Index Properties;Where Condition=Bitmap Index Properties;Local Partitioned=Bitmap Index Properties;Index Attributes=Oracle Index properties;Index Status=Oracle Index properties;Invalidation=Oracle Index properties;ILM Cluase=ILM Property;"/>
 						<Property name="_tagGroups" value="Common Properties,Table Index Clause Properties,Bitmap Index Properties,Oracle Index properties,ILM Property"/>
 						<Property name="_tagGroupStates" value="Table Index Clause Properties=closed;Bitmap Index Properties=closed;Common Properties=open;Oracle Index properties=closed;ILM Property=closed;"/>
 						<Property name="isOrdered" value=""/>
@@ -97,6 +98,7 @@
 					<Tag name="Index Type" type="Index Type" description="" unit="" values="" default=""/>
 					<Tag name="Invalidation" type="" description="" unit="" values="" default=""/>
 					<Tag name="Local Partitioned" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Table Schema" type="" description="" unit="" values="" default=""/>
 					<Tag name="Where Condition" type="" description="" unit="" values="" default=""/>
 				</TaggedValues>
@@ -116,7 +118,7 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="Oracle"/>
-						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;Procedure Type=Common Properties;Parameter Declaration=Procedure Definition;Return Type=Procedure Definition;procdef=Procedure Definition;Sharing Clause=Oracle Procedure Properties;Default Collation=Oracle Procedure Properties;Partition By=Oracle Procedure Properties;Invoker Rights=Oracle Procedure Properties;Accesible By=Oracle Procedure Properties;Object Body Indicator=Oracle Procedure Properties;"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Database and Schema=Common Properties;Procedure Type=Common Properties;Not Exists=Common Properties;Parameter Declaration=Procedure Definition;Return Type=Procedure Definition;procdef=Procedure Definition;Sharing Clause=Oracle Procedure Properties;Default Collation=Oracle Procedure Properties;Partition By=Oracle Procedure Properties;Invoker Rights=Oracle Procedure Properties;Accesible By=Oracle Procedure Properties;Object Body Indicator=Oracle Procedure Properties;"/>
 						<Property name="_tagGroups" value="Common Properties,Procedure Definition,Oracle Procedure Properties"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Procedure Definition=closed;Oracle Procedure Properties=closed;"/>
 						<Property name="isActive" value=""/>
@@ -128,6 +130,7 @@
 					<Tag name="Default Collation" type="Default Collation" description="" unit="" values="" default=""/>
 					<Tag name="Invoker Rights" type="" description="" unit="" values="" default=""/>
 					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Object Body Indicator" type="" description="" unit="" values="" default=""/>
 					<Tag name="Parameter Declaration" type="" description="" unit="" values="" default=""/>
 					<Tag name="Partition By" type="" description="" unit="" values="" default=""/>
@@ -141,7 +144,7 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="Oracle"/>
-						<Property name="_tagGroupings" value="Database and Schema=Common Properties;Increment By=Oracle Sequence Properties;Start With=Oracle Sequence Properties;Caching Option=Oracle Sequence Properties;Order=Oracle Sequence Properties;Keep Option=Oracle Sequence Properties;Scale Option=Oracle Sequence Properties;Scale Value=Oracle Sequence Properties;Scope Specification=Oracle Sequence Properties;Sharing Clause=Other Properties;Cycle=Other Properties;Cache Value=Other Properties;Maximum Value=Range Specification;Maximum Number=Range Specification;Minimum Value=Range Specification;Minimum Number=Range Specification;"/>
+						<Property name="_tagGroupings" value="Database and Schema=Common Properties;Not Exists=Common Properties;Increment By=Oracle Sequence Properties;Start With=Oracle Sequence Properties;Caching Option=Oracle Sequence Properties;Order=Oracle Sequence Properties;Keep Option=Oracle Sequence Properties;Scale Option=Oracle Sequence Properties;Scale Value=Oracle Sequence Properties;Scope Specification=Oracle Sequence Properties;Sharing Clause=Other Properties;Cycle=Other Properties;Cache Value=Other Properties;Maximum Value=Range Specification;Maximum Number=Range Specification;Minimum Value=Range Specification;Minimum Number=Range Specification;"/>
 						<Property name="_tagGroups" value="Common Properties,Oracle Sequence Properties,Other Properties,Range Specification"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Range Specification=closed;Oracle Sequence Properties=closed;Other Properties=closed;"/>
 						<Property name="isActive" value=""/>
@@ -158,6 +161,7 @@
 					<Tag name="Maximum Value" type="" description="" unit="" values="" default=""/>
 					<Tag name="Minimum Number" type="" description="" unit="" values="" default=""/>
 					<Tag name="Minimum Value" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Order" type="" description="" unit="" values="" default=""/>
 					<Tag name="Scale Option" type="" description="" unit="" values="" default=""/>
 					<Tag name="Scale Value" type="" description="" unit="" values="" default=""/>
@@ -176,20 +180,23 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="Oracle"/>
-						<Property name="_tagGroupings" value="Table Type=Common Properties;Database and Schema=Common Properties;Table Formats=Common Properties;Immutable Table=Relational Table Properties;Blockchain Table=Relational Table Properties;Collation=Relational Table Properties;Period Definition=Relational Table Properties;Object Type=Object Table Properties;Table Substitution=Object Table Properties;Outline Reference Constraint=Object Table Properties;Supplemental Log=Object Table Properties;XMLType Storage=XML Type Table Properties;XMLSchema Spec=XML Type Table Properties;XMLType Virtual Columns=XML Type Table Properties;Object Identifier=XML Type Table Properties;On Commit Rows=On Commit;On Commit Definition=On Commit;Select Query=Table As;Sharing Clause=Oracle Table Properties;OID Index=Oracle Table Properties;Physical Properties=Oracle Table Properties;Column Properties=Oracle Table Properties;Read Only Clause=Oracle Table Properties;Indexing=Oracle Table Properties;Table Partition=Oracle Table Properties;Attribute Clustering=Oracle Table Properties;Caching Option=Oracle Table Properties;Parallel Clause=Oracle Table Properties;Parallel Range=Oracle Table Properties;Row Dependencies=Oracle Table Properties;Enable Disable Clause=Oracle Table Properties;Row Movement=Oracle Table Properties;Logical Replication=Oracle Table Properties;Flashback Archive=Oracle Table Properties;Flashback Archive Value=Oracle Table Properties;Row Archival=Oracle Table Properties;Exchange with=Oracle Table Properties;For Read=Oracle Table Properties;For Write=Oracle Table Properties;Parent=Oracle Table Properties;Result Cache=Oracle Table Properties;Opaque Type=Oracle Table Properties;"/>
-						<Property name="_tagGroups" value="Common Properties,Relational Table Properties,Object Table Properties,XML Type Table Properties,On Commit,Table As,Oracle Table Properties"/>
+						<Property name="_tagGroupings" value="Table Type=Common Properties;Database and Schema=Common Properties;Table Formats=Common Properties;Not Exists=Common Properties;Immutable Table=Relational Table Properties;Blockchain Table=Relational Table Properties;Collation=Relational Table Properties;Period Definition=Relational Table Properties;Domain clause=Relational Table Properties;Object Type=Object Table Properties;Table Substitution=Object Table Properties;Outline Reference Constraint=Object Table Properties;Supplemental Log=Object Table Properties;XMLType Storage=XML Type Table Properties;XMLSchema Spec=XML Type Table Properties;XMLType Virtual Columns=XML Type Table Properties;Object Identifier=XML Type Table Properties;On Commit Rows=On Commit;On Commit Definition=On Commit;Select Query=Table As;Sharing Clause=Oracle Table Properties;OID Index=Oracle Table Properties;Physical Properties=Oracle Table Properties;Column Properties=Oracle Table Properties;Read Only Clause=Oracle Table Properties;Indexing=Oracle Table Properties;Table Partition=Oracle Table Properties;Attribute Clustering=Oracle Table Properties;Caching Option=Oracle Table Properties;Parallel Clause=Oracle Table Properties;Parallel Range=Oracle Table Properties;Row Dependencies=Oracle Table Properties;Enable Disable Clause=Oracle Table Properties;Row Movement=Oracle Table Properties;Logical Replication=Oracle Table Properties;Flashback Archive=Oracle Table Properties;Flashback Archive Value=Oracle Table Properties;Row Archival=Oracle Table Properties;Exchange with=Oracle Table Properties;For Read=Oracle Table Properties;For Write=Oracle Table Properties;Parent=Oracle Table Properties;Result Cache=Oracle Table Properties;Opaque Type=Oracle Table Properties;Annotations clause=Oracle Table Properties;Etag=Json collection table properties;"/>
+						<Property name="_tagGroups" value="Common Properties,Relational Table Properties,Object Table Properties,XML Type Table Properties,On Commit,Table As,Oracle Table Properties,Json collection table properties"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Oracle Table Properties=closed;Relational Table Properties=closed;Object Table Properties=closed;XML Type Table Properties=closed;On Commit=closed;Table As=closed;"/>
 						<Property name="isActive" value=""/>
 					</Apply>
 				</AppliesTo>
 				<TaggedValues>
+					<Tag name="Annotations clause" type="" description="" unit="" values="" default=""/>
 					<Tag name="Attribute Clustering" type="" description="" unit="" values="" default=""/>
 					<Tag name="Blockchain Table" type="" description="" unit="" values="" default=""/>
 					<Tag name="Caching Option" type="" description="" unit="" values="" default=""/>
 					<Tag name="Collation" type="" description="" unit="" values="" default=""/>
 					<Tag name="Column Properties" type="" description="" unit="" values="" default=""/>
 					<Tag name="Database and Schema" type="" description="" unit="" values="" default=""/>
+					<Tag name="Domain clause" type="" description="" unit="" values="" default=""/>
 					<Tag name="Enable Disable Clause" type="" description="" unit="" values="" default=""/>
+					<Tag name="Etag" type="" description="" unit="" values="" default=""/>
 					<Tag name="Exchange with" type="" description="" unit="" values="" default=""/>
 					<Tag name="Flashback Archive" type="" description="" unit="" values="" default=""/>
 					<Tag name="Flashback Archive Value" type="" description="" unit="" values="" default=""/>
@@ -198,6 +205,7 @@
 					<Tag name="Immutable Table" type="" description="" unit="" values="" default=""/>
 					<Tag name="Indexing" type="" description="" unit="" values="" default=""/>
 					<Tag name="Logical Replication" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Object Identifier" type="" description="" unit="" values="" default=""/>
 					<Tag name="Object Type" type="" description="" unit="" values="" default=""/>
 					<Tag name="OID Index" type="" description="" unit="" values="" default=""/>
@@ -242,6 +250,7 @@
 					<Tag name="Default Collation" type="Default Collation" description="" unit="" values="" default=""/>
 					<Tag name="For Each Row" type="" description="" unit="" values="" default=""/>
 					<Tag name="Is Replace" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Referencing Clause" type="" description="" unit="" values="" default=""/>
 					<Tag name="Search Condition" type="" description="" unit="" values="" default=""/>
 					<Tag name="Sharing Clause" type="" description="" unit="" values="" default=""/>
@@ -268,7 +277,7 @@
 				<AppliesTo>
 					<Apply type="Class">
 						<Property name="_dbtype" value="Oracle"/>
-						<Property name="_tagGroupings" value="Is Replace=Common Properties;Force=Common Properties;View Type=Common Properties;Database and Schema=Common Properties;Collation=Common Properties;Column Specification=Common Properties;View Parameters=Common Properties;XMLType View Clause=XML Type View Property;Object View=Object Type View;Column Properties=Materialized View Properties;Table Partition=Materialized View Properties;Caching Option=Materialized View Properties;Build Option=Materialized View Properties;Materialized View Option=Materialized View Properties;Cache Value=Materialized View Properties;Parallel Clause=Parallel clause;Parallel Range=Parallel clause;Refresh For=Refresh Clause;Staging Log Name=Refresh Clause;Caption=Classification Clause;Description=Classification Clause;Classification Name=Classification Clause;Classification Value=Classification Clause;Language=Classification Clause;Source Clause=Other Properties;Dimension Key=Other Properties;Measure By=Other Properties;Default Measure=Other Properties;Aggregate By=Other Properties;Cache Specification=Other Properties;Fact Columns=Other Properties;Bequeath=Other Properties;Container Option=Other Properties;Query Rewrite=Query Properties;Query Transform=Query Properties;Unusuable Edition=Query Properties;Rely Option=Query Properties;viewdef=View Definition;Reduced Precision=Orcale View Properties;Physical Properties=Orcale View Properties;Index Option=Orcale View Properties;Index Clause=Orcale View Properties;Evaluation Edition=Orcale View Properties;Query Computation=Orcale View Properties;Sharing Clause=Orcale View Properties;Log Purge=Orcale View Properties;Refresh Clause=Orcale View Properties;Prebuilt Table=Orcale View Properties;Log On=Orcale View Properties;"/>
+						<Property name="_tagGroupings" value="Is Replace=Common Properties;Force=Common Properties;View Type=Common Properties;Database and Schema=Common Properties;Collation=Common Properties;Column Specification=Common Properties;View Parameters=Common Properties;Not Exists=Common Properties;XMLType View Clause=XML Type View Property;Object View=Object Type View;Column Properties=Materialized View Properties;Table Partition=Materialized View Properties;Caching Option=Materialized View Properties;Build Option=Materialized View Properties;Materialized View Option=Materialized View Properties;Cache Value=Materialized View Properties;Parallel Clause=Parallel clause;Parallel Range=Parallel clause;Refresh For=Refresh Clause;Staging Log Name=Refresh Clause;Caption=Classification Clause;Description=Classification Clause;Classification Name=Classification Clause;Classification Value=Classification Clause;Language=Classification Clause;Source Clause=Other Properties;Dimension Key=Other Properties;Measure By=Other Properties;Default Measure=Other Properties;Aggregate By=Other Properties;Cache Specification=Other Properties;Fact Columns=Other Properties;Bequeath=Other Properties;Container Option=Other Properties;Query Rewrite=Query Properties;Query Transform=Query Properties;Unusuable Edition=Query Properties;Rely Option=Query Properties;viewdef=View Definition;Reduced Precision=Orcale View Properties;Physical Properties=Orcale View Properties;Index Option=Orcale View Properties;Index Clause=Orcale View Properties;Evaluation Edition=Orcale View Properties;Query Computation=Orcale View Properties;Sharing Clause=Orcale View Properties;Log Purge=Orcale View Properties;Refresh Clause=Orcale View Properties;Prebuilt Table=Orcale View Properties;Log On=Orcale View Properties;"/>
 						<Property name="_tagGroups" value="Common Properties,XML Type View Property,Object Type View,Materialized View Properties,Parallel clause,Refresh Clause,Classification Clause,Other Properties,Query Properties,View Definition,Orcale View Properties"/>
 						<Property name="_tagGroupStates" value="Common Properties=open;Orcale View Properties=closed;XML Type View Property=closed;Object Type View=closed;Materialized View Properties=closed;Parallel clause=closed;Refresh Clause=closed;Classification Clause=closed;Other Properties=closed;Query Properties=closed;View Definition=closed;"/>
 						<Property name="isActive" value=""/>
@@ -303,6 +312,7 @@
 					<Tag name="Log Purge" type="" description="" unit="" values="" default=""/>
 					<Tag name="Materialized View Option" type="" description="" unit="" values="" default=""/>
 					<Tag name="Measure By" type="" description="" unit="" values="" default=""/>
+					<Tag name="Not Exists" type="" description="" unit="" values="" default=""/>
 					<Tag name="Object View" type="" description="" unit="" values="" default=""/>
 					<Tag name="Parallel Clause" type="" description="" unit="" values="" default=""/>
 					<Tag name="Parallel Range" type="" description="" unit="" values="" default=""/>

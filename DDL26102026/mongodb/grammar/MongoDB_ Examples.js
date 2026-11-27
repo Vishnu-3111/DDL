@@ -880,3 +880,136 @@ watchCursorFullDocumentBeforeChange = db.temperatureSensor.watch(
 var authColl = db.getCollection("auth")
 
 db.users.createIndex({ "email": 1 }, { unique: true })
+
+// ---- Collection methods (added) ----
+// Vis_26112026_[261101044]_Tests db.collection.insert() with a document and an array
+db.products.insert( { item: "card", qty: 15 } )
+db.products.insert( [ { item: "pen", qty: 20 }, { item: "pad", qty: 5 } ] )
+// Vis_26112026_[261101041]_Tests legacy db.collection.update()
+db.books.update( { _id: 1 }, { $inc: { stock: 5 } }, { upsert: true } )
+// Vis_26112026_[261101040]_Tests db.collection.getShardLocation()
+db.users.getShardLocation()
+
+// ---- Replication (added) ----
+// Vis_26112026_[261101045]_Tests rs.printReplicationInfo and rs.printSecondaryReplicationInfo
+rs.printReplicationInfo()
+rs.printSecondaryReplicationInfo()
+
+// ---- Sharding (added) ----
+// Vis_26112026_[261101046]_Tests the new sh.* sharding methods
+sh.abortMoveCollection( "app.inventory" )
+sh.abortUnshardCollection( "app.inventory" )
+sh.addShardTag( "shard0000", "NYC" )
+sh.disableMigrations( "app.inventory" )
+sh.enableMigrations( "app.inventory" )
+sh.getTransitionToDedicatedConfigServerStatus()
+sh.help()
+sh.isConfigShardEnabled()
+var shards = sh.listShards()
+sh.moveCollection( "app.inventory", "shard02" )
+sh.moveRange( "app.inventory", "shard02", { x: 10 }, { x: 20 } )
+sh.shardAndDistributeCollection( "app.inventory", { key: 1 } )
+sh.shardDrainingStatus( "shard02" )
+sh.unshardCollection( "app.inventory", "shard01" )
+
+// ---- Connection (added) ----
+conn = Mongo()
+// Vis_26112026_[261101047]_Tests Mongo getURI, getReadPrefTagSet and bulkWrite
+conn.getURI()
+conn.getReadPrefTagSet()
+conn.bulkWrite( [ { insertOne: { namespace: "app.inventory", document: { item: "box" } } } ] )
+
+// ---- Session (added) ----
+const session = db.getMongo().startSession()
+// Vis_26112026_[261101049]_Tests Session methods and the SessionOptions constructor
+const sessionDb = session.getDatabase( "app" )
+session.startTransaction( { readConcern: { level: "snapshot" }, writeConcern: { w: "majority" } } )
+session.commitTransaction()
+session.abortTransaction()
+session.withTransaction( function() { sessionDb.orders.insertOne( { item: "abc" } ); } )
+session.hasEnded()
+session.getOptions()
+session.getClusterTime()
+session.getOperationTime()
+session.advanceOperationTime( Timestamp( 1, 1 ) )
+session.endSession()
+var opts = SessionOptions()
+
+// ---- Atlas Stream Processing (added) ----
+// Vis_26112026_[261101048]_Tests createStreamProcessor, listStreamProcessors, process and modify
+sp.createStreamProcessor( "solarDemo", [ { $source: { connectionName: "sample_stream_solar" } } ] )
+sp.listStreamProcessors( { name: "solarDemo" } )
+sp.process( [ { $source: { connectionName: "sample_stream_solar" } } ] )
+sp.solarDemo.modify( [ { $source: { connectionName: "sample_stream_solar" } } ] )
+
+// ---- In-Use Encryption (added) ----
+// Vis_26112026_[261101051]_Tests key vault and ClientEncryption methods
+const keyVault = db.getMongo().getKeyVault()
+const clientEncryption = getClientEncryption()
+const keyId = keyVault.createKey( "local" )
+keyVault.createDataKey( "local" )
+keyVault.getKey( keyId )
+keyVault.getKeys()
+keyVault.addKeyAlternateName( keyId, "dataKey1" )
+keyVault.addKeyAltName( keyId, "dataKey2" )
+keyVault.removeKeyAlternateName( keyId, "dataKey1" )
+keyVault.removeKeyAltName( keyId, "dataKey2" )
+keyVault.getKeyByAltName( "dataKey1" )
+keyVault.rewrapManyDataKey( {}, { provider: "local" } )
+keyVault.deleteKey( keyId )
+clientEncryption.encrypt( keyId, "123-45-6789", "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic" )
+clientEncryption.encryptExpression( keyId, "Range", { $and: [ { age: { $gte: 23 } } ] }, { contentionFactor: 0 } )
+clientEncryption.decrypt( encryptedValue )
+
+// ---- Native methods (added) ----
+// Vis_26112026_[261101052]_Tests mongosh native methods
+load( "scripts/seed.js" )
+sleep( 1000 )
+cat( "notes.txt" )
+getHostName()
+getMemInfo()
+hostname()
+isInteractive()
+listFiles( "." )
+ls()
+md5sumFile( "notes.txt" )
+mkdir( "backup" )
+removeFile( "old.txt" )
+version()
+_isWindows()
+_rand()
+quit()
+
+// ---- Shell helpers (added) ----
+// Vis_26112026_[261101053]_Tests show, print, printjson, console.log and it
+show dbs
+show collections
+show users
+show log global
+print( "done" )
+printjson( { ok: 1 } )
+console.log( "done" )
+it
+
+// ---- Cursor methods on a cursor variable (added) ----
+// Vis_26112026_[261101054]_Tests cursor methods and chained cursor calls
+cursor.forEach( printjson )
+cursor.hasNext()
+cursor.next()
+cursor.sort( { qty: -1 } ).limit( 5 ).toArray()
+cursor.batchSize( 10 )
+cursor.close()
+cursor.isExhausted()
+cursor.itcount()
+
+
+
+// Vis_26112026_[261101050]_Tests db.createEncryptedCollection with provider, createCollectionOptions and masterKey
+encDb.createEncryptedCollection(
+  "users",
+  {
+    provider: "local",
+    createCollectionOptions: encryptedFieldsMap,
+    masterKey: {} // masterKey is optional when provider is local
+  }
+);

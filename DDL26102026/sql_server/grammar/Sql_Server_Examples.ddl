@@ -182,7 +182,8 @@ CREATE TABLE t1
     index IX1 (c1) WHERE (c1 > 0)
 );
 
-CREATE TABLE t1
+-- Vis_26112026_[261101148]_Renamed second t1 table to T1 (inline INDEX NONCLUSTERED test)
+CREATE TABLE T1
 (
     c1 INT,
     INDEX ix_1 NONCLUSTERED (c1)
@@ -4600,3 +4601,195 @@ ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[Survey_Positioning_System] CHECK CONSTRAINT [FK_Survey_Positioning_System_Dataset_Survey_Platform]
 GO
+
+-- =====================================================
+-- Test cases for grammar changes [281001001]-[281001010]
+-- Date: 28-10-2026
+-- =====================================================
+
+-- Test #1: CREATE STATISTICS basic [281001001]
+CREATE STATISTICS Stats_SalesOrderDetail
+ON Sales.SalesOrderDetail (OrderQty, ProductID)
+;
+GO
+
+-- Test #2: CREATE STATISTICS with FULLSCAN [281001001]
+CREATE STATISTICS Stats_Products
+ON Production.Product (Name, ListPrice)
+WITH FULLSCAN
+;
+GO
+
+-- Test #3: CREATE STATISTICS with SAMPLE and options [281001001]
+CREATE STATISTICS Stats_Customers
+ON Sales.Customer (TerritoryID, AccountNumber)
+WITH SAMPLE 50 PERCENT, NORECOMPUTE, AUTO_DROP = ON
+;
+GO
+
+-- Test #4: CREATE STATISTICS with WHERE filter [281001001]
+CREATE STATISTICS Stats_Filtered
+ON Sales.SalesOrderHeader (OrderDate, TotalDue)
+WHERE TotalDue > 1000
+WITH FULLSCAN, INCREMENTAL = ON
+;
+GO
+
+-- Test #5: CREATE STATISTICS with MAXDOP [281001001]
+CREATE STATISTICS Stats_Large
+ON dbo.LargeTable (Col1, Col2, Col3)
+WITH FULLSCAN, NORECOMPUTE, MAXDOP = 4
+;
+GO
+
+-- Test #6: ALTER COLUMN ENCRYPTION KEY ADD VALUE [281001002]
+ALTER COLUMN ENCRYPTION KEY MyCEK
+ADD VALUE
+(
+	COLUMN_MASTER_KEY = MyCMK2,
+	ALGORITHM = 'RSA_OAEP',
+	ENCRYPTED_VALUE = 0x01700000016C006F00
+)
+;
+GO
+
+-- Test #7: ALTER COLUMN ENCRYPTION KEY DROP VALUE [281001002]
+ALTER COLUMN ENCRYPTION KEY MyCEK
+DROP VALUE
+(
+	COLUMN_MASTER_KEY = MyCMK
+)
+;
+GO
+
+-- Test #8: ALTER DATABASE SCOPED CREDENTIAL [281001003]
+ALTER DATABASE SCOPED CREDENTIAL AppCred
+WITH IDENTITY = 'Mary6',
+SECRET = 'newSecret123'
+;
+GO
+
+-- Test #9: ALTER DATABASE SCOPED CREDENTIAL identity only [281001003]
+ALTER DATABASE SCOPED CREDENTIAL ReadOnlyCred
+WITH IDENTITY = 'ReadUser'
+;
+GO
+
+-- Test #10: DROP DATABASE SCOPED CREDENTIAL [281001004]
+DROP DATABASE SCOPED CREDENTIAL AppCred
+;
+GO
+
+-- Test #11: DROP DATABASE SCOPED CREDENTIAL IF EXISTS [281001004]
+DROP DATABASE SCOPED CREDENTIAL IF EXISTS OldCred
+;
+GO
+
+-- Test #12: DROP INDEX relational syntax [281001005]
+DROP INDEX IX_ProductVendor_VendorID ON Purchasing.ProductVendor
+;
+GO
+
+-- Test #13: DROP INDEX IF EXISTS with options [281001005]
+DROP INDEX IF EXISTS
+IX_WorkOrder_ProductID ON Production.WorkOrder
+WITH (ONLINE = OFF, MAXDOP = 1)
+;
+GO
+
+-- Test #14: DROP INDEX backward compatible syntax [281001005]
+DROP INDEX dbo.MyTable.IX_MyTable_Col1
+;
+GO
+
+-- Test #15: DROP INDEX multiple relational [281001005]
+DROP INDEX
+IX_Index1 ON dbo.Table1,
+IX_Index2 ON dbo.Table2
+;
+GO
+
+-- Test #16: DROP INDEX with MOVE TO [281001005]
+DROP INDEX AK_BillOfMaterials ON Production.BillOfMaterials
+WITH (ONLINE = ON, MOVE TO MyFileGroup)
+;
+GO
+
+-- Test #17: READTEXT [281001006]
+READTEXT pub_info.pr_info @ptrval 0 25
+;
+GO
+
+-- Test #18: READTEXT with HOLDLOCK [281001006]
+READTEXT dbo.Documents.Content @textPtr 10 100 HOLDLOCK
+;
+GO
+
+-- Test #19: UPDATETEXT basic [281001007]
+UPDATETEXT pub_info.pr_info @ptrval 0 NULL 'New text content'
+;
+GO
+
+-- Test #20: UPDATETEXT with NULL offsets [281001007]
+UPDATETEXT dbo.Documents.Content @destPtr NULL NULL 'appended text'
+;
+GO
+
+-- Test #21: UPDATETEXT with WITH LOG [281001007]
+UPDATETEXT BULK pub_info.pr_info @ptrval 88 0 WITH LOG 'inserted text'
+;
+GO
+
+-- Test #22: WRITETEXT basic [281001008]
+WRITETEXT pub_info.pr_info @ptrval 'Completely new text content'
+;
+GO
+
+-- Test #23: WRITETEXT BULK with WITH LOG [281001008]
+WRITETEXT BULK dbo.Documents.Content @textPtr WITH LOG 'Replaced document body'
+;
+GO
+
+-- Test #24: EXECUTE AS LOGIN statement [281001009]
+EXECUTE AS LOGIN = 'TestLogin'
+;
+GO
+
+-- Test #25: EXECUTE AS USER with NO REVERT [281001009]
+EXECUTE AS USER = 'AppUser'
+WITH NO REVERT
+;
+GO
+
+-- Test #26: EXECUTE AS USER with COOKIE [281001009]
+EXEC AS USER = 'DataReader'
+WITH COOKIE INTO @SavedCookie
+;
+GO
+
+-- Test #27: EXECUTE AS CALLER statement [281001009]
+EXECUTE AS CALLER
+;
+GO
+
+-- Test #28: EXECUTE AS CLAUSE in CREATE PROCEDURE [281001010]
+CREATE PROCEDURE dbo.TestSecurityProc
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+	SELECT 1
+END
+;
+GO
+
+-- Test #29: EXECUTE AS CLAUSE in CREATE FUNCTION [281001010]
+CREATE FUNCTION dbo.TestSecurityFunc()
+RETURNS INT
+WITH SCHEMABINDING, EXECUTE AS CALLER
+AS
+BEGIN
+	RETURN 1
+END
+;
+
+
